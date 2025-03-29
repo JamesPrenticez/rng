@@ -1,9 +1,13 @@
-import { Dice } from './components/Dice';
+// import { DiceGame } from './components/Game';
+// import { GameStateProvider } from './context/GameStateContext';
 
 export const App = () => {
   return (
+    // <GameStateProvider>
+    //   <DiceGame />
+    // </GameStateProvider>
     <div>
-      <Dice />
+      Hello
     </div>
   )
 };

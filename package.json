@@ -1,0 +1,14 @@
+{
+  "name": "dice-magic",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "mprocs --config mprocs.yaml"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "mprocs": "^0.7.2"
+  }
+}
