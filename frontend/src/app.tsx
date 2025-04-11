@@ -1,13 +1,19 @@
-// import { DiceGame } from './components/Game';
-// import { GameStateProvider } from './context/GameStateContext';
+import { SocketProvider } from './context/room-state.context';
+import { ThemeProvider } from '@emotion/react';
+
+import { Container } from './ui';
+import { theme } from "./theme"
+
+import { Lobby } from './components/lobby';
 
 export const App = () => {
   return (
-    // <GameStateProvider>
-    //   <DiceGame />
-    // </GameStateProvider>
-    <div>
-      Hello
-    </div>
-  )
+    <ThemeProvider theme={theme}>
+      <SocketProvider>
+        <Container style={{ backgroundColor: theme.colors.background, minHeight: '100vh', paddingTop: '2rem' }}>
+          <Lobby />
+        </Container>
+      </SocketProvider>
+    </ThemeProvider>
+  );
 };
