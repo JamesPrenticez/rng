@@ -1,28 +1,32 @@
-import { useRoomSocket } from "../context/room-state.context";
+import styled from '@emotion/styled'
+import { Title } from './lobby/title';
 
-import { Title } from "../ui";
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 
-import { CreateRoom } from "./create-room";
-import { Login } from "./login";
-import { Room } from "./room";
-import { RoomsList } from "./room-list";
+  background-color: var(--color-primary);
+`
 
 export const Lobby = () => {
-  const { user, currentRoom } = useRoomSocket();
-
-  if (!user) {
-    return <Login />;
-  }
-
-  if (currentRoom) {
-    return <Room />;
-  }
 
   return (
-    <>
-      <Title>Welcome, {user.username}!</Title>
-      <CreateRoom />
-      <RoomsList />
-    </>
+    <Container>
+      <Title text="Dice Magic" />
+      {/* <CreateRoom /> */}
+      {/* <RoomsList />  */}
+    </Container>
   );
 };
+
+
+  // const { user, currentRoom } = useRoomSocket();
+
+  // if (!user) {
+  //   return <Login />;
+  // }
+
+  // if (currentRoom) {
+  //   return <Room />;
+  // }
