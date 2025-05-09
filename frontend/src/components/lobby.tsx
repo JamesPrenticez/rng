@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { Title } from './lobby/title';
+import { GameCanvas } from '../game/core/canvas';
 
 const Container = styled.div`
   display: flex;
@@ -9,11 +10,22 @@ const Container = styled.div`
   background-color: var(--color-primary);
 `
 
+const GameContainer = styled.div`
+  width: 50vw;
+  height: 50vh;
+  border: lime 1px solid;
+`
+
 export const Lobby = () => {
 
   return (
     <Container>
       <Title text="Dice Magic" />
+
+      <GameContainer>
+        <GameCanvas />
+      </GameContainer>
+
       {/* <CreateRoom /> */}
       {/* <RoomsList />  */}
     </Container>

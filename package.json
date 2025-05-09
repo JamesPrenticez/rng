@@ -9,6 +9,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@react-three/cannon": "^6.6.0",
+    "@react-three/drei": "^10.0.7",
     "mprocs": "^0.7.2"
   }
 }
