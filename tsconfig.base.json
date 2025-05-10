@@ -1,0 +1,54 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "strict": true,
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es6",
+    "module": "es2020",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/assets/styles": ["libs/shared/assets/styles"],
+      "@shared/models": ["libs/shared/models/src/index.ts"],
+      "@shared/models/api": ["libs/shared/models/src/lib/api/index.ts"],
+      "@shared/models/auth": ["libs/shared/models/src/lib/auth/index.ts"],
+      "@shared/models/user": ["libs/shared/models/src/lib/user/index.ts"],
+      "@shared/state-management": ["libs/shared/state-management/src/index.ts"],
+      "@shared/supabase/auth": ["libs/shared/supabase/auth/src/index.ts"],
+      "@shared/supabase/db": ["libs/shared/supabase/db/src/index.ts"],
+      "@shared/supabase/db/supabase-backend": [
+        "libs/shared/supabase/db/src/lib/supabase-db-backend.ts"
+      ],
+      "@shared/supabase/db/supabase-frontend": [
+        "libs/shared/supabase/db/src/lib/supabase-db-frontend.ts"
+      ],
+      "@shared/supabase/realtime": [
+        "libs/shared/supabase/realtime/src/index.ts"
+      ],
+      "@shared/ui/components": ["libs/shared/ui/components/src/lib/index.ts"],
+      "@shared/ui/components/buttons": [
+        "libs/shared/ui/components/src/lib/buttons/index.ts"
+      ],
+      "@shared/ui/components/effects": [
+        "libs/shared/ui/components/src/lib/effects/index.ts"
+      ],
+      "@shared/ui/components/inputs": [
+        "libs/shared/ui/components/src/lib/inputs/index.ts"
+      ],
+      "@shared/ui/layouts": ["libs/shared/ui/layouts/src/lib/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

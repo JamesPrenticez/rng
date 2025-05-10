@@ -1,0 +1,5 @@
+procs:
+  'messenger:backend':
+    shell: 'nx serve messenger-backend'
+  'messenger:frontend':
+    shell: 'nx serve messenger-frontend'

@@ -1,0 +1,51 @@
+:root {
+  font-family: Quicksand, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: #dadada;
+  background-color: #111815;
+
+  font-synthesis: none;
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#root {
+  /* font-size: 10px;  */
+  /* This is important to set the rem units of our site */
+  /* min-height: 100vh; */
+  display: flex;
+  flex-direction: column;
+}
+
+a,
+a:visited,
+a:hover,
+a:active {
+  all: unset;
+}
+/* a {
+  all: unset;
+  color: lime;
+  text-decoration: underline;
+  cursor: pointer;
+} */
+
+/* a:visited {
+  color: fuchsia;
+}
+
+a:hover {
+  color: lime;
+  text-decoration: underline;
+}
+
+a:active {
+  color: fuchsia;
+} */

@@ -1,0 +1,42 @@
+.theme-gold {
+  --color-primary: rgb(255, 204, 102); /* #FFCC66; Adjusted Gold */
+  --color-secondary: rgb(129, 107, 81); /* #816b51; Slightly lighter */
+  --color-accent: rgb(255, 239, 153); /* #FFEF99; Lightest shade */
+
+  --color-action: rgb(255, 210, 158); /*#ffd29e; */
+  --color-action-hover: rgb(255, 209, 123); /*#ffd17b;  */
+  --color-focus: rgb(255, 210, 158); /*#ffd29e; */
+  --color-disabled: rgb(153, 153, 153); /*#939393; */
+
+  --color-border: rgb(129, 107, 81); /*#816b51; */
+  --color-border-accent: rgb(255, 210, 158); /*#767676;  */
+
+  --color-text: rgb(248, 248, 255); /*#f8f8ff; */
+  --color-text-subtle: rgb(118, 118, 118); /*#767676; */
+  --color-text-accent: rgb(255, 210, 158); /*#ffd29e; */
+
+  --color-background: rgb(32, 32, 32); /*#0d0d0d;  */
+  --color-background-subtle: rgb(118, 118, 118); /*#767676; */
+}
+
+/* With Opacity */
+.theme-gold {
+  --color-primary-opacity: 255, 221, 170; /* #ffddaa; rgb(255,221,170) */
+  --color-secondary-opacity: 129, 107, 81; /* #816b51; rgb(129,107,81)  */
+  --color-accent-opacity: 255, 210, 158; /* #ffd29e; rgb(255,210,158) */
+
+  --color-action-opacity: 255, 210, 158; /*#ffd29e; rgb(255,210,158) */
+  --color-action-hover-opacity: 255, 209, 123; /*#ffd17b; rgb(255,209,123) */
+  --color-focus-opacity: 255, 210, 158; /*#ffd29e; rgb(255,210,158) */
+  --color-disabled-opacity: 153, 153, 153; /*#939393; rgb(153,153,153) */
+
+  --color-border-opacity: 129, 107, 81; /*#816b51; rgb(129,107,81)   */
+  --color-border-accent-opacity: 255, 210, 158; /*#767676; rgb(118,118,118)  */
+
+  --color-text-opacity: 248, 248, 255; /*#f8f8ff; rgb(248,248,255)  */
+  --color-text-subtle-opacity: 118, 118, 118; /*#767676; */
+  --color-text-accent-opacity: 255, 210, 158; /*#ffd29e; rgb(255, 210, 158)   */
+
+  --color-background-opacity: 13, 13, 13; /*#0d0d0d;  */
+  --color-background-subtle-opacity: 118, 118, 118; /*#767676; */
+}

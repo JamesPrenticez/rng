@@ -1,0 +1,20 @@
+{
+    "name": "shared/ui/layouts",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/shared/ui/layouts/src",
+    "projectType": "library",
+    "tags": ["scope:shared", "type:ui"],
+    "targets": {
+        "lint": {
+            "executor": "@nx/eslint:lint"
+        },
+        "typecheck": {
+            "executor": "nx:run-commands",
+            "options": {
+                "commands": ["tsc -p tsconfig.lib.json --noEmit --incremental"],
+                "cwd": "{projectRoot}",
+                "forwardAllArgs": false
+            }
+        }
+    }
+}

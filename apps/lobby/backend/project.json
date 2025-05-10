@@ -1,0 +1,88 @@
+{
+  "name": "lobby-backend",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/lobby/backend/src",
+  "projectType": "application",
+  "tags": [
+    "scope:lobby",
+    "app:lobby-backend",
+    "type:app",
+    "environment:production",
+    "environment:demo",
+    "environment:dev"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/lobby/backend",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/lobby/backend/src/main.ts",
+        "tsConfig": "apps/lobby/backend/tsconfig.app.json",
+        "assets": [
+          "apps/lobby/backend/src/assets",
+          {
+            "input": "apps/lobby/backend/src/public",
+            "glob": "**/*",
+            "output": "public"
+          }
+        ],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "lobby-backend:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "lobby-backend:build:development"
+        },
+        "production": {
+          "buildTarget": "lobby-backend:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["tsc -p tsconfig.app.json --noEmit --incremental"],
+        "cwd": "{projectRoot}",
+        "forwardAllArgs": false
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/lobby/backend/jest.config.ts"
+      }
+    }
+  }
+}

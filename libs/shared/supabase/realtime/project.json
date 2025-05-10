@@ -1,0 +1,20 @@
+{
+  "name": "realtime",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/supabase/realtime/src",
+  "projectType": "library",
+  "tags": ["scope:shared"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/shared/supabase/realtime",
+        "tsConfig": "libs/shared/supabase/realtime/tsconfig.lib.json",
+        "packageJson": "libs/shared/supabase/realtime/package.json",
+        "main": "libs/shared/supabase/realtime/src/index.ts",
+        "assets": ["libs/shared/supabase/realtime/*.md"]
+      }
+    }
+  }
+}
