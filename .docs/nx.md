@@ -24,6 +24,7 @@ operable program or batch file.
 ```bash
   npm install --save-dev @nx/react
 npx nx g @nx/react:application messenger-frontend --directory=apps/messenger/frontend
+npx nx g @nx/react:application dice-magic-frontend --directory=apps/dice-magic/frontend
 ```
 
 ### App - BACKEND - Express

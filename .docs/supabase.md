@@ -10,7 +10,6 @@
 ```basg
   npm install supabase --save-dev
   npm update supabase --save-dev
-
 ```
 
 ### Clean up before upgrading
