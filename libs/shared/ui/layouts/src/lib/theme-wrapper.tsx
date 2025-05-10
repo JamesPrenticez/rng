@@ -46,7 +46,7 @@ export const ThemeWrapper = ({
 
   return (
     <Container
-      style={{ display: 'contents' }}
+      // style={{ display: 'contents' }}
       className={`theme-${activeTheme}`}
     >
       {showSwitcher && <ThemeSwitcher handleSetTheme={handleSetTheme} />}

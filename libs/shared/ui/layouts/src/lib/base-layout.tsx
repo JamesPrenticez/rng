@@ -1,41 +1,23 @@
-import { PropsWithChildren, useMemo } from 'react';
+import { PropsWithChildren } from 'react';
 import { Themes, ThemeWrapper } from './theme-wrapper';
-import styled from '@emotion/styled';
-import { AspectRatioWrapper } from './use-aspect-ratio';
-
-const LayoutWrapper = styled.div`
-  font-size: 2.6rem;
-  color: var(--color-primary);
-  background-color: var(--color-background);
-  position: relative;
-  height: 100dvh;
-
-  box-sizing: border-box;
-  border: lime solid 1px;
-
-  /* main {
-
-  } */
-`;
+import { AspectRatioWrapper, useAspectRatioHandler } from './use-aspect-ratio';
 
 interface BaseLayoutProps extends PropsWithChildren {
   theme?: Themes;
   showSwitcher?: boolean;
-  isMobile: boolean;
 }
 
 export const BaseLayout = ({
   theme = Themes.GOLD,
   showSwitcher = false,
-  isMobile,
   children,
 }: BaseLayoutProps) => {
+  const { isVertical } = useAspectRatioHandler();
+
   return (
-    <AspectRatioWrapper isVertical={isMobile}>
+    <AspectRatioWrapper isVertical={isVertical}>
       <ThemeWrapper theme={theme} showSwitcher={showSwitcher}>
-        <LayoutWrapper>
-          <main>{children}</main>
-        </LayoutWrapper>
+        {children}
       </ThemeWrapper>
     </AspectRatioWrapper>
   );

@@ -7,13 +7,13 @@ import { useWindowSize } from './use-window-size';
 // We want update font size which in-turn effects the scaling of all other rem units in our app
 // We use "isVertical" as a js variable instead of using a hardcoded media query width
 
-export const useAspectRatioHandler = (): { isVertical: boolean } => {
+export const useAspectRatioHandler = () => {
   const [width, height] = useWindowSize();
   const isVertical = width < height;
 
   useEffect(() => {
     const fontSize = isVertical
-      ? 'calc((min(100vh, 932px) / 932) * 16)'
+      ? 'calc((min(100vh, 932px) / 932) * 10)'
       : `calc((min(100vw, ${(1920 / 1080) * 100}vh) / 1920) * 10)`;
 
     document.documentElement.style.fontSize = fontSize;
@@ -43,6 +43,8 @@ export const AspectRatioWrapper = styled.div<{
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center center;
+
+  border: red 1px solid;
 
   display: flex;
   flex-direction: column;
