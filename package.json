@@ -1,12 +1,13 @@
 {
-  "name": "buildflo",
+  "name": "dice-magic",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "all-games": "sh ./.config/run-many.sh lobby messenger timesheets",
+    "all-games": "sh ./.config/run-many.sh lobby messenger",
     "lobby": "mprocs -c ./.config/lobby.mprocs.yaml",
     "website": "mprocs -c ./.config/website.mprocs.yaml",
     "messenger": "mprocs -c ./.config/messenger.mprocs.yaml",
+    "dice-magic": "mprocs -c ./.config/dice-magic.mprocs.yaml",
     "swagger": "npx ts-node apps/lobby/backend/src/public/swagger.json"
   },
   "private": true,

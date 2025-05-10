@@ -32,6 +32,7 @@ npx nx g @nx/react:application dice-magic-frontend --directory=apps/dice-magic/f
 ```bash
 npx nx add @nx/express
 npx nx g @nx/express:app messenger-backend --directory=apps/messenger/backend
+npx nx g @nx/express:app dice-magic-backend --directory=apps/dice-magic/backend
 ```
 
 ### Libs
