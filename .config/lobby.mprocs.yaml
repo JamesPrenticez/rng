@@ -1,5 +1,0 @@
-procs:
-  'lobby:backend':
-    shell: 'nx serve lobby-backend'
-  'lobby:frontend':
-    shell: 'nx serve lobby-frontend'

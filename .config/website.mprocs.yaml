@@ -1,3 +1,0 @@
-procs:
-  'website:frontend':
-    shell: 'nx serve website-frontend'
