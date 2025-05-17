@@ -1,5 +1,5 @@
 import { WebSocketServer } from 'ws';
-import { createMockSession } from '@shared/websockets';
+import { createMockSession } from '@shared/websocket';
 import { BaseEvents } from '@shared/events';
 
 const PORT = 5201;

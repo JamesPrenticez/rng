@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { DiceMagicAppLayout } from './app/layouts/app-layout';
+import { DiceMagicAppLayout } from './layouts/app-layout';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
