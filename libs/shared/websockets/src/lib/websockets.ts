@@ -1,9 +1,8 @@
 import { User } from "@shared/models";
-import { v4 as uuidv4 } from 'uuid';
 
 export const createMockSession = (): User => {
   return {
-    id: uuidv4(),
+    id: "123",
     username: "mock-user",
     name: "jimmy",
     source: "mock",

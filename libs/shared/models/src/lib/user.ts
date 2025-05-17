@@ -8,3 +8,4 @@ export interface User {
   balance: number;
   currency: string;
 }
+

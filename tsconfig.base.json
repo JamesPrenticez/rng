@@ -21,12 +21,13 @@
     "baseUrl": ".",
     "paths": {
       "@shared/assets/styles": ["libs/shared/assets/styles"],
+      "@shared/contexts": ["libs/shared/ui/contexts/src/index.ts"],
       "@shared/events": ["libs/shared/events/src/index.ts"],
       "@shared/layouts": ["libs/shared/ui/layouts/src/index.ts"],
       "@shared/models": ["libs/shared/models/src/index.ts"],
-      "@shared/websocket": ["libs/shared/websocket/src/index.ts"],
       "@shared/stores": ["libs/shared/ui/stores/src/index.ts"],
-      "@shared/contexts": ["libs/shared/ui/contexts/src/index.ts"]
+      "@shared/websocket": ["libs/shared/websocket/src/index.ts"],
+      "@shared/websockets": ["libs/shared/websockets/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

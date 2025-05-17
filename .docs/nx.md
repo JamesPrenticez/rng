@@ -58,7 +58,7 @@ To generate a new Node library in the /libs/rgs directory we run:
   npx nx g @nx/node:library <your-lib-name> --directory=libs/shared/<your-lib-name>
   npx nx g @nx/node:library events --directory=libs/shared/events
   npx nx g @nx/node:library models --directory=libs/shared/events
-  npx nx g @nx/node:library websocket --directory=libs/shared/websocket
+  npx nx g @nx/node:library websockets --directory=libs/shared/websockets
 ```
 
 Once the 'libs/shared/your-lib-name' file structure has been generated go to the project.json file and update the "tags" property ie "tags": ["scope:shared"]
