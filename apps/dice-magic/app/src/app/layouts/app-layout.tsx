@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { BaseAppLayout, BaseGameLayout, Themes, useAspectRatioHandler } from '@shared/ui/layouts';
+import { BaseAppLayout, BaseGameLayout, Themes, useAspectRatioHandler } from '@shared/layouts';
 import { MobileAppLayout } from './app-layout-mobile';
 import { DesktopAppLayout } from './app-layout-desktop';
 import { useUserStore } from '@shared/stores';

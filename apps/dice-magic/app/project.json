@@ -1,23 +1,22 @@
 {
-  "name": "dice-magic-frontend",
+  "name": "dice-magic-app",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/dice-magic/frontend/src",
+  "sourceRoot": "apps/dice-magic/app/src",
   "projectType": "application",
   "tags": [
     "scope:dice-magic",
-    "app:dice-magic-frontend",
     "type:app",
-    "environment:production",
-    "environment:demo",
-    "environment:dev"
-  ],
+    "tier:frontend",
+    "environment:dev",
+    "environment:prod"
+],
   "targets": {
     "build": {
       "executor": "@nx/vite:build",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/dice-magic/frontend"
+        "outputPath": "dist/apps/dice-magic/app"
       },
       "configurations": {
         "development": {
@@ -32,28 +31,17 @@
       "executor": "@nx/vite:dev-server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "dice-magic-frontend:build"
+        "buildTarget": "dice-magic-app:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "dice-magic-frontend:build:development",
+          "buildTarget": "dice-magic-app:build:development",
           "hmr": true
         },
         "production": {
-          "buildTarget": "dice-magic-frontend:build:production",
+          "buildTarget": "dice-magic-app:build:production",
           "hmr": false
         }
-      }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint"
-    },
-    "typecheck": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": ["tsc -p tsconfig.app.json --noEmit --incremental"],
-        "cwd": "{projectRoot}",
-        "forwardAllArgs": false
       }
     },
     "preview": {
@@ -61,15 +49,26 @@
       "executor": "@nx/vite:preview-server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "dice-magic-frontend:build"
+        "buildTarget": "dice-magic-app:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "dice-magic-frontend:build:development"
+          "buildTarget": "dice-magic-app:build:development"
         },
         "production": {
-          "buildTarget": "dice-magic-frontend:build:production"
+          "buildTarget": "dice-magic-app:build:production"
         }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "app:build",
+        "spa": true
       }
     }
   }

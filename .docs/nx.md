@@ -23,8 +23,7 @@ operable program or batch file.
 
 ```bash
   npm install --save-dev @nx/react
-npx nx g @nx/react:application messenger-frontend --directory=apps/messenger/frontend
-npx nx g @nx/react:application dice-magic-frontend --directory=apps/dice-magic/frontend
+npx nx g @nx/react:application dice-magic-app --directory=apps/dice-magic/app
 ```
 
 ### App - BACKEND - Express
@@ -59,6 +58,7 @@ To generate a new Node library in the /libs/rgs directory we run:
   npx nx g @nx/node:library <your-lib-name> --directory=libs/shared/<your-lib-name>
   npx nx g @nx/node:library events --directory=libs/shared/events
   npx nx g @nx/node:library models --directory=libs/shared/events
+  npx nx g @nx/node:library websocket --directory=libs/shared/websocket
 ```
 
 Once the 'libs/shared/your-lib-name' file structure has been generated go to the project.json file and update the "tags" property ie "tags": ["scope:shared"]

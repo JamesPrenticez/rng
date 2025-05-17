@@ -6,8 +6,6 @@
   "tags": [
     "scope:dice-magic",
     "type:app",
-    "environment:production",
-    "environment:demo",
     "environment:dev",
     "environment:prod"
   ],

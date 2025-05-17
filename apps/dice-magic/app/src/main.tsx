@@ -1,4 +1,4 @@
-// import { StrictMode } from 'react';
+import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { DiceMagicAppLayout } from './app/layouts/app-layout';
 
@@ -7,7 +7,7 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  // <StrictMode>
+  <StrictMode>
     <DiceMagicAppLayout />
-  // </StrictMode>
+  </StrictMode>
 );

@@ -1,0 +1,20 @@
+{
+  "name": "websocket",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/websocket/src",
+  "projectType": "library",
+  "tags": ["scope:shared"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/shared/websocket",
+        "tsConfig": "libs/shared/websocket/tsconfig.lib.json",
+        "packageJson": "libs/shared/websocket/package.json",
+        "main": "libs/shared/websocket/src/index.ts",
+        "assets": ["libs/shared/websocket/*.md"]
+      }
+    }
+  }
+}
