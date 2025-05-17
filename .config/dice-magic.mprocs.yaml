@@ -1,5 +1,5 @@
 procs:
-  'dice-magic:backend':
-    shell: 'nx serve dice-magic-backend'
+  'dice-magic:server':
+    shell: 'nx serve dice-magic-server'
   'dice-magic:frontend':
     shell: 'nx serve dice-magic-frontend'

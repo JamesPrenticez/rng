@@ -1,11 +1,13 @@
-import styled from '@emotion/styled';
-import { PropsWithChildren, useMemo } from 'react';
-import { BaseLayout, Themes, useAspectRatioHandler } from '@shared/ui/layouts';
+import { useMemo } from 'react';
+import { BaseAppLayout, BaseGameLayout, Themes, useAspectRatioHandler } from '@shared/ui/layouts';
 import { MobileAppLayout } from './app-layout-mobile';
 import { DesktopAppLayout } from './app-layout-desktop';
+import { useUserStore } from '@shared/stores';
 
-export const AppLayout = () => {
+export const DiceMagicAppLayout = () => {
   const { isVertical } = useAspectRatioHandler();
+  const user = useUserStore((s) => s.user);
+  console.log(user)
 
   const render = useMemo(() => {
     if (isVertical) {
@@ -16,8 +18,10 @@ export const AppLayout = () => {
   }, [isVertical]);
 
   return (
-    <BaseLayout theme={Themes.GOLD} showSwitcher={true}>
-      {render}
-    </BaseLayout>
+    <BaseAppLayout>
+      <BaseGameLayout theme={Themes.GOLD} showSwitcher={true}>
+        {render}
+      </BaseGameLayout>
+    </BaseAppLayout>
   );
 };

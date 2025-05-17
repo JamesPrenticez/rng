@@ -4,7 +4,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  background-color: var(--color-primary);
+  font-size: 5rem;
+  color: var(--color-primary);
 `;
 
 export const DesktopAppLayout = () => {

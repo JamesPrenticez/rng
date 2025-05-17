@@ -33,6 +33,7 @@ npx nx g @nx/react:application dice-magic-frontend --directory=apps/dice-magic/f
 npx nx add @nx/express
 npx nx g @nx/express:app messenger-backend --directory=apps/messenger/backend
 npx nx g @nx/express:app dice-magic-backend --directory=apps/dice-magic/backend
+nx g @nx/node:application dice-magic-server --directory=apps/dice-magic/server
 ```
 
 ### Libs
@@ -42,7 +43,9 @@ npx nx g @nx/express:app dice-magic-backend --directory=apps/dice-magic/backend
 To generate a new React component library in the /libs directory we run:
 
 ```bash
-  npx nx g @nx/react:library <ie baccarat-components> --directory=libs/<ie baccarat>/ui/components
+  npx nx g @nx/react:library <your-lib-name> --directory=libs/shared/ui/<your-lib-name>
+  npx nx g @nx/react:library contexts --directory=libs/shared/ui/contexts
+  npx nx g @nx/react:library stores --directory=libs/shared/ui/stores
 ```
 
 Once the app has been generated go to the project.json file and update the "tags" property with the following:
@@ -54,6 +57,8 @@ To generate a new Node library in the /libs/rgs directory we run:
 
 ```bash
   npx nx g @nx/node:library <your-lib-name> --directory=libs/shared/<your-lib-name>
+  npx nx g @nx/node:library events --directory=libs/shared/events
+  npx nx g @nx/node:library models --directory=libs/shared/events
 ```
 
 Once the 'libs/shared/your-lib-name' file structure has been generated go to the project.json file and update the "tags" property ie "tags": ["scope:shared"]

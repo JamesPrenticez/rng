@@ -1,0 +1,65 @@
+{
+  "name": "dice-magic-server",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/dice-magic/server/src",
+  "projectType": "application",
+  "tags": [
+    "scope:dice-magic",
+    "type:app",
+    "environment:production",
+    "environment:demo",
+    "environment:dev",
+    "environment:prod"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/dice-magic/server",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/dice-magic/server/src/main.ts",
+        "tsConfig": "apps/dice-magic/server/tsconfig.app.json",
+        "assets": ["apps/dice-magic/server/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "dice-magic-server:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "dice-magic-server:build:development"
+        },
+        "production": {
+          "buildTarget": "dice-magic-server:build:production"
+        }
+      }
+    }
+  }
+}
