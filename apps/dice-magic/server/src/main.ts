@@ -1,46 +1,40 @@
-import { WebSocketServer } from 'ws';
+import { Server, Socket } from 'socket.io';
+import { createServer } from 'http';
 import { createMockSession } from '@shared/websocket';
-import { BaseEvents } from '@shared/events';
+import { BaseEvents, PasscodeAcceptedEvent, PasscodeRequiredEvent } from '@shared/events';
 
 const PORT = 5201;
-const wss = new WebSocketServer({ port: PORT });
 
-wss.on('connection', (ws) => {
-  console.log('[server] connection made');
+const httpServer = createServer();
+const io = new Server(httpServer, {
+  cors: {
+    origin: '*',
+  },
+});
+
+io.on('connection', (socket: Socket) => {
+  console.log('[server] Socket.IO connection made');
   const user = createMockSession();
-  console.log(user)
+  // console.log(user);
 
-  const send = (event: string, payload: any) => {
-    ws.send(JSON.stringify({ event, payload }));
-  };
+  socket.emit(BaseEvents.User, { payload: {user: user}, requireNameChange: false });
+  socket.emit(BaseEvents.Ready, {});
 
-  // Send session info
-  send(BaseEvents.User, { user, requireNameChange: false });
-
-  // Send "ready" if needed
-  send(BaseEvents.Ready, {});
-
-  ws.on('message', (msg) => {
-    try {
-      const data = JSON.parse(msg.toString());
-      console.log(`[server] Received: ${data.event}`, data.payload);
-
-      if (data.event === BaseEvents.PasscodeRequired) {
-        // do something
-      }
-
-      if (data.event === BaseEvents.PasscodeAccepted) {
-        send(BaseEvents.PasscodeAccepted, { success: true });
-      }
-
-    } catch (err) {
-      console.error('[server] Failed to parse message', err);
-    }
+  socket.on(BaseEvents.PasscodeRequired, (payload: PasscodeRequiredEvent['payload']) => {
+    console.log(`[server] Received ${BaseEvents.PasscodeRequired}`, payload);
+    // handle logic here
   });
 
-  ws.on('close', () => {
-    console.log(`[server] Connection closed for user ${user.id}`);
+  socket.on(BaseEvents.PasscodeAccepted, (payload: PasscodeAcceptedEvent['payload']) => {
+    console.log(`[server] Received ${BaseEvents.PasscodeAccepted}`, payload);
+    socket.emit(BaseEvents.PasscodeAccepted, { success: true });
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`[server] Socket.IO connection closed for user ${user.id}`);
   });
 });
 
-console.log(`[server] WebSocket server running on ws://localhost:${PORT}`);
+httpServer.listen(PORT, () => {
+  console.log(`[server] Socket.IO server running at http://localhost:${PORT}`);
+});

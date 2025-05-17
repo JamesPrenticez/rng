@@ -145,6 +145,7 @@ export const BaseAppProvider = ({ children }: BaseProviderProps) => {
 
     socket.on(BaseEvents.User, (userEvent: UserEvent) => {
       console.log("user")
+      console.log(userEvent)
       setUser(userEvent.payload.user);
 
       if (userEvent.payload.requireNameChange) {
