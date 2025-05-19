@@ -27,7 +27,8 @@
       "@shared/models": ["libs/shared/models/src/index.ts"],
       "@shared/stores": ["libs/shared/ui/stores/src/index.ts"],
       "@shared/websocket": ["libs/shared/websocket/src/index.ts"],
-      "@shared/websockets": ["libs/shared/websockets/src/index.ts"]
+      "@shared/websockets": ["libs/shared/websockets/src/index.ts"],
+      "@shared/demo-casino": ["libs/shared/ui/demo-casino/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

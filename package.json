@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "all-games": "sh ./.config/run-many.sh dice-magic",
-    "dice-magic": "mprocs -c ./.config/dice-magic.mprocs.yaml",
+    "dice": "mprocs -c ./.config/dice-magic.mprocs.yaml",
     "swagger": "npx ts-node apps/lobby/backend/src/public/swagger.json"
   },
   "engines": {

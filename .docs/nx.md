@@ -45,6 +45,7 @@ To generate a new React component library in the /libs directory we run:
   npx nx g @nx/react:library <your-lib-name> --directory=libs/shared/ui/<your-lib-name>
   npx nx g @nx/react:library contexts --directory=libs/shared/ui/contexts
   npx nx g @nx/react:library stores --directory=libs/shared/ui/stores
+  npx nx g @nx/react:library demo-casino --directory=libs/shared/ui/demo-casino
 ```
 
 Once the app has been generated go to the project.json file and update the "tags" property with the following:
