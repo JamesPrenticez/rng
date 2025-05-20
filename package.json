@@ -5,6 +5,7 @@
   "scripts": {
     "all-games": "sh ./.config/run-many.sh dice-magic",
     "dice": "mprocs -c ./.config/dice-magic.mprocs.yaml",
+    "components": "mprocs -c ./.config/component-library.mprocs.yaml",
     "swagger": "npx ts-node apps/lobby/backend/src/public/swagger.json"
   },
   "engines": {

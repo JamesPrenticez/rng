@@ -6,13 +6,13 @@ import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 
 export default defineConfig({
   root: __dirname,
-  cacheDir: '../../../node_modules/.vite/apps/dice-magic/app',
+  cacheDir: '../../../node_modules/.vite/apps/component-library/app',
   server: {
-    port: 4201,
+    port: 4200,
     host: 'localhost',
   },
   preview: {
-    port: 4301,
+    port: 4300,
     host: 'localhost',
   },
   plugins: [react(), nxViteTsPaths(), nxCopyAssetsPlugin(['*.md'])],
@@ -21,7 +21,7 @@ export default defineConfig({
   //  plugins: [ nxViteTsPaths() ],
   // },
   build: {
-    outDir: '../../../dist/apps/dice-magic/app',
+    outDir: '../../../dist/apps/component-library/app',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {

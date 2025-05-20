@@ -39,8 +39,7 @@ const Header = styled.div`
   box-sizing: border-box;
   width: 100vw;
   height: ${HEADER_HEIGHT}px;
-  background-color: red;
-  border-bottom: 1px solid #242424;
+  border-bottom: silver 1px solid;
 
   padding: 0px 40px;
 
@@ -51,19 +50,21 @@ const Header = styled.div`
     justify-content: center;
     padding: 0px 10px;
   }
-  `;
+`;
 
 interface DemoCasinoProps {
-  app: "dice-magic" | null;
+  app: 'dice-magic' | null;
 }
 
-export const DemoCasino = ({app}: DemoCasinoProps ) => {
+export const DemoCasino = ({ app }: DemoCasinoProps) => {
   const mobile = useAspectRatioHandler();
-  const [gameUrl, setGameUrl] = useState("http://localhost:4200/");
+  const [gameUrl, setGameUrl] = useState('http://localhost:4200/');
 
   return (
     <Conatiner className={clsx({ mobile })}>
-      <Header />
+      <Header>
+        
+      </Header>
       {gameUrl && <iframe src={gameUrl} title="Game Studio" />}
     </Conatiner>
   );

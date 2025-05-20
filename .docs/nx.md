@@ -22,8 +22,9 @@ operable program or batch file.
 (React Tutorial)[https://nx.dev/getting-started/tutorials/react-monorepo-tutorial]
 
 ```bash
-  npm install --save-dev @nx/react
+npm install --save-dev @nx/react
 npx nx g @nx/react:application dice-magic-app --directory=apps/dice-magic/app
+npx nx g @nx/react:application comoponent-library --directory=apps/component-library/app
 ```
 
 ### App - BACKEND - Express
@@ -31,7 +32,10 @@ npx nx g @nx/react:application dice-magic-app --directory=apps/dice-magic/app
 ```bash
 npx nx add @nx/express
 npx nx g @nx/express:app messenger-backend --directory=apps/messenger/backend
-npx nx g @nx/express:app dice-magic-backend --directory=apps/dice-magic/backend
+```
+
+### App - BACKEND - Vanilla Node
+```bash
 nx g @nx/node:application dice-magic-server --directory=apps/dice-magic/server
 ```
 
@@ -43,6 +47,7 @@ To generate a new React component library in the /libs directory we run:
 
 ```bash
   npx nx g @nx/react:library <your-lib-name> --directory=libs/shared/ui/<your-lib-name>
+  npx nx g @nx/react:library components --directory=libs/shared/ui/components
   npx nx g @nx/react:library contexts --directory=libs/shared/ui/contexts
   npx nx g @nx/react:library stores --directory=libs/shared/ui/stores
   npx nx g @nx/react:library demo-casino --directory=libs/shared/ui/demo-casino

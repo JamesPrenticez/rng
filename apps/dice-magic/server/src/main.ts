@@ -3,7 +3,7 @@ import { createServer } from 'http';
 import { createMockSession } from '@shared/websocket';
 import { BaseEvents, PasscodeAcceptedEvent, PasscodeRequiredEvent } from '@shared/events';
 
-const PORT = 5201;
+const PORT = 3201;
 
 const httpServer = createServer();
 const io = new Server(httpServer, {
