@@ -1,12 +1,13 @@
 import { PropsWithChildren, useState } from 'react';
 
-import '@shared/assets/styles/colors.css';
-import '@shared/assets/styles/globals.css';
-import '@shared/assets/styles/preflight.css';
-import '@shared/assets/styles/theme-gold.css';
-import '@shared/assets/styles/theme-blue.css';
-import '@shared/assets/styles/theme-green.css';
-import '@shared/assets/styles/fonts.css';
+import './styles/preflight.css'
+import './styles/globals.css'
+import './styles/fonts.css'
+import './styles/colors.css'
+import './styles/theme-blue.css'
+import './styles/theme-gold.css'
+import './styles/theme-green.css'
+import './styles/theme-purple.css'
 
 import styled from '@emotion/styled';
 import { ThemeSwitcher } from './theme-switcher';
@@ -22,6 +23,7 @@ export enum Themes {
   GOLD = 'gold',
   BLUE = 'blue',
   GREEN = 'green',
+  PURPLE = 'purple',
 }
 
 export interface Theme {
@@ -46,7 +48,6 @@ export const ThemeWrapper = ({
 
   return (
     <Container
-      // style={{ display: 'contents' }}
       className={`theme-${activeTheme}`}
     >
       {showSwitcher && <ThemeSwitcher handleSetTheme={handleSetTheme} />}

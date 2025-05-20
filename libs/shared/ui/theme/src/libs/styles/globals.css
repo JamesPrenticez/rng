@@ -4,8 +4,8 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: #dadada;
-  background-color: #111815;
+  color: #151515;
+  background-color: #dadada;
 
   font-synthesis: none;
 
@@ -17,9 +17,6 @@
 html,
 body,
 #root {
-  /* font-size: 10px;  */
-  /* This is important to set the rem units of our site */
-  /* min-height: 100vh; */
   display: flex;
   flex-direction: column;
 }
@@ -30,6 +27,7 @@ a:hover,
 a:active {
   all: unset;
 }
+
 /* a {
   all: unset;
   color: lime;

@@ -3,6 +3,13 @@
   /* COlORS
 /* *************************************************** */
   /* Green */
+  --color-purple-100-opacity: 167, 79, 249;   /* #A74FF9 */
+  --color-purple-80-opacity: 116, 77, 255;    /* #744DFF */
+  --color-purple-60-opacity: 192, 128, 251;   /* #C080FB */
+  --color-purple-40-opacity: 255, 107, 235;   /* #FF6BEB */
+  --color-purple-20-opacity: 242, 164, 242;   /* #F2A4F2 */
+
+  /* Green */
   --color-green-100-opacity: 34, 139, 34; /* #228B22 */
   --color-green-80-opacity: 50, 205, 50; /* #32CD32 */
   --color-green-60-opacity: 77, 218, 77; /* #4DDA4D */
@@ -54,12 +61,12 @@
 
   /* Black */
   --color-black-100-opacity: 0, 0, 0; /*#000000;*/
+  --color-black-90-opacity: 9, 9, 10; /*#09090A;*/
   --color-black-80-opacity: 13, 13, 13; /*#0d0d0d;*/
   --color-black-70-opacity: 18, 18, 18; /*#121212;*/
   --color-black-60-opacity: 21, 21, 21; /*#151515;*/
   --color-black-40-opacity: 32, 32, 32; /*#202020;*/
   --color-black-20-opacity: 44, 44, 44; /*#2c2c2c;*/
-
   /* *************************************************** */
   /* OTHER
 /* *************************************************** */
@@ -71,7 +78,14 @@
 }
 
 :root {
-  /* Blue */
+  /* Purple */
+  --color-purple-100: rgb(var(--color-purple-100-opacity));
+  --color-purple-80: rgb(var(--color-purple-80-opacity));
+  --color-purple-60: rgb(var(--color-purple-60-opacity));
+  --color-purple-40: rgb(var(--color-purple-40-opacity));
+  --color-purple-20: rgb(var(--color-purple-20-opacity));
+
+  /* Green */
   --color-green-100: rgb(var(--color-green-100-opacity));
   --color-green-80: rgb(var(--color-green-80-opacity));
   --color-green-60: rgb(var(--color-green-60-opacity));

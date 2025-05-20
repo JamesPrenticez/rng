@@ -7,7 +7,7 @@ import { useWindowSize } from './use-window-size';
 // We want update font size which in-turn effects the scaling of all other rem units in our app
 // We use "isVertical" as a js variable instead of using a hardcoded media query width
 
-export const useAspectRatioHandler = () => {
+export const useAspectRatio = () => {
   const [width, height] = useWindowSize();
   const isVertical = width < height;
 

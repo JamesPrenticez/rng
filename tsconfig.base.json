@@ -28,7 +28,8 @@
       "@shared/layouts": ["libs/shared/ui/layouts/src/index.ts"],
       "@shared/models": ["libs/shared/models/src/index.ts"],
       "@shared/stores": ["libs/shared/ui/stores/src/index.ts"],
-      "@shared/websocket": ["libs/shared/websocket/src/index.ts"]
+      "@shared/websocket": ["libs/shared/websocket/src/index.ts"],
+      "@shared/theme": ["libs/shared/ui/theme/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

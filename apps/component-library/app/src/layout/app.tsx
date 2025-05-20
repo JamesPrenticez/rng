@@ -1,15 +1,27 @@
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
+import { useAspectRatio } from '@shared/layouts';
+import { Themes, ThemeWrapper } from '@shared/theme';
 
 const Container = styled.div`
-  min-height: 100dhv;
-`
+  min-height: 100dvh;
+  background-color: var(--color-background);
 
-// It is very important to understand that this app is use to DISPLAY ONLY the components from shared. 
-// It is NOT a place to build new components
+  h1 {
+    font-family: 'Manuka', sans-serif;
+    color: var(--color-primary);
+    font-size: 5rem;
+    font-weight: 900;
+  }
+`;
+
 export const AppLayoutComponentLibrary = () => {
+  useAspectRatio();
+
   return (
-    <Container>
-      <h1>Component Library</h1>
-    </Container>
-  )
-}
+    <ThemeWrapper theme={Themes.PURPLE} showSwitcher>
+      <Container>
+        <h1>Component Library Dice Magic</h1>
+      </Container>
+    </ThemeWrapper>
+  );
+};

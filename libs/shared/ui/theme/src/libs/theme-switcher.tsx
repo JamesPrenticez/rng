@@ -1,9 +1,6 @@
 import styled from '@emotion/styled';
 import { Themes } from './theme-wrapper';
 
-import '../styles/fonts.css';
-import '../styles/globals.css';
-
 const Container = styled.div`
   position: absolute;
   bottom: 0.5rem;

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import clsx from 'clsx';
-import { useAspectRatioHandler } from '@shared/layouts';
+import { useAspectRatio } from '@shared/layouts';
 
 const HEADER_HEIGHT = 60;
 
@@ -12,7 +12,7 @@ const MIN = `
 const Conatiner = styled.div`
   height: 100dvh;
   box-sizing: border-box;
-  background-color: #09090a;
+  background-color: var(--color-black-90);
   overflow: hidden;
   border: lime 1px solid;
 
@@ -57,7 +57,7 @@ interface DemoCasinoProps {
 }
 
 export const DemoCasino = ({ app }: DemoCasinoProps) => {
-  const mobile = useAspectRatioHandler();
+  const mobile = useAspectRatio();
   const [gameUrl, setGameUrl] = useState('http://localhost:4200/');
 
   return (
