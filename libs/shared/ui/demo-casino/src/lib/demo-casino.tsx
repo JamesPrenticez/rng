@@ -9,12 +9,14 @@ const MIN = `
             min(calc(100vw - ${HEADER_HEIGHT * 2}px),
             calc(177vh - ${HEADER_HEIGHT * 4}px))`;
 
-const Conatiner = styled.div`
-  height: 100dvh;
+const Container = styled.div`
   box-sizing: border-box;
-  background-color: var(--color-black-90);
-  overflow: hidden;
+
+  background-color: #09090a;
   border: lime 1px solid;
+  height: 100dvh;
+
+  overflow: hidden;
 
   iframe {
     box-sizing: border-box;
@@ -23,7 +25,7 @@ const Conatiner = styled.div`
     height: calc((1080 / 1920) * ${MIN});
   }
 
-  &.mobile {
+  &.moible {
     iframe {
       margin: 0px;
       box-sizing: border-box;
@@ -39,11 +41,14 @@ const Header = styled.div`
   box-sizing: border-box;
   width: 100vw;
   height: ${HEADER_HEIGHT}px;
+
+  font-size: 4rem;
+  font-family: 'Aronui';
+  color: var(--color-primary);
+  background-color: var(--color-black-20);
   border-bottom: silver 1px solid;
 
-  padding: 0px 40px;
-
-  font-family: 'Chakra Petch';
+  padding: 0rem 1rem;
 
   &.mobile {
     align-items: center;
@@ -58,14 +63,12 @@ interface DemoCasinoProps {
 
 export const DemoCasino = ({ app }: DemoCasinoProps) => {
   const mobile = useAspectRatio();
-  const [gameUrl, setGameUrl] = useState('http://localhost:4200/');
+  const [gameUrl, setGameUrl] = useState('http://localhost:4202/'); // TODO update for different apps
 
   return (
-    <Conatiner className={clsx({ mobile })}>
-      <Header>
-        
-      </Header>
+    <Container className={clsx({ mobile })}>
+      <Header>Demo Casino</Header>
       {gameUrl && <iframe src={gameUrl} title="Game Studio" />}
-    </Conatiner>
+    </Container>
   );
 };

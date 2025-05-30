@@ -20,7 +20,11 @@
     "noPropertyAccessFromIndexSignature": false,
     "baseUrl": ".",
     "paths": {
-      "@shared/assets/styles": ["libs/shared/assets/styles"],
+      "@shared/assets/audio/*": ["libs/shared/assets/audio/*"],
+      "@shared/assets/fonts/*": ["libs/shared/assets/fonts/*"],
+      "@shared/assets/styles/*": ["libs/shared/assets/styles/*"],
+      "@shared/assets/images/*": ["libs/shared/assets/images/*"],
+      
       "@shared/components": ["libs/shared/ui/components/src/index.ts"],
       "@shared/contexts": ["libs/shared/ui/contexts/src/index.ts"],
       "@shared/demo-casino": ["libs/shared/ui/demo-casino/src/index.ts"],

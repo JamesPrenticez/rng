@@ -141,4 +141,5 @@
   --color-black-70: rgb(var(--color-black-70-opacity));
   --color-black-60: rgb(var(--color-black-60-opacity));
   --color-black-40: rgb(var(--color-black-40-opacity));
+  --color-black-20: rgb(var(--color-black-20-opacity));
 }

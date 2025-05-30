@@ -6,6 +6,7 @@ const Container = styled.div`
   flex-grow: 1;
   font-size: 5rem;
   color: var(--color-primary);
+  background-color: var(--color-background);
 `;
 
 export const DesktopAppLayout = () => {

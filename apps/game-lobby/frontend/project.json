@@ -1,0 +1,77 @@
+{
+    "name": "game-lobby-frontend",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "apps/game-lobby/frontend/src",
+    "projectType": "application",
+    "tags": [
+        "scope:game-lobby",
+        "app:game-lobby-frontend",
+        "type:app",
+        "tier:frontend",
+        "environment:production",
+        "environment:demo",
+        "environment:prod",
+        "environment:dev"
+    ],
+    "targets": {
+        "build": {
+            "executor": "@nx/vite:build",
+            "outputs": ["{options.outputPath}"],
+            "defaultConfiguration": "production",
+            "options": {
+                "outputPath": "dist/apps/game-lobby/frontend"
+            },
+            "configurations": {
+                "development": {
+                    "mode": "development"
+                },
+                "production": {
+                    "mode": "production"
+                }
+            }
+        },
+        "serve": {
+            "executor": "@nx/vite:dev-server",
+            "defaultConfiguration": "development",
+            "options": {
+                "buildTarget": "game-lobby-frontend:build"
+            },
+            "configurations": {
+                "development": {
+                    "buildTarget": "game-lobby-frontend:build:development",
+                    "hmr": true
+                },
+                "production": {
+                    "buildTarget": "game-lobby-frontend:build:production",
+                    "hmr": false
+                }
+            }
+        },
+        "lint": {},
+        "lint:fix": {},
+        "typecheck": {},
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+            "options": {
+                "jestConfig": "apps/game-lobby/frontend/jest.config.ts"
+            }
+        },
+        "preview": {
+            "dependsOn": ["build"],
+            "executor": "@nx/vite:preview-server",
+            "defaultConfiguration": "development",
+            "options": {
+                "buildTarget": "game-lobby-frontend:build"
+            },
+            "configurations": {
+                "development": {
+                    "buildTarget": "game-lobby-frontend:build:development"
+                },
+                "production": {
+                    "buildTarget": "game-lobby-frontend:build:production"
+                }
+            }
+        }
+    }
+}

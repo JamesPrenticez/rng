@@ -1,14 +1,5 @@
 import { PropsWithChildren, useState } from 'react';
 
-import './styles/preflight.css'
-import './styles/globals.css'
-import './styles/fonts.css'
-import './styles/colors.css'
-import './styles/theme-blue.css'
-import './styles/theme-gold.css'
-import './styles/theme-green.css'
-import './styles/theme-purple.css'
-
 import styled from '@emotion/styled';
 import { ThemeSwitcher } from './theme-switcher';
 

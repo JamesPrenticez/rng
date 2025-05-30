@@ -16,9 +16,9 @@
         "outputPath": "dist/libs/shared/ui/theme",
         "assets": [
           {
-            "input": "assets/fonts",
+            "input": "libs/shared/ui/theme/assets",
             "glob": "**/*",
-            "output": "assets/fonts"
+            "output": "assets/"
           }
         ]
       },

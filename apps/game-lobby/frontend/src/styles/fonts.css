@@ -1,0 +1,39 @@
+/* Aux Mono */
+/* Normal - 400 */
+@font-face {
+    font-family: "Aux Mono";
+    src: url("../assets/fonts/aux-mono-normal.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Enduro */
+/* Normal - 400 */
+@font-face {
+    font-family: "Enduro";
+    src: url("../assets/fonts/enduro-normal.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Enduro Narrow */
+/* Normal - 400 */
+@font-face {
+    font-family: "Enduro";
+    src: url("../assets/fonts/enduro-narrow-normal.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Manuka */
+/* Black - 900 */
+@font-face {
+    font-family: "Manuka";
+    src: url("../assets/fonts/manuka-black.woff") format("woff");
+    font-weight: black;
+    font-style: normal;
+    font-display: swap;
+}

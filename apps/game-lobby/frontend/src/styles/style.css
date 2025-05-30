@@ -1,0 +1,15 @@
+:root {
+    --bj-premium-color: #ffd29e;
+    --bj-premium-background: #110904;
+
+    --roulette-color: #93c2e8;
+    --roulette-background: #041020;
+
+    --lobby-color: #404040;
+    --lobby-background: #090909;
+
+    --mobile-base-width: 1080;
+    --mobile-multiplier: 100vw;
+
+    --mobile-font-size: calc((100vw / 1080) * 10);
+}
