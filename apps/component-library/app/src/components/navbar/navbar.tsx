@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import LogoSVG from '../../assets/logo.svg?react';
+import { Title } from '@shared/components';
 
 const Container = styled.div`
   display: flex;
@@ -15,13 +16,6 @@ const Container = styled.div`
       height: 4rem;
     }
   }
-
-  .title {
-    font-family: 'Orbitron', monospace;
-    color: var(--color-white-80);
-    font-size: 2.8rem;
-    letter-spacing: 0.2rem;
-  }
 `;
 
 export const Navbar = () => {
@@ -31,7 +25,7 @@ export const Navbar = () => {
         <LogoSVG />
       </div>
 
-      <div className="title">Orbit — Component Library</div>
+      <Title>Orbit</Title>
     </Container>
   );
 };

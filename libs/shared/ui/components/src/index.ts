@@ -1,1 +1,2 @@
-export * from './lib/components';
+export * from './lib/button';
+export * from './lib/typography.title';
