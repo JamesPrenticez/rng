@@ -1,22 +1,22 @@
-import styled from '@emotion/styled';
 import clsx from 'clsx';
+import styled from '@emotion/styled';
+import { forwardRef } from 'react';
 
-const ButtonContainer = styled.button`
-  width: fit-content;
-
+const InputContainer = styled.input`
   border-radius: 0.8rem;
   border: solid 0.2rem;
   box-sizing: border-box;
-  padding: 0.5rem 1.5rem;
+  padding: 0.5rem 1rem;
   outline: none;
+  transition: all 300ms ease;
+  z-index: 50;
+  width: 100%;
 
   font-size: 3rem;
   line-height: 4.44rem;
   padding: 1rem 1rem;
   margin: 1rem 0rem;
   font-weight: 600;
-
-  transition: all 300ms ease;
 
   &.mobile {
     font-size: 2rem;
@@ -37,25 +37,15 @@ const ButtonContainer = styled.button`
       border-color: var(--color-primary);
     }
 
+    :focus-visible {
+      border-color: var(--color-primary);
+    }
+
     :disabled {
       color: var(--color-dark-grey-80);
       border-color: var(--color-grey-80);
       background-color: var(--color-grey-60);
     }
-  }
-
-  &.filled {
-    background-color: red;
-  }
-
-  &.outlined {
-    border-color: red;
-  }
-
-  &.link {
-    background: none;
-    color: purple;
-    text-decoration: underline;
   }
 
   &.form {
@@ -72,7 +62,17 @@ const ButtonContainer = styled.button`
     }
   }
 
-  &.skeleton {
+  &.form {
+    color: var(--color-text);
+    background-color: rgba(var(--color-secondary-opacity), 0.2);
+    border-color: var(--color-text);
+
+    :focus {
+      border-color: var(--color-accent);
+    }
+  }
+
+    &.skeleton {
     color: var(--color-secondary);
     background-color: transparent;
     border: none;
@@ -90,9 +90,10 @@ const ButtonContainer = styled.button`
       border-color: var(--color-primary);
     }
   }
+
 `;
 
-export enum ButtonVariants {
+export enum InputVariants {
   DEFAULT = 'default',
   OUTLINED = 'primary',
   FILLED = 'secondary',
@@ -101,25 +102,23 @@ export enum ButtonVariants {
   SKELETON = 'skeleton'
 }
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariants;
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  variant?: InputVariants;
   isMobile?: boolean;
 }
 
-export const Button = ({
-  variant = ButtonVariants.DEFAULT,
-  children,
-  onClick,
-  isMobile,
-  ...rest
-}: ButtonProps) => {
-  return (
-    <ButtonContainer
-      className={clsx(variant, { mobile: isMobile })}
-      onClick={onClick}
-      {...rest}
-    >
-      {children}
-    </ButtonContainer>
-  );
-};
+export const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ variant = InputVariants.DEFAULT, isMobile, ...rest }, ref) => {
+    return (
+      <InputContainer
+        className={clsx(variant, {
+          mobile: isMobile,
+        })}
+        ref={ref}
+        {...rest}
+      />
+    );
+  }
+);
+
+Input.displayName = 'Input';
