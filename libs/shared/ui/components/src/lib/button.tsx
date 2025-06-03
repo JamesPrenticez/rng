@@ -2,6 +2,8 @@ import styled from '@emotion/styled';
 import clsx from 'clsx';
 
 const ButtonContainer = styled.button`
+  width: fit-content;
+
   border-radius: 0.8rem;
   border: solid 0.2rem;
   box-sizing: border-box;
@@ -34,6 +36,12 @@ const ButtonContainer = styled.button`
       background-color: var(--color-background);
       border-color: var(--color-primary);
     }
+
+    :disabled {
+      color: var(--color-dark-grey-80);
+      border-color: var(--color-grey-80);
+      background-color: var(--color-grey-60);
+    }
   }
 
   &.primary {
@@ -58,7 +66,6 @@ const ButtonContainer = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
     color: var(--color-text);
     background-color: rgba(var(--color-secondary-opacity), 0.5);
 
@@ -69,7 +76,7 @@ const ButtonContainer = styled.button`
     }
   }
 
-  &.inviz {
+  &.skeleton {
     color: var(--color-secondary);
     background-color: transparent;
     border: none;
@@ -95,6 +102,7 @@ export enum ButtonVariants {
   FILLED = 'secondary',
   LINK = 'link',
   FORM = 'form',
+  SKELETON = 'skeleton'
 }
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -113,6 +121,7 @@ export const Button = ({
     <ButtonContainer
       className={clsx(variant, { mobile: isMobile })}
       onClick={onClick}
+      {...rest}
     >
       {children}
     </ButtonContainer>

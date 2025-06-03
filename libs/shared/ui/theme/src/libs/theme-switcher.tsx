@@ -3,13 +3,16 @@ import { Themes } from './theme-wrapper';
 
 const Container = styled.div`
   position: absolute;
-  bottom: 0.5rem;
-  right: 0.5rem;
+  top: 3rem; /* half of 6rem navbar height */
+  transform: translateY(-50%);
+  right: 2rem;
   z-index: 9999;
+
   display: flex;
   align-items: center;
   padding: 0.8rem;
   border-radius: 8rem;
+  transform-origin: center;
 
   gap: 0.4rem;
   background-color: rgba(var(--color-white-20-opacity), 0.5);

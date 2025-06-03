@@ -10,7 +10,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
-  background-color: var(--color-black-40);
+  background-color: var(--color-background);
 
   .row {
     display: flex;
@@ -21,6 +21,8 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    height: calc(100dvh - 6rem); // deduct height of navnar
+    overflow-y: auto;
     background-color: var(--color-black-20);
     border-radius: 0.5rem;
 
