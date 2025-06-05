@@ -50,7 +50,7 @@ To generate a new React component library in the /libs directory we run:
   npx nx g @nx/react:library components --directory=libs/shared/ui/components
   npx nx g @nx/react:library contexts --directory=libs/shared/ui/contexts
   npx nx g @nx/react:library stores --directory=libs/shared/ui/stores
-  npx nx g @nx/react:library demo-casino --directory=libs/shared/ui/demo-casino
+  npx nx g @nx/react:library demo-casino --directory=libs/shared/ui/demo-casino < this is not suppose to be buildable
   npx nx g @nx/react:library theme --directory=libs/shared/ui/theme
 ```
 
@@ -65,6 +65,7 @@ To generate a new Node library in the /libs/rgs directory we run:
   npx nx g @nx/node:library <your-lib-name> --directory=libs/shared/<your-lib-name>
   npx nx g @nx/node:library events --directory=libs/shared/events
   npx nx g @nx/node:library models --directory=libs/shared/events
+  npx nx g @nx/node:library utils --directory=libs/shared/utils
   npx nx g @nx/node:library websockets --directory=libs/shared/websockets
 ```
 

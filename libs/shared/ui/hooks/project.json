@@ -1,9 +1,9 @@
 {
-  "name": "layouts",
+  "name": "hooks",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/shared/ui/layouts/src",
+  "sourceRoot": "libs/shared/ui/hooks/src",
   "projectType": "library",
-    "tags": ["scope:shared", "type:ui"],
+    "tags": ["scope:shared"],
     "targets": {
         "lint": {},
         "typecheck": {},

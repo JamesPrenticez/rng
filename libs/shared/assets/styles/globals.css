@@ -28,6 +28,31 @@ a:active {
   all: unset;
 }
 
+@media only screen {
+    html,
+    body {
+        font-size: calc((min(100vw, (1920 / 1080) * 100vh) / 1920) * 10);
+    }
+}
+
+@media only screen and (max-width: 768px) and (orientation: portrait) {
+    html,
+    body {
+        font-size: var(
+            --mobile-font-size,
+            calc(
+                (
+                    min(
+                        var(--mobile-multiplier, 100vh),
+                        (var(--mobile-base-width, 932) * 1px)
+                    ) /
+                    var(--mobile-base-width, 932)
+                ) *
+                10
+            )
+        );
+    }
+}
 /* a {
   all: unset;
   color: lime;

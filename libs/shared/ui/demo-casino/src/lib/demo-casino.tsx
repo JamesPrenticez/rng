@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { type FormEvent, useMemo, useState } from 'react';
 import clsx from 'clsx';
-import { useAspectRatio } from '@shared/layouts';
+import type { APP, GAME } from '@shared/models';
+import { useAspectRatio } from '@shared/hooks';
+import { getSessionUrl } from './get-session-url';
+import { createRandomUsername, CURRENCIES, CURRENCY_MAP } from '@shared/utils';
 
 const HEADER_HEIGHT = 60;
 
@@ -17,6 +20,10 @@ const Container = styled.div`
   height: 100dvh;
 
   overflow: hidden;
+
+  form {
+    display: flex;
+  }
 
   iframe {
     box-sizing: border-box;
@@ -58,16 +65,126 @@ const Header = styled.div`
 `;
 
 interface DemoCasinoProps {
-  app: 'dice-magic' | null;
+  app: APP | GAME;
 }
 
 export const DemoCasino = ({ app }: DemoCasinoProps) => {
-  const mobile = useAspectRatio();
-  const [gameUrl, setGameUrl] = useState('http://localhost:4202/'); // TODO update for different apps
+  const isMobile = useAspectRatio();
+  // const [gameUrl, setGameUrl] = useState('http://localhost:4202/'); // TODO update for different apps
+  const [gameUrl, setGameUrl] = useState(
+      localStorage.getItem(`${app}_demo_casino_url`)
+  );
 
+  const randomName = () => {
+    setForm((p) => ({ ...p, username: createRandomUsername() }));
+  };
+
+  const [form, setForm] = useState<{
+    username: string;
+    credits: number;
+    currency: string;
+    nicknamePrompt: boolean;
+  }>({
+    username:
+      localStorage.getItem(`${app}_demo_casino_username`) ||
+      createRandomUsername(2, 999),
+    credits: 10000,
+    currency: 'USD',
+    nicknamePrompt: false,
+  });
+
+  const updateUser = (e: FormEvent) => {
+    e.preventDefault();
+    const data = getSessionUrl(
+      form.username,
+      form.credits,
+      form.currency,
+      form.nicknamePrompt
+    );
+    localStorage.setItem(`${app}_demo_casino_url`, data.url);
+    localStorage.setItem(`${app}_demo_casino_session`, data.token);
+    localStorage.setItem(`${app}_demo_casino_username`, form.username);
+
+    setGameUrl(data.url);
+  };
+
+  const updateForm = (
+    field: 'username' | 'credits' | 'currency' | 'nicknamePrompt'
+  ) => {
+    const getValue = (target: HTMLInputElement | HTMLSelectElement) => {
+      switch (field) {
+        case 'username':
+        case 'currency':
+          return target.value;
+        case 'credits':
+          return +target.value;
+        case 'nicknamePrompt':
+          return true;
+      }
+    };
+    return (e: FormEvent<HTMLInputElement | HTMLSelectElement>) => {
+      if (field !== 'nicknamePrompt') e.preventDefault();
+
+      const value = getValue(e.currentTarget);
+
+      setForm((prev) => {
+        return {
+          ...prev,
+          [field]: field === 'nicknamePrompt' ? !prev.nicknamePrompt : value,
+        };
+      });
+    };
+  };
+
+  const symbol = useMemo(() => {
+    return CURRENCY_MAP[form.currency as keyof typeof CURRENCY_MAP].symbol;
+  }, [form.currency]);
+
+  console.log(gameUrl)
   return (
-    <Container className={clsx({ mobile })}>
-      <Header>Demo Casino</Header>
+    <Container className={clsx({ mobile: isMobile })}>
+      <Header>
+        Demo Casino
+        <form onSubmit={updateUser}>
+          <div className="group">
+            <input
+              type="text"
+              placeholder="username"
+              value={form.username}
+              onChange={updateForm('username')}
+            />
+            <button className={'random-name'} onClick={randomName}>
+              ?
+            </button>
+          </div>
+          <div className="group">
+            <div className="currency-symbol">{symbol}</div>
+            <input
+              type="text"
+              placeholder="credits"
+              value={form.credits}
+              onChange={updateForm('credits')}
+            />
+          </div>
+          <select value={form.currency} onChange={updateForm('currency')}>
+            {CURRENCIES.map((cur) => (
+              <option key={cur.value} value={cur.value} label={cur.label} />
+            ))}
+          </select>
+          <div className="nickname-prompt">
+            <input
+              id="nickname-prompt"
+              name="nickname-prompt"
+              type="checkbox"
+              checked={form.nicknamePrompt}
+              value="nicknamePrompt"
+              onChange={updateForm('nicknamePrompt')}
+            />
+            <label htmlFor="nickname-prompt">Nickname Prompt</label>
+          </div>
+          <input type="submit" value="Update" />
+        </form>
+      </Header>
       {gameUrl && <iframe src={gameUrl} title="Game Studio" />}
     </Container>
   );

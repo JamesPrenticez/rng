@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 import { Themes, ThemeWrapper } from '@shared/theme';
-import { AspectRatioWrapper, useAspectRatio } from './use-aspect-ratio';
+import { AspectRatioWrapper } from '@shared/hooks';
 
 interface BaseLayoutProps extends PropsWithChildren {
   theme?: Themes;
@@ -12,10 +12,9 @@ export const BaseGameLayout = ({
   showSwitcher = false,
   children,
 }: BaseLayoutProps) => {
-  const { isVertical } = useAspectRatio();
 
   return (
-    <AspectRatioWrapper isVertical={isVertical}>
+    <AspectRatioWrapper>
       <ThemeWrapper theme={theme} showSwitcher={showSwitcher}>
         {children}
       </ThemeWrapper>
