@@ -1,5 +1,6 @@
 import styled from "@emotion/styled"
-import { Button, ButtonVariants, SubTitle, Title, Tooltip } from "@shared/components"
+import { Button, ButtonVariants, MockIframe, SubTitle, Title, Tooltip } from "@shared/components"
+import { Themes, ThemeWrapper } from "@shared/theme"
 
 const Container = styled.div`
   display: flex;
@@ -8,10 +9,16 @@ const Container = styled.div`
 
   .row {
     display: flex;
-    background-color: red;
     justify-content: center;
     gap: 2rem;
   }
+`
+
+const Test = styled.div`
+  width: 300px;
+  height: 300px;
+  /* background-color: red; */
+  background: var(--color-primary);
 `
 
 export const TooltipPage = () => {
@@ -21,9 +28,20 @@ export const TooltipPage = () => {
 
       <section>
         <div className="row">
-          <Tooltip content="this is a tooltxckashldkfhalsjkdhflakjsdhfladip">
-            hello worldfjadsljfkahsdlkfjhalsdjk
-          </Tooltip>
+
+        <Tooltip message="This is a tooltip">
+          <Button>
+            Hover inside iframe
+          </Button>
+        </Tooltip>
+
+      <MockIframe>
+        <Tooltip message="This is a tooltip">
+          <Button>
+            Hover inside iframe
+          </Button>
+        </Tooltip>
+      </MockIframe>
         </div>
       </section>
     </Container>

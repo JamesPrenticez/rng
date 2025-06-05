@@ -3,9 +3,10 @@ import styled from "@emotion/styled";
 import clsx from "clsx";
 
 const Container = styled.div`
-  display: inline-block;
+  height: fit-content;
+  width: fit-content;
   position: relative;
-  cursor: pointer;
+  background-color: red;
 
   .wrapper {
     position: absolute;
@@ -39,8 +40,6 @@ const Container = styled.div`
           left: 50%;
           transform: translateX(-50%); 
           width: 2.8rem;
-          stroke-width: 0.5px;
-          z-index: 9999;
         }
       }
     }
@@ -49,7 +48,7 @@ const Container = styled.div`
     transform: translate(-50%, 2rem);
 
     opacity: 0;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 2000ms ease-in-out;
 
     z-index: 50;
 
@@ -62,17 +61,16 @@ const Container = styled.div`
 
 interface TooltipProps extends PropsWithChildren {
   message: string;
-  overRide?: boolean;
 }
 
-export const Tooltip = ({ children, message, overRide }: TooltipProps) => {
-  const [visible, setVisible] = useState(true);
+export const Tooltip = ({ children, message }: TooltipProps) => {
+  const [visible, setVisible] = useState(false);
   const triangle = generateBellCurveSvg(10, 21, 5);
 
   return (
     <Container
-      onMouseEnter={() => !overRide && setVisible(true)}
-      onMouseLeave={() => !overRide && setVisible(false)}
+      onMouseEnter={() => setVisible(true)}
+      onMouseLeave={() => setVisible(false)}
     >
       <div className={clsx("wrapper", {visible: visible})}>
         <div className="tooltip">

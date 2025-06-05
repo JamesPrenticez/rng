@@ -13,10 +13,10 @@ const ButtonContainer = styled.button`
   font-size: 3rem;
   line-height: 4.44rem;
   padding: 1rem 1rem;
-  margin: 1rem 0rem;
   font-weight: 600;
 
   transition: all 300ms ease;
+  cursor: pointer;
 
   &.mobile {
     font-size: 2rem;
