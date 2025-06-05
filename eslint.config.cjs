@@ -23,6 +23,7 @@ module.exports = [
           ],
         },
       ],
+
     },
   },
   {
@@ -35,6 +36,10 @@ module.exports = [
       '**/*.mjs',
     ],
     // Override or add rules here
-    rules: {},
+    rules: {
+      "react-hooks/exhaustive-deps": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "prefer-const": "off",
+    },
   },
 ];
