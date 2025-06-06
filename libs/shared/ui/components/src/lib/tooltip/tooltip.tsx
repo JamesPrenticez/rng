@@ -5,6 +5,8 @@ import type { TooltipProps } from './tooltip.d';
 import { useTooltipVisibility } from './tooltip-visibility.hook';
 import { useTooltipPosition } from './tooltip-position.hook';
 import { Arrow } from './tooltip-arrow';
+import { Themes } from '@shared/ui/theme'
+import clsx from 'clsx';
 
 export const TriggerWrapper = styled.div`
   display: inline-block;
@@ -16,16 +18,17 @@ export const TriggerWrapper = styled.div`
 export const TooltipContainer = styled.div`
   position: fixed;
   z-index: 9999;
-  padding: 8px 12px;
-  font-size: 14px;
-  color: white;
-  background-color: var(--color-primary);
-  border-radius: 8px;
+  padding: 1rem 2rem;
+  font-size: 1.8rem;
+  color: var(--color-white-100);
+  background-color: var(--color-black-20);
+
+  border: 0.1rem solid var(--color-primary);
+  border-radius: 0.8rem;
+
   pointer-events: none;
   transition: opacity 0.2s ease-in-out;
 
-  /* Add some additional styling for better UX */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   white-space: nowrap;
   max-width: 300px;
   word-wrap: break-word;
@@ -38,7 +41,7 @@ export const Tooltip = ({
   position = 'top',
   delay = 200,
   offset = 8,
-  className = '',
+  className = '', 
   container = document.body,
   disabled = false,
 }: TooltipProps) => {
@@ -106,10 +109,13 @@ export const Tooltip = ({
     }
   };
 
+  // React Portal is outside main DOM tree, therefore we must add themes to it
+  const savedTheme = localStorage.getItem('theme') as Themes | null;
+
   const tooltipElement = isVisible && !disabled && (
     <TooltipContainer
       ref={tooltipRef}
-      className={className}
+      className={clsx(className, `theme-${savedTheme}`)}
       style={{
         top: tooltipPosition.top,
         left: tooltipPosition.left,

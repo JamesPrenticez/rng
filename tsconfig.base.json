@@ -34,7 +34,8 @@
       "@shared/theme": ["libs/shared/ui/theme/src/index.ts"],
       "@shared/utils": ["libs/shared/utils/src/index.ts"],
       "@shared/websocket": ["libs/shared/websocket/src/index.ts"],
-      "@shared/hooks": ["libs/shared/ui/hooks/src/index.ts"]
+      "@shared/hooks": ["libs/shared/ui/hooks/src/index.ts"],
+      "@shared/ui/theme": ["libs/shared/ui/theme/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
