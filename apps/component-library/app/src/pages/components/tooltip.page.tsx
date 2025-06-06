@@ -165,6 +165,7 @@ export const TooltipPage = () => {
               anchorSelect="#top"
               content="This tooltip appears on top"
               place="top"
+              border="1px solid var(--color-primary)" 
             />
             <Button id="top" className="blue">
               Top Tooltip

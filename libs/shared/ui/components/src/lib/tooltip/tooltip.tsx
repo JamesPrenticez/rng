@@ -1,8 +1,18 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from '@emotion/styled';
 import type { TooltipProps } from './tooltip.d';
-import { useFloating, autoUpdate, offset, flip, shift, arrow, FloatingArrow } from '@floating-ui/react';
+import { 
+  useFloating, 
+  autoUpdate, 
+  offset, 
+  flip, 
+  shift, 
+  arrow, 
+  FloatingArrow,
+  limitShift,
+  size
+} from '@floating-ui/react';
 import { Themes } from '@shared/ui/theme'
 import clsx from 'clsx';
 
@@ -45,19 +55,56 @@ export const Tooltip = ({
   const arrowRef = useRef<SVGSVGElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
-  const { refs, floatingStyles, context } = useFloating({
+  const { refs, floatingStyles, context, middlewareData } = useFloating({
     open: isVisible,
     onOpenChange: setIsVisible,
     placement: position,
     middleware: [
       offset(offsetValue),
-      flip(),
-      shift(),
+      flip({
+        // Add more boundary detection
+        boundary: 'clippingAncestors',
+        // Fallback placements in preferred order
+        fallbackPlacements: ['top', 'bottom', 'right', 'left'],
+        // Allow flipping to opposite axis
+        crossAxis: true,
+        // Add padding from viewport edges
+        padding: 8,
+      }),
+      shift({
+        // Add boundary detection for shift
+        boundary: 'clippingAncestors',
+        // Add padding from edges
+        padding: 8,
+        // Use limitShift to prevent tooltip from going too far
+        limiter: limitShift({
+          // Offset from the edge when limiting
+          offset: 8,
+          // Allow some overflow before limiting
+          mainAxis: true,
+          crossAxis: true,
+        }),
+      }),
+      // Add size middleware to handle overflow better
+      size({
+        apply({ availableWidth, availableHeight, elements }) {
+          // Dynamically adjust max-width based on available space
+          Object.assign(elements.floating.style, {
+            maxWidth: `${Math.min(300, availableWidth - 16)}px`,
+            maxHeight: `${availableHeight - 16}px`,
+          });
+        },
+        padding: 8,
+      }),
       arrow({
         element: arrowRef,
+        // Add padding to prevent arrow from touching edges
+        // padding: 8,
       }),
     ],
     whileElementsMounted: autoUpdate,
+    // Add strategy for better positioning
+    strategy: 'fixed',
   });
 
   const handleMouseEnter = () => {
@@ -91,7 +138,14 @@ export const Tooltip = ({
     <TooltipContainer
       ref={refs.setFloating}
       className={clsx(className, `theme-${savedTheme}`)}
-      style={floatingStyles}
+      // style={floatingStyles}
+      style={{
+        ...floatingStyles,
+        // Ensure tooltip stays within viewport
+        maxWidth: '100px',
+        wordWrap: 'break-word',
+        whiteSpace: 'normal',
+      }}
       role="tooltip"
       aria-hidden={!isVisible}
     >
@@ -104,7 +158,7 @@ export const Tooltip = ({
         strokeWidth={1}
         path=''
         tipRadius={2}
-        height={10} 
+        height={10}
       />
     </TooltipContainer>
   );
