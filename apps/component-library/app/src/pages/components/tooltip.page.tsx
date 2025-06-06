@@ -116,6 +116,11 @@ export const TooltipPage = () => {
     <DemoContainer>
       <h1>React Tooltip Demo</h1>
       
+      <div style={{background: "var(--color-primary)"}}>
+        asdf
+
+      </div>
+      
       <Grid>
         <div>
           <h2>Basic Examples</h2>
