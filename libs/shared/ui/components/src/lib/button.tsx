@@ -31,6 +31,10 @@ const ButtonContainer = styled.button`
     background-color: var(--color-background);
     border-color: var(--color-border);
 
+    :focus-visible {
+      border: 50px var(--color-primary) solid;
+    }
+
     :hover {
       color: var(--color-primary);
       background-color: var(--color-background);
