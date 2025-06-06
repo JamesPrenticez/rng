@@ -99,9 +99,12 @@ export const Tooltip = ({
       <FloatingArrow 
         ref={arrowRef} 
         context={context}
-        fill="var(--color-primary)"
+        fill="var(--color-black-20)"
         stroke="var(--color-primary)"
         strokeWidth={1}
+        path=''
+        tipRadius={2}
+        height={10} 
       />
     </TooltipContainer>
   );
