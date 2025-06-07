@@ -133,7 +133,6 @@ export const TooltipPage = () => {
       <Grid>
         <div>
           <h2>Floating UI</h2>
-
           <ButtonGroup>
             <Tooltip message="This tooltip appears on top" position="top">
               <Button className="blue">Top Tooltip</Button>
@@ -156,41 +155,6 @@ export const TooltipPage = () => {
             <Tooltip message="This tooltip appears on the left" position="left">
               <Button className="red">Left Tooltip</Button>
             </Tooltip>
-          </ButtonGroup>
-
-          {/* ================== REACT ================= */}
-            <h2>React ToolTip</h2>
-          <ButtonGroup>
-            <ReactTooltip
-              anchorSelect="#top"
-              content="This tooltip appears on top"
-              place="top"
-              border="1px solid var(--color-primary)" 
-            />
-            <Button id="top" className="blue">
-              Top Tooltip
-            </Button>
-
-            <ReactTooltip
-              anchorSelect="#right"
-              content="This tooltip appears on the right"
-              place="right"
-            />
-            <Button id="right" className="green">Right Tooltip</Button>
-
-            <ReactTooltip
-              anchorSelect="#bottom"
-              content="This tooltip appears on the bottom"
-              place="bottom"
-            />
-            <Button id="bottom" className="purple">REACT Bottom Tooltip</Button>
-
-            <ReactTooltip
-              anchorSelect="#left"
-              content="This tooltip appears on the left"
-              place="left"
-            />
-            <Button id="left"className="red">Left Tooltip</Button>
           </ButtonGroup>
         </div>
 
@@ -252,3 +216,39 @@ export const TooltipPage = () => {
     </DemoContainer>
   );
 };
+
+
+// REACT TOOL TIP EXAMPLE
+          //   <h2>React ToolTip</h2>
+          // <ButtonGroup>
+          //   <ReactTooltip
+          //     anchorSelect="#top"
+          //     content="This tooltip appears on top"
+          //     place="top"
+          //     border="1px solid var(--color-primary)" 
+          //   />
+          //   <Button id="top" className="blue">
+          //     Top Tooltip
+          //   </Button>
+
+          //   <ReactTooltip
+          //     anchorSelect="#right"
+          //     content="This tooltip appears on the right"
+          //     place="right"
+          //   />
+          //   <Button id="right" className="green">Right Tooltip</Button>
+
+          //   <ReactTooltip
+          //     anchorSelect="#bottom"
+          //     content="This tooltip appears on the bottom"
+          //     place="bottom"
+          //   />
+          //   <Button id="bottom" className="purple">REACT Bottom Tooltip</Button>
+
+          //   <ReactTooltip
+          //     anchorSelect="#left"
+          //     content="This tooltip appears on the left"
+          //     place="left"
+          //   />
+          //   <Button id="left"className="red">Left Tooltip</Button>
+          // </ButtonGroup>

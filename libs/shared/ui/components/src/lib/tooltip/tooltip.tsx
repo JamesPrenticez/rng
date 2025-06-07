@@ -38,7 +38,7 @@ export const TooltipContainer = styled.div`
   transition: opacity 0.2s ease-in-out;
 
   white-space: nowrap;
-  max-width: 300px;
+  max-width: 300px;  // This is counter intuitive its more like a min-width before edge detection repositioning takes place
   word-wrap: break-word;
   white-space: normal;
 `;
@@ -138,14 +138,7 @@ export const Tooltip = ({
     <TooltipContainer
       ref={refs.setFloating}
       className={clsx(className, `theme-${savedTheme}`)}
-      // style={floatingStyles}
-      style={{
-        ...floatingStyles,
-        // Ensure tooltip stays within viewport
-        maxWidth: '100px',
-        wordWrap: 'break-word',
-        whiteSpace: 'normal',
-      }}
+      style={{...floatingStyles}}
       role="tooltip"
       aria-hidden={!isVisible}
     >
