@@ -13,10 +13,12 @@
   --color-focus-opacity: var(--color-base-black);
   --color-disabled-opacity: var(--color-base-black);
 
-  --color-border-opacity: var(--color-base-black);
+  --color-border-opacity: var(--color-grey-80-opacity);
   --color-border-accent-opacity: var(--color-base-black);
 
-  --color-text-opacity: var(--color-base-black);
+  --color-background-opacity: var(--color-black-20-opacity);
+
+  --color-text-opacity: var(--color-white-80-opacity);
   --color-text-accent-opacity: var(--color-base-black);
 
   --color-theme-white-opacity: var(--color-base-black);
@@ -39,6 +41,8 @@
 
   --color-border: rgb(var(--color-border-opacity));
   --color-border-accent: rgb(var(--color-border-accent-opacity));
+
+  --color-background: rgb(var(--color-background-opacity));
 
   --color-text: rgb(var(--color-text-opacity));
   --color-text-accent: rgb(var(--color-text-accent-opacity));

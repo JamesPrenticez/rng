@@ -22,6 +22,7 @@
     "paths": {
       "@shared/assets/audio/*": ["libs/shared/assets/audio/*"],
       "@shared/assets/fonts/*": ["libs/shared/assets/fonts/*"],
+      "@shared/assets/icons/*": ["libs/shared/assets/icons/*"],
       "@shared/assets/images/*": ["libs/shared/assets/images/*"],
       "@shared/assets/styles/*": ["libs/shared/assets/styles/*"],
       "@shared/components": ["libs/shared/ui/components/src/index.ts"],

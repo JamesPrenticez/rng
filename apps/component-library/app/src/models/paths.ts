@@ -12,6 +12,7 @@ export enum Path {
   LABEL = '/label',
   LOADING = '/loading',
   MODAL = '/modal',
+  SELECT = '/select',
   TOAST = '/toast',
   TOGGLE = '/toggle',
   TOOLTIP = '/tooltip',

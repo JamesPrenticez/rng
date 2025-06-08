@@ -5,6 +5,7 @@ import type { APP, GAME } from '@shared/models';
 import { useAspectRatio } from '@shared/hooks';
 import { getSessionUrl } from './get-session-url';
 import { createRandomUsername, CURRENCIES, CURRENCY_MAP } from '@shared/utils';
+import { Button, ButtonVariants, Input, Select } from '@shared/components'
 
 const HEADER_HEIGHT = 60;
 
@@ -22,7 +23,14 @@ const Container = styled.div`
   overflow: hidden;
 
   form {
+    margin-left: 2rem;
     display: flex;
+    gap: 2rem;
+
+    fieldset {
+      display: flex;
+      gap: 2rem;
+    }
   }
 
   iframe {
@@ -30,6 +38,13 @@ const Container = styled.div`
     margin: 40px;
     width: ${MIN};
     height: calc((1080 / 1920) * ${MIN});
+  }
+
+  .currency-symbol {
+    font-size: 3rem;
+    display: flex;
+    align-items: center;
+    margin-right: -1rem;
   }
 
   &.moible {
@@ -42,13 +57,13 @@ const Container = styled.div`
   }
 `;
 
+// Replace with Title?
 const Header = styled.div`
   display: flex;
   align-items: center;
   box-sizing: border-box;
   width: 100vw;
   height: ${HEADER_HEIGHT}px;
-
   font-size: 4rem;
   font-family: 'Aronui';
   color: var(--color-primary);
@@ -63,6 +78,15 @@ const Header = styled.div`
     padding: 0px 10px;
   }
 `;
+
+const SubmitButton = styled(Button)`
+  && {
+    border-color: rgba(var(--color-rag-green-opacity), 0.7);
+    :hover {
+      background-color: rgba(var(--color-rag-green-opacity), 1);
+    }
+  }
+`
 
 interface DemoCasinoProps {
   app: APP | GAME;
@@ -145,44 +169,47 @@ export const DemoCasino = ({ app }: DemoCasinoProps) => {
     <Container className={clsx({ mobile: isMobile })}>
       <Header>
         Demo Casino
+
         <form onSubmit={updateUser}>
-          <div className="group">
-            <input
+          <fieldset>
+            <Input
               type="text"
               placeholder="username"
               value={form.username}
               onChange={updateForm('username')}
             />
-            <button className={'random-name'} onClick={randomName}>
+            <Button className={'random-name'} onClick={randomName}>
               ?
-            </button>
-          </div>
-          <div className="group">
+            </Button> 
+          </fieldset>
+          
+          <fieldset>
             <div className="currency-symbol">{symbol}</div>
-            <input
-              type="text"
+            <Input
+              type="number"
+              step={500}
               placeholder="credits"
               value={form.credits}
               onChange={updateForm('credits')}
             />
-          </div>
-          <select value={form.currency} onChange={updateForm('currency')}>
+          </fieldset>
+
+<fieldset>
+          <Select 
+            value={form.currency} onChange={updateForm('currency')}
+            >
             {CURRENCIES.map((cur) => (
               <option key={cur.value} value={cur.value} label={cur.label} />
             ))}
-          </select>
-          <div className="nickname-prompt">
-            <input
-              id="nickname-prompt"
-              name="nickname-prompt"
-              type="checkbox"
-              checked={form.nicknamePrompt}
-              value="nicknamePrompt"
-              onChange={updateForm('nicknamePrompt')}
-            />
-            <label htmlFor="nickname-prompt">Nickname Prompt</label>
-          </div>
-          <input type="submit" value="Update" />
+          </Select>
+            </fieldset>
+          <SubmitButton 
+            type="submit"
+            value="Update"
+            variant={ButtonVariants.FILLED}
+          > 
+            Update
+          </SubmitButton> 
         </form>
       </Header>
       {gameUrl && <iframe src={gameUrl} title="Game Studio" />}

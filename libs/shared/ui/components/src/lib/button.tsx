@@ -4,16 +4,18 @@ import clsx from 'clsx';
 const ButtonContainer = styled.button`
   width: fit-content;
 
-  border-radius: 0.8rem;
-  border: solid 0.2rem;
-  box-sizing: border-box;
-  padding: 0.5rem 1.5rem;
-  outline: none;
-
+  color: var(--color-text);
   font-size: 3rem;
   line-height: 4.44rem;
-  padding: 1rem 1rem;
-  font-weight: 600;
+  font-weight: 400;
+
+  outline: none;
+  border-radius: 0.8rem;
+  border: var(--color-border) solid 0.2rem;
+  box-sizing: border-box;
+
+  padding: 0.5rem 1.5rem;
+  margin: 0rem;
 
   transition: all 300ms ease;
   cursor: pointer;
@@ -21,9 +23,6 @@ const ButtonContainer = styled.button`
   &.mobile {
     font-size: 2rem;
     line-height: 2rem;
-    padding: 1rem 1rem;
-    margin: 1rem 0rem;
-    font-weight: 600;
   }
 
   &.default {
