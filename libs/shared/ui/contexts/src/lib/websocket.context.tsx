@@ -1,4 +1,3 @@
-// WebSocketContext.tsx
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { io, type Socket } from 'socket.io-client';
 
@@ -14,7 +13,15 @@ export const WebSocketProvider = ({
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    const s = io(url, { autoConnect: true });
+    const params = new URLSearchParams(window.location.search);
+    const session = params.get('session');
+
+    const s = io(url, {
+      autoConnect: true,
+      auth: {
+        session,
+      },
+    });
 
     setSocket(s);
     return () => {
@@ -36,4 +43,3 @@ export const useSocket = (): Socket => {
   if (!socket) throw new Error('useSocket must be used within WebSocketProvider');
   return socket;
 };
-
