@@ -62,3 +62,10 @@ export const mockUserMiddleware =
       next(e as ExtendedError);
     }
   };
+
+// Exploring the code base
+// mockUserMiddlewate // libs\shared\websocket\src\lib\mock-user.middleware.ts
+// PlayerServer // libs\shared\websocket\src\lib\player-server.ts
+// UserServer // libs\shared\websocket\src\lib\user-server.ts
+// RouletteBackend // apps\roulette\server\src\roulette-backend.service.ts
+// which then get called here to main.ts.
