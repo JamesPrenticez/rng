@@ -1,0 +1,13 @@
+{
+  "name": "dice-magic:models",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/dice-magic/models/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {},
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

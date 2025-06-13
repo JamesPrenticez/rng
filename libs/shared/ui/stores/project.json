@@ -1,5 +1,5 @@
 {
-  "name": "stores",
+  "name": "shared:stores",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/shared/ui/stores/src",
   "projectType": "library",

@@ -67,6 +67,12 @@ To generate a new Node library in the /libs/rgs directory we run:
   npx nx g @nx/node:library models --directory=libs/shared/events
   npx nx g @nx/node:library utils --directory=libs/shared/utils
   npx nx g @nx/node:library websockets --directory=libs/shared/websockets
+
+  npx nx g @nx/node:library dice-magic --directory=libs/dice-magic/handlers
+  npx nx g @nx/node:library dice-magic --directory=libs/dice-magic/models
+
+  npx nx g @nx/node:library dice-magic --directory=libs/dice-magic/ui/stores
+  npx nx g @nx/node:library dice-magic --directory=libs/dice-magic/ui/contexts
 ```
 
 Once the 'libs/shared/your-lib-name' file structure has been generated go to the project.json file and update the "tags" property ie "tags": ["scope:shared"]

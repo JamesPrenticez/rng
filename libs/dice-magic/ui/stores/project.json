@@ -1,0 +1,20 @@
+{
+  "name": "dic-magic:stores",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/dice-magic/ui/stores/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/dice-magic/ui/stores",
+        "tsConfig": "libs/dice-magic/ui/stores/tsconfig.lib.json",
+        "packageJson": "libs/dice-magic/ui/stores/package.json",
+        "main": "libs/dice-magic/ui/stores/src/index.ts",
+        "assets": ["libs/dice-magic/ui/stores/*.md"]
+      }
+    }
+  }
+}

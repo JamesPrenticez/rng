@@ -20,6 +20,8 @@
     "noPropertyAccessFromIndexSignature": false,
     "baseUrl": ".",
     "paths": {
+      "@dice-magic/ui": ["libs/dice-magic/ui/src/index.ts"],
+      "@dice-maic/models": ["libs/dice-magic/models/src/index.ts"],
       "@shared/assets/audio/*": ["libs/shared/assets/audio/*"],
       "@shared/assets/fonts/*": ["libs/shared/assets/fonts/*"],
       "@shared/assets/icons/*": ["libs/shared/assets/icons/*"],
@@ -29,14 +31,16 @@
       "@shared/contexts": ["libs/shared/ui/contexts/src/index.ts"],
       "@shared/demo-casino": ["libs/shared/ui/demo-casino/src/index.ts"],
       "@shared/events": ["libs/shared/events/src/index.ts"],
+      "@shared/hooks": ["libs/shared/ui/hooks/src/index.ts"],
       "@shared/layouts": ["libs/shared/ui/layouts/src/index.ts"],
       "@shared/models": ["libs/shared/models/src/index.ts"],
       "@shared/stores": ["libs/shared/ui/stores/src/index.ts"],
       "@shared/theme": ["libs/shared/ui/theme/src/index.ts"],
+      "@shared/ui/theme": ["libs/shared/ui/theme/src/index.ts"],
       "@shared/utils": ["libs/shared/utils/src/index.ts"],
       "@shared/websocket": ["libs/shared/websocket/src/index.ts"],
-      "@shared/hooks": ["libs/shared/ui/hooks/src/index.ts"],
-      "@shared/ui/theme": ["libs/shared/ui/theme/src/index.ts"]
+      "@dice-maigic/contexts": ["libs/dice-magic/ui/contexts/src/index.ts"],
+      "@dice-magic/stores": ["libs/dice-magic/ui/stores/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

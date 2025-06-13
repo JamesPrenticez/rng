@@ -107,7 +107,7 @@ const baseReducer: BaseReducer = (state, event): BaseState => {
   return state;
 };
 
-interface BaseProviderProps extends PropsWithChildren {}
+type BaseProviderProps = PropsWithChildren
 
 export const BaseAppProvider = ({ children }: BaseProviderProps) => {
   const socket = useSocket();
@@ -144,8 +144,8 @@ export const BaseAppProvider = ({ children }: BaseProviderProps) => {
     // });
 
     socket.on(BaseEvents.User, (userEvent: UserEvent) => {
-      console.log("user")
-      console.log(userEvent)
+      // console.log("user")
+      // console.log(userEvent)
       setUser(userEvent.payload.user);
 
       if (userEvent.payload.requireNameChange) {

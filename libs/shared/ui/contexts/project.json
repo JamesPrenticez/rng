@@ -1,28 +1,14 @@
 {
-  "name": "contexts",
+  "name": "shared:contexts",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/shared/ui/contexts/src",
   "projectType": "library",
-  "tags": ["scope:shared"],
+  "tags": [
+    "scope:shared"
+  ],
   "targets": {
-    "lint": {
-      "executor": "@nx/eslint:lint"
-    },
-    "build": {
-      "executor": "@nx/vite:build",
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
-      "options": {
-        "outputPath": "dist/libs/shared/ui/contexts"
-      },
-      "configurations": {
-        "development": {
-          "mode": "development"
-        },
-        "production": {
-          "mode": "production"
-        }
-      }
-    }
+    "lint": {},
+    "lint:fix": {},
+    "typecheck": {}
   }
 }
