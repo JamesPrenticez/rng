@@ -34,6 +34,8 @@ export interface BaseAppContextProps {
 
   setHasLoaded: (loaded: boolean) => void;
   submitPasscode: (passcode: string) => void;
+
+   users: User[];
 }
 
 const BaseAppContext = createContext<BaseAppContextProps | undefined>(undefined);

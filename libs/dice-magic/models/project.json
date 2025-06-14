@@ -4,10 +4,5 @@
   "sourceRoot": "libs/dice-magic/models/src",
   "projectType": "library",
   "tags": [],
-  "targets": {
-    "build": {},
-    "lint": {
-      "executor": "@nx/eslint:lint"
-    }
-  }
+  "targets": {}
 }

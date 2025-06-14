@@ -6,9 +6,5 @@
   "tags": [
     "scope:shared"
   ],
-  "targets": {
-    "lint": {},
-    "lint:fix": {},
-    "typecheck": {}
-  }
+  "targets": {}
 }

@@ -4,7 +4,5 @@
   "sourceRoot": "libs/shared/models/src",
   "projectType": "library",
   "tags": ["scope:shared"],
-  "targets": {
-    "typecheck": {}
-  }
+  "targets": {}
 }

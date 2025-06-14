@@ -4,17 +4,5 @@
   "sourceRoot": "libs/dice-magic/ui/contexts/src",
   "projectType": "library",
   "tags": [],
-  "targets": {
-    "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/libs/dice-magic/ui/contexts",
-        "tsConfig": "libs/dice-magic/ui/contexts/tsconfig.lib.json",
-        "packageJson": "libs/dice-magic/ui/contexts/package.json",
-        "main": "libs/dice-magic/ui/contexts/src/index.ts",
-        "assets": ["libs/dice-magic/ui/contexts/*.md"]
-      }
-    }
-  }
+  "targets": {}
 }

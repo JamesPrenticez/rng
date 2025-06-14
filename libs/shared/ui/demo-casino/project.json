@@ -4,9 +4,5 @@
   "sourceRoot": "libs/shared/ui/demo-casino/src",
   "projectType": "library",
   "tags": ["scope:shared"],
-    "targets": {
-        "lint": {},
-        "lint:fix": {},
-        "typecheck": {}
-    }
+  "targets": {}
 }

@@ -1,4 +1,4 @@
-import type { User } from '@shared/models';
+import { User } from '@shared/models';
 import { produce } from 'immer';
 import { create } from 'zustand';
 

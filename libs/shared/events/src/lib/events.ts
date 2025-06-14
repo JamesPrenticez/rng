@@ -37,7 +37,7 @@ export enum FromUserEvents {
 
 
 export enum InternalEvents {
-  // UserJoin = 'UserJoin',
+  UserJoin = 'UserJoin',
   // UserDisconnect = 'UserDisconnect',
   Ready = 'Ready',
   // DeleteChatMessage = 'DeleteChatMessage',
@@ -80,12 +80,21 @@ export const createEvent = <T, D = unknown>(
   ];
 };
 
+// USER - READY
 export const createReadyEvent = () => {
     return createEvent(BaseEvents.Ready, {});
 };
 
 export type ReadyEvent = ReturnType<typeof createReadyEvent>[1];
 
+// USER - JOIN
+export const createUserJoinEvent = (user: User) => {
+  return createEvent(BaseEvents.UserJoin, { user });
+};
+
+export type UserJoinEvent = ReturnType<typeof createUserJoinEvent>[1];
+
+// PASSCODE
 export const createPasscodeRequiredEvent = () => {
   return createEvent(BaseEvents.PasscodeRequired, {});
 };
