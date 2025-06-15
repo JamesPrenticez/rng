@@ -13,6 +13,11 @@ export enum FromServerEvents {
   // WaitingForWheel = 'WaitingForWheel',
   // SettingPasscode = 'SettingPasscode', // Premium game server is setting a game enter passcode on the User Server
   // GameSchedule = 'GameSchedule',
+
+  RoundStart = 'RoundStart',
+  RoundEnd = 'RoundEnd',
+
+  GameState = 'GameState',
 }
 
 export enum ToServerEvents {
@@ -35,10 +40,11 @@ export enum FromUserEvents {
   // UpdateDisplayNameRequest = 'UpdateDisplayNameRequest',
 }
 
-
 export enum InternalEvents {
   UserJoin = 'UserJoin',
-  // UserDisconnect = 'UserDisconnect',
+  UserDisconnect = 'UserDisconnect',
+  UsersUpdate = 'UsersUpdate',
+
   Ready = 'Ready',
   // DeleteChatMessage = 'DeleteChatMessage',
   // HostChange = 'HostChange',
@@ -80,6 +86,7 @@ export const createEvent = <T, D = unknown>(
   ];
 };
 
+
 // USER - READY
 export const createReadyEvent = () => {
     return createEvent(BaseEvents.Ready, {});
@@ -93,6 +100,13 @@ export const createUserJoinEvent = (user: User) => {
 };
 
 export type UserJoinEvent = ReturnType<typeof createUserJoinEvent>[1];
+
+// USER - UPDATE
+export const createUsersUpdateEvent = (user: User) => {
+  return createEvent(BaseEvents.UserJoin, { user });
+};
+
+export type UserUpdateEvent = ReturnType<typeof createUsersUpdateEvent>[1];
 
 // PASSCODE
 export const createPasscodeRequiredEvent = () => {
@@ -135,3 +149,32 @@ export const createUserEvent = (
 };
 
 export type UserEvent = ReturnType<typeof createUserEvent>[1];
+
+// ROUND DATA
+export interface RoundData {
+  roundId: string;
+  host: string;
+  remainingBetDuration?: number;
+}
+
+
+export const createRoundEvent = (event: BaseEvents, data: RoundData) => {
+    return createEvent(event, data);
+};
+
+export const createRoundStartEvent = (data: RoundData) => {
+    return createRoundEvent(BaseEvents.RoundStart, data);
+};
+
+export const createRoundEndEvent = (data: RoundData) => {
+    return createRoundEvent(BaseEvents.RoundEnd, data);
+};
+
+export type RoundStartEvent = ReturnType<typeof createRoundStartEvent>[1];
+export type RoundEndEvent = ReturnType<typeof createRoundEndEvent>[1];
+
+export interface PlayerPayout {
+    userId?: string;
+    name: string;
+    amount: number;
+}

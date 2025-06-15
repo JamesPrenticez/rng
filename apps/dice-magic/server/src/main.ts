@@ -6,7 +6,6 @@ import {
   handleUserJoin,
   mockUserMiddleware
 } from '@shared/websocket';
-import { users } from '@shared/websocket';
 
 const PORT = 3201;
 const GAME_UUID = "123456789"

@@ -1,16 +1,16 @@
 import { User } from '@shared/models';
 import { Socket, Server } from 'socket.io';
 import { users } from '../stores/users.store';
+import { BaseEvents } from '@shared/events';
 
 export const handleUserJoin = (io: Server, socket: Socket) => {
-  socket.on('user:join', (user: User) => {
+  socket.on(BaseEvents.UserJoin, (user: User) => {
     users.set(socket.id, user);
-    io.emit('users:update', Array.from(users.values()));
-    console.log(users)
+    io.emit(BaseEvents.UsersUpdate, Array.from(users.values()));
   });
 
-  socket.on('disconnect', () => {
+  socket.on("disconnect", () => {
     users.delete(socket.id);
-    io.emit('users:update', Array.from(users.values()));
+    io.emit(BaseEvents.UsersUpdate, Array.from(users.values()));
   });
 }

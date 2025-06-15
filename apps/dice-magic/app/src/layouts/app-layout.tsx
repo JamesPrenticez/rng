@@ -1,15 +1,19 @@
 import { useMemo } from 'react';
-import { BaseAppLayout, BaseGameLayout } from '@shared/layouts';
 import { useAspectRatio } from '@shared/hooks'
 import { MobileAppLayout } from './app-layout-mobile';
 import { DesktopAppLayout } from './app-layout-desktop';
+import { useGameContext } from '@dice-maigic/contexts';
 import { useUserStore } from '@shared/stores';
+import { BaseGameLayout } from '@shared/layouts';
 import { Themes } from '@shared/theme';
+
+// import { useUserStore } from '@shared/stores';
 
 export const DiceMagicAppLayout = () => {
   const isMobile = useAspectRatio();
+
   const user = useUserStore((s) => s.user);
-  console.log(user)
+  const { users } = useGameContext(); // TODO move to a zustand store
 
   const render = useMemo(() => {
     if (isMobile) {
@@ -20,10 +24,12 @@ export const DiceMagicAppLayout = () => {
   }, [isMobile]);
 
   return (
-    <BaseAppLayout>
-      <BaseGameLayout theme={Themes.GOLD} showSwitcher={true}>
-        {render}
-      </BaseGameLayout>
-    </BaseAppLayout>
-  );
+    <BaseGameLayout 
+      theme={Themes.GOLD}
+      showSwitcher={true}
+      
+    >
+      {render}
+    </BaseGameLayout>
+  )
 };
