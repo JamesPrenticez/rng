@@ -102,11 +102,11 @@ export const createUserJoinEvent = (user: User) => {
 export type UserJoinEvent = ReturnType<typeof createUserJoinEvent>[1];
 
 // USER - UPDATE
-export const createUsersUpdateEvent = (user: User) => {
-  return createEvent(BaseEvents.UserJoin, { user });
+export const createUsersUpdateEvent = (users: User[]) => {
+  return createEvent(BaseEvents.UsersUpdate, users);
 };
 
-export type UserUpdateEvent = ReturnType<typeof createUsersUpdateEvent>[1];
+export type UsersUpdateEvent = ReturnType<typeof createUsersUpdateEvent>[1];
 
 // PASSCODE
 export const createPasscodeRequiredEvent = () => {
@@ -156,7 +156,6 @@ export interface RoundData {
   host: string;
   remainingBetDuration?: number;
 }
-
 
 export const createRoundEvent = (event: BaseEvents, data: RoundData) => {
     return createEvent(event, data);

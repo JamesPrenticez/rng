@@ -12,8 +12,9 @@ import { Themes } from '@shared/theme';
 export const DiceMagicAppLayout = () => {
   const isMobile = useAspectRatio();
 
-  const user = useUserStore((s) => s.user);
-  const { users } = useGameContext(); // TODO move to a zustand store
+  // const user = useUserStore((s) => s.user);
+  const { gameState } = useGameContext(); // TODO move to a zustand store
+  console.log(gameState.players)
 
   const render = useMemo(() => {
     if (isMobile) {
@@ -27,7 +28,6 @@ export const DiceMagicAppLayout = () => {
     <BaseGameLayout 
       theme={Themes.GOLD}
       showSwitcher={true}
-      
     >
       {render}
     </BaseGameLayout>

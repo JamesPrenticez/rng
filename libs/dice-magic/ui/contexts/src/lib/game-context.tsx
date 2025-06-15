@@ -4,7 +4,6 @@ import {
   useEffect,
   useMemo,
   useState,
-  PropsWithChildren,
   useReducer,
   ReactNode,
 } from 'react';
@@ -12,20 +11,18 @@ import { useSocket } from '@shared/contexts';
 
 import { User } from '@shared/models';
 
-import { DiceMagicEvents } from '@dice-maic/models';
+import { DiceMagicEvents, GameState } from '@dice-maic/models';
 import {
   IBaseEvent,
   BaseEvents,
-  RoundData,
-  PlayerPayout,
   RoundStartEvent,
   RoundEndEvent,
+  UsersUpdateEvent,
 } from '@shared/events';
 import { useUserStore } from '@shared/stores';
 
 interface GameContextProps {
   gameState: GameState;
-  users: User[];
 }
 
 interface GameProviderProps {
@@ -34,14 +31,9 @@ interface GameProviderProps {
 
 const GameContext = createContext<GameContextProps | undefined>(undefined);
 
-interface GameState {
-  roundInfo: RoundData | null;
-  payouts: PlayerPayout[];
-  endTime: number;
-}
-
 const initialState: GameState = {
   roundInfo: null,
+  players: [],
   payouts: [],
   endTime: 0,
 };
@@ -53,6 +45,13 @@ type GameReducer = (
 
 const gameReducer: GameReducer = (state, event): GameState => {
   switch (event.event) {
+    case BaseEvents.UsersUpdate: {
+      const eventData = event as UsersUpdateEvent;
+      return {
+        ...state,
+        players: eventData.payload,
+      };
+    }
     case BaseEvents.RoundStart: {
       const eventData = event as RoundStartEvent;
       return {
@@ -89,30 +88,29 @@ export const GameProvider = ({ children }: GameProviderProps) => {
   const socket = useSocket();
 
   const currentUser = useUserStore((s) => s.user);
-  const [users, setUsers] = useState<User[]>([]);
   const [gameState, dispatch] = useReducer(gameReducer, initialState);
 
-  const handleUsersUpdate = (newUsers: User[]) => {
-    setUsers(newUsers);
+useEffect(() => {
+  if (!currentUser) return;
+
+  socket.emit(BaseEvents.UserJoin, currentUser);
+
+  const handleUsersUpdate = (event: UsersUpdateEvent) => {
+    dispatch(event);
   };
 
-  useEffect(() => {
-    if(!currentUser) return;
+  socket.on(BaseEvents.UsersUpdate, handleUsersUpdate);
 
-    socket.emit(BaseEvents.UserJoin, currentUser);
-    socket.on(BaseEvents.UsersUpdate, handleUsersUpdate);
-
-    return () => {
-      socket.off(BaseEvents.UsersUpdate, handleUsersUpdate);
-    };
-  }, [currentUser, socket]);
+  return () => {
+    socket.off(BaseEvents.UsersUpdate, handleUsersUpdate);
+  };
+}, [currentUser, socket]);
 
   const value = useMemo(
     () => ({
-      users,
       gameState,
     }),
-    [users, gameState]
+    [gameState]
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
