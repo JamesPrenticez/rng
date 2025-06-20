@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { GameCanvas } from '../game/core/canvas';
 
 const Container = styled.div`
   display: flex;
@@ -12,7 +13,7 @@ const Container = styled.div`
 export const DesktopAppLayout = () => {
   return (
     <Container>
-      Desktop
+      <GameCanvas />
     </Container>
   );
 };
