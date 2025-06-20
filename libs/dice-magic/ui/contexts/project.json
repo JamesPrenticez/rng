@@ -1,5 +1,5 @@
 {
-  "name": "contexts",
+  "name": "dice-magic:contexts",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/dice-magic/ui/contexts/src",
   "projectType": "library",

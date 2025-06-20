@@ -1,5 +1,5 @@
 {
-  "name": "stores",
+  "name": "dice-magic-stores",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
