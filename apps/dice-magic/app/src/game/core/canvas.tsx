@@ -1,6 +1,7 @@
 import { Canvas } from '@react-three/fiber';
 import { GameLoop } from './loop';
 import { OrbitControls } from '@react-three/drei';
+import * as THREE from 'three';
 
 export const GameCanvas = () => {
   return (
@@ -12,8 +13,14 @@ export const GameCanvas = () => {
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
       />
-      <OrbitControls enableDamping />
-        <GameLoop />
+      <OrbitControls
+        enableDamping
+        mouseButtons={{
+          MIDDLE: THREE.MOUSE.PAN,
+          RIGHT: THREE.MOUSE.ROTATE,
+        }}
+      />
+      <GameLoop />
     </Canvas>
   );
 };
