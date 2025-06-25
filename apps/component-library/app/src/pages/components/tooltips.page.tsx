@@ -1,6 +1,14 @@
 import styled from '@emotion/styled';
-import { TooltipRenderer, tooltips } from '@shared/components';
+import { TooltipRenderer, tooltips, Arrow } from '@shared/components';
 
+const MockArrowContainer = styled.div`
+  position: relative;
+  border-radius: 0.8rem;
+  padding: 0.5rem;
+  text-align: center;
+  border: solid 0.1rem var(--color-primary);
+  background-color: rgba(var(--color-black-100-opacity), 0.7);
+`;
 const DemoContainer = styled.div`
   padding: 32px;
 
@@ -71,9 +79,7 @@ const Button = styled.button`
       background-color: #dc2626;
     }
   }
-
 `;
-
 
 export const TooltipsPage = () => {
   return (
@@ -85,7 +91,6 @@ export const TooltipsPage = () => {
           <h2>Custom Tooltips</h2>
 
           <ButtonGroup>
-
             <Button
               className="blue"
               onMouseEnter={(e) =>
@@ -107,7 +112,7 @@ export const TooltipsPage = () => {
                   'This tooltip appears on the right',
                   e.currentTarget,
                   'right',
-                  2000
+                  200000000
                 )
               }
             >
@@ -142,12 +147,16 @@ export const TooltipsPage = () => {
               Bottom Tooltip
             </Button>
 
+            <MockArrowContainer>
+              Static Container for Arrow
+              <Arrow side="top" />
+              <Arrow side="bottom" />
+              <Arrow side="left" />
+              <Arrow side="right" />
+            </MockArrowContainer>
           </ButtonGroup>
         </div>
       </Grid>
-
-
     </DemoContainer>
   );
 };
-

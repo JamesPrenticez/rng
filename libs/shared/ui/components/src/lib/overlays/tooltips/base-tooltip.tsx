@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import clsx from 'clsx';
 import type { PropsWithChildren } from 'react';
 
 import { Arrow } from './base-tooltip-arrow';
@@ -45,9 +44,9 @@ const Container = styled.div`
     border: 0.1rem solid var(--color-primary);
 
     color: var(--color-white-100);
-    font-family: 'Chakra Petch';
+    font-family: 'Aronui';
     font-size: calc(max(1.1rem, 10px));
-    font-weight: 600;
+    font-weight: 400;
     text-align: center;
 
     box-sizing: border-box;
@@ -80,7 +79,7 @@ export const BaseTooltip = ({
             <Container>
                 {children}
 
-                {/* {hasArrow && <Arrow side={side} />} */}
+                {hasArrow && <Arrow side={side} />}
             </Container>
         </Wrapper>
     );
