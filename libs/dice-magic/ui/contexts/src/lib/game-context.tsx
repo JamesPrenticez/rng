@@ -3,26 +3,27 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
   useReducer,
   ReactNode,
+  useCallback,
 } from 'react';
 import { useSocket } from '@shared/contexts';
 
-import { User } from '@shared/models';
-
-import { DiceMagicEvents, GameState } from '@dice-maic/models';
+import { createPlayerSitEvent, DiceMagicEvents, GameState } from '@dice-maic/models';
 import {
   IBaseEvent,
   BaseEvents,
   RoundStartEvent,
   RoundEndEvent,
   UsersUpdateEvent,
+  ResponseEvent,
 } from '@shared/events';
 import { useUserStore } from '@shared/stores';
 
 interface GameContextProps {
   gameState: GameState;
+  handlePlayerSit: (seatId: number) => void;
+  seatIsFree: (seatId: number) => boolean;
 }
 
 interface GameProviderProps {
@@ -33,6 +34,7 @@ const GameContext = createContext<GameContextProps | undefined>(undefined);
 
 const initialState: GameState = {
   roundInfo: null,
+  users: [],
   players: [],
   payouts: [],
   endTime: 0,
@@ -49,7 +51,7 @@ const gameReducer: GameReducer = (state, event): GameState => {
       const eventData = event as UsersUpdateEvent;
       return {
         ...state,
-        players: eventData.payload,
+        users: eventData.payload,
       };
     }
     case BaseEvents.RoundStart: {
@@ -84,33 +86,65 @@ const gameReducer: GameReducer = (state, event): GameState => {
   }
 };
 
+
+const responseHandler = (response: ResponseEvent) => {
+    if (response.payload.status > 400) {
+        // TODO
+        console.log(response.payload.message)
+        // toast(response.payload.message);
+    }
+};
+
+
 export const GameProvider = ({ children }: GameProviderProps) => {
   const socket = useSocket();
 
   const currentUser = useUserStore((s) => s.user);
   const [gameState, dispatch] = useReducer(gameReducer, initialState);
 
-useEffect(() => {
-  if (!currentUser) return;
+  const handlePlayerSit = useCallback(
+    (seatId: number) => {
+      const event = createPlayerSitEvent(seatId);
 
-  socket.emit(BaseEvents.UserJoin, currentUser);
+      socket.emitWithResponse(event).then(responseHandler);
+    },
+    [socket]
+  );
 
-  const handleUsersUpdate = (event: UsersUpdateEvent) => {
-    dispatch(event);
-  };
+  const seatIsFree = useCallback(
+    (seatId: number) => {
+        return !gameState.players.find((p) => p.seat === seatId);
+    },
+    [gameState.players]
+  );
 
-  socket.on(BaseEvents.UsersUpdate, handleUsersUpdate);
+  useEffect(() => {
+    if (!currentUser) return;
 
-  return () => {
-    socket.off(BaseEvents.UsersUpdate, handleUsersUpdate);
-  };
-}, [currentUser, socket]);
+    socket.emit(BaseEvents.UserJoin, currentUser);
+
+    const handleUsersUpdate = (event: UsersUpdateEvent) => {
+      dispatch(event);
+    };
+
+    socket.on(BaseEvents.UsersUpdate, handleUsersUpdate);
+
+    return () => {
+      socket.off(BaseEvents.UsersUpdate, handleUsersUpdate);
+    };
+  }, [currentUser, socket]);
 
   const value = useMemo(
     () => ({
       gameState,
+      handlePlayerSit,
+      seatIsFree
     }),
-    [gameState]
+    [
+      gameState,
+      handlePlayerSit,
+      seatIsFree
+    ]
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
