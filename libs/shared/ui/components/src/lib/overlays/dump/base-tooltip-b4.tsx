@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import type { PropsWithChildren } from 'react';
+import { forwardRef, type PropsWithChildren } from 'react';
 
 import { Arrow } from './base-tooltip-arrow';
 import type { TooltipSide } from './tooltip.types';
@@ -53,7 +53,7 @@ const Container = styled.div`
     transform: translate(-50%, -50%);
 `;
 
-export interface BaseTooltipProps extends PropsWithChildren {
+export interface BaseTooltipProps extends React.HTMLAttributes<HTMLDivElement> {
     id: string;
     top: string | number; // position.y
     left: string | number; // postion.x
@@ -61,19 +61,16 @@ export interface BaseTooltipProps extends PropsWithChildren {
     hasArrow?: boolean;
 }
 
-export const BaseTooltip = ({
-    top,
-    left,
-    side,
-    hasArrow,
-    children,
-}: BaseTooltipProps) => {
+export const BaseTooltip = forwardRef<HTMLDivElement, BaseTooltipProps>(
+  ({ top, left, side, hasArrow, children, style }, ref) => {
     return (
         <Wrapper
+            ref={ref}
             className={`side-${side}`}
             style={{
                 top,
                 left,
+                ...style
             }}
         >
             <Container>
@@ -83,4 +80,7 @@ export const BaseTooltip = ({
             </Container>
         </Wrapper>
     );
-};
+  }
+);
+
+BaseTooltip.displayName = 'BaseTooltip';

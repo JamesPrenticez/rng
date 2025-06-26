@@ -1,20 +1,25 @@
 import { create } from 'zustand';
 
-import type { ITooltip } from './tooltips';
+export type TooltipSide = 'top' | 'bottom' | 'left' | 'right';
 
-interface TooltipState {
-    tooltip: ITooltip | null;
-    createTooltip: (tooltip: ITooltip) => void;
-    clearTooltip: () => void;
+interface TooltipData {
+  message: string;
+  side: TooltipSide;
+  duration: number;
+  reference: HTMLElement;
 }
 
-export type NotificationState = TooltipState;
+interface TooltipStore {
+  tooltip: TooltipData | null;
+  createTooltip: (data: TooltipData) => void;
+  clearTooltip: () => void;
+}
 
-export const useNotificationStore = create<NotificationState>((set) => ({
-    tooltip: null,
-    createTooltip: (tooltip) => {
-        set({ tooltip: null }); 
-        queueMicrotask(() => set({ tooltip })); // before showing a new one
-    },
-    clearTooltip: () => set({ tooltip: null }),
+export const useTooltipStore = create<TooltipStore>((set) => ({
+  tooltip: null,
+  createTooltip: (data) => {
+    set({ tooltip: data });
+    setTimeout(() => set({ tooltip: null }), data.duration);
+  },
+  clearTooltip: () => set({ tooltip: null }),
 }));

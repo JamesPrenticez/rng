@@ -1,23 +1,12 @@
-<svg 
-  fill="var(--color-black-20)"
-  path=""
-  aria-hidden="true"
-  width="16"
-  height="14"
-  viewBox="0 0 14 14"
->
-  <path 
-    clip-path="url(#:r3d:)"
-    fill="none"
-    stroke="red"
-    stroke-width="3"
-    d="M0,0 H14 L8.75,7.5 Q7,10 5.25,7.5 Z">
-  </path>
-  <path 
-    stroke="var(--color-black-20)"
-    d="M0,0 H14 L8.75,7.5 Q7,10 5.25,7.5 Z"
-  />
-  <clipPath id=":r3d:">
-    <rect x="-1" y="1" width="16" height="14" />
-  </clipPath>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 50 22.5" style="border: 1px solid lime;"><path d="
+    M0 21 
+    C 12.5 21, 
+      12.5 0, 
+      25 0, 
+      37.5 0, 
+      37.5 21, 
+      50 21 
+    L50 22 
+    L0 22 
+    Z
+  " fill="white"></path><path d="M0 21 C 12.5 21, 12.5 0, 25 0, 37.5 0, 37.5 21, 50 21" fill="white" stroke="red" vector-effect="non-scaling-stroke" stroke-width="2"></path></svg>

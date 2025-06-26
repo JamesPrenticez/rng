@@ -43,7 +43,7 @@ export const TooltipContainer = styled.div`
   white-space: normal;
 `;
 
-export const Tooltip = ({
+export const Tooltipx = ({
   children,
   message,
   position = 'top',

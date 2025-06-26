@@ -1,7 +1,7 @@
 export type TooltipSide = 'top' | 'left' | 'right' | 'bottom';
 
 export interface ITooltip {
-    type: 'mouse' | 'absolute';
+    type: 'mouse' | 'absolute' | 'lib';
     message: string;
     position?: {
         x: number | string;

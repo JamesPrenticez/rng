@@ -1,88 +1,76 @@
+// TooltipRenderer.tsx
+import React, { useEffect, useRef } from 'react';
+import {
+  useFloating,
+  offset,
+  flip,
+  shift,
+  autoUpdate,
+  arrow,
+  // FloatingArrow,
+} from '@floating-ui/react';
 import styled from '@emotion/styled';
-import { useEffect, useRef, useState } from 'react';
-
-import { useNotificationStore } from '../notification.store';
-import { BaseTooltip } from './base-tooltip';
-import { ITooltip } from './tooltip.types';
+import { useTooltipStore } from '../notification.store';
+import { Tooltip } from './tooltip';
+import { CustomFloatingArrow } from './Arrow';
 
 const Wrapper = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  bottom: 0;
   right: 0;
-
+  bottom: 0;
   pointer-events: none;
   z-index: 100;
 `;
 
 export const TooltipRenderer = () => {
-  const tooltip = useNotificationStore((s) => s.tooltip);
-  const clearTooltip = useNotificationStore((s) => s.clearTooltip);
-  const mousePosition = useRef({ x: 0, y: 0 });
+  const tooltip = useTooltipStore((s) => s.tooltip);
+  const { message, side, reference } = tooltip || {};
+  // const arrowRef = useRef<SVGSVGElement>(null);
+  const arrowRef = useRef(null);
 
-  // We need to sync the position update and render so the side transform doesn't apply before the position updates
-  const [renderedTooltip, setRenderedTooltip] = useState<{
-    tooltip: ITooltip;
-    position: { x: number | string; y: number | string };
-  } | null>(null);
+  const { refs, floatingStyles, placement, context, middlewareData, strategy } = useFloating({
+    placement: side,
+    middleware: [offset(8), flip(), shift(), arrow({ element: arrowRef })],
+    whileElementsMounted: autoUpdate,
+  });
 
-  // Update tooltip position
   useEffect(() => {
-    if (!tooltip) {
-      setRenderedTooltip(null);
-      return;
+    if (tooltip && reference) {
+      refs.setReference(reference);
     }
-
-    const x =
-      tooltip.type === 'mouse'
-        ? mousePosition.current.x
-        : tooltip.position?.x ?? 0;
-
-    const y =
-      tooltip.type === 'mouse'
-        ? mousePosition.current.y
-        : tooltip.position?.y ?? 0;
-
-    setRenderedTooltip({
-      tooltip,
-      position: {x, y},
-    });
-
-    const timer = setTimeout(clearTooltip, tooltip.duration);
-    return () => clearTimeout(timer);
-  }, [tooltip]);
-
-  // Get mouse position
-  useEffect(() => {
-      if(tooltip?.type !== "mouse") return;
-      let ticking = false;
-      const listener = (event: MouseEvent) => {
-          if (!ticking) {
-              requestAnimationFrame(() => {
-                  mousePosition.current = { x: event.x, y: event.y };
-                  ticking = false;
-              });
-              ticking = true;
-          }
-      };
-      document.addEventListener('mousemove', listener);
-      return () => document.removeEventListener('mousemove', listener);
-  }, []);
+  }, [tooltip, reference, refs]);
 
   return (
     <Wrapper>
-      {renderedTooltip && (
-        <BaseTooltip
-          key={renderedTooltip.tooltip.message}
-          id="tooltip"
-          top={renderedTooltip.position.y}
-          left={renderedTooltip.position.x}
-          side={renderedTooltip.tooltip.side ?? 'top'}
-          hasArrow={renderedTooltip.tooltip.hasArrow ?? false}
+      {tooltip && (
+        <Tooltip
+          ref={refs.setFloating}
+          style={{
+            ...floatingStyles,
+          }}
         >
-          {renderedTooltip.tooltip.message}
-        </BaseTooltip>
+          {message} ({placement})
+          {/* <FloatingArrow
+            ref={arrowRef}
+            context={context}
+            fill="var(--color-black-100)"
+            stroke="var(--color-primary)"
+            strokeWidth={1}
+            path=""
+            tipRadius={2}
+            height={10}
+          /> */}
+
+          <CustomFloatingArrow
+            ref={arrowRef}
+            x={middlewareData.arrow?.x}
+            y={middlewareData.arrow?.y}
+            placement={placement}
+            strategy={strategy}
+          />
+        </Tooltip>
       )}
     </Wrapper>
   );

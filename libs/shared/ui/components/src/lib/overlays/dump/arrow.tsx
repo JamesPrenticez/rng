@@ -2,8 +2,19 @@ import styled from '@emotion/styled';
 import type React from 'react';
 
 import type { TooltipSide } from './tooltip.types';
+import { Placement } from '@floating-ui/react-dom';
 
-const OFFSET = 1;
+
+
+const arrowStyle: React.CSSProperties = {
+  position: 'absolute',
+  width: 10,
+  height: 10,
+  pointerEvents: 'none',
+  [staticSide!]: '-5px', // offset arrow 5px "into" the tooltip
+  left: middlewareData.arrow?.x != null ? `${middlewareData.arrow.x}px` : '',
+  top: middlewareData.arrow?.y != null ? `${middlewareData.arrow.y}px` : '',
+};
 
 const StyledArrow = styled.svg`
   position: absolute;
@@ -34,15 +45,24 @@ const StyledArrow = styled.svg`
 `;
 
 interface ArrowProps extends React.SVGAttributes<SVGElement> {
-  side: TooltipSide;
+  placement: Placement;
 }
 
-export const Arrow = ({ side, ...rest }: ArrowProps) => {
+export const Arrow = ({ placement, ...rest }: ArrowProps) => {
+
+  const staticSide = {
+    top: 'bottom',
+    bottom: 'top',
+    left: 'right',
+    right: 'left',
+  }[placement.split('-')[0]];
+
+
   return (
     <StyledArrow
       xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="14"
+      width="10"
+      height="10"
       viewBox="0 0 14 14"
       fill="none"
       stroke="none"
