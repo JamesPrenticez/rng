@@ -1,5 +1,4 @@
-// TooltipRenderer.tsx
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import {
   useFloating,
   offset,
@@ -7,12 +6,12 @@ import {
   shift,
   autoUpdate,
   arrow,
-  // FloatingArrow,
+  limitShift,
 } from '@floating-ui/react';
 import styled from '@emotion/styled';
 import { useTooltipStore } from '../notification.store';
 import { Tooltip } from './tooltip';
-import { CustomFloatingArrow } from './Arrow';
+import { Arrow } from './arrow';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -24,15 +23,33 @@ const Wrapper = styled.div`
   z-index: 100;
 `;
 
-export const TooltipRenderer = () => {
+interface TooltipRendererProps {
+  boundaryRef: React.RefObject<HTMLElement>;
+}
+
+export const TooltipRenderer = ({ boundaryRef }: TooltipRendererProps ) => {
   const tooltip = useTooltipStore((s) => s.tooltip);
   const { message, side, reference } = tooltip || {};
-  // const arrowRef = useRef<SVGSVGElement>(null);
   const arrowRef = useRef(null);
 
-  const { refs, floatingStyles, placement, context, middlewareData, strategy } = useFloating({
+  const middleware = useMemo(() => {
+    const boundaryEl = boundaryRef.current;
+    return [
+      offset(8),
+      flip({ 
+        boundary: boundaryEl ? [boundaryEl] : [],
+        fallbackPlacements: ['top', 'bottom', 'right', 'left'],
+        crossAxis: true,
+        padding: 8,
+      }),
+      shift({ boundary: boundaryEl ? [boundaryEl] : [] }),
+      arrow({ element: arrowRef }),
+    ];
+  }, [boundaryRef.current]);
+
+  const { refs, floatingStyles, placement, middlewareData, strategy } = useFloating({
     placement: side,
-    middleware: [offset(8), flip(), shift(), arrow({ element: arrowRef })],
+    middleware,
     whileElementsMounted: autoUpdate,
   });
 
@@ -52,18 +69,8 @@ export const TooltipRenderer = () => {
           }}
         >
           {message} ({placement})
-          {/* <FloatingArrow
-            ref={arrowRef}
-            context={context}
-            fill="var(--color-black-100)"
-            stroke="var(--color-primary)"
-            strokeWidth={1}
-            path=""
-            tipRadius={2}
-            height={10}
-          /> */}
 
-          <CustomFloatingArrow
+          <Arrow
             ref={arrowRef}
             x={middlewareData.arrow?.x}
             y={middlewareData.arrow?.y}
@@ -75,3 +82,28 @@ export const TooltipRenderer = () => {
     </Wrapper>
   );
 };
+
+// flip({
+//   // Add more boundary detection
+//   boundary: 'clippingAncestors',
+//   // Fallback placements in preferred order
+//   fallbackPlacements: ['top', 'bottom', 'right', 'left'],
+//   // Allow flipping to opposite axis
+//   crossAxis: true,
+//   // Add padding from viewport edges
+//   padding: 8,
+// }),
+// shift({
+//   // Add boundary detection for shift
+//   boundary: 'clippingAncestors',
+//   // Add padding from edges
+//   padding: 8,
+//   // Use limitShift to prevent tooltip from going too far
+//   limiter: limitShift({
+//     // Offset from the edge when limiting
+//     offset: 8,
+//     // Allow some overflow before limiting
+//     mainAxis: true,
+//     crossAxis: true,
+//   }),
+// }),

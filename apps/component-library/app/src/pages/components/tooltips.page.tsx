@@ -1,55 +1,20 @@
 import styled from '@emotion/styled';
-import { TooltipRenderer, tooltips, generateBellCurveSvg } from '@shared/components';
+import { TooltipRenderer, tooltips } from '@shared/components';
+import { useRef, useState } from 'react';
 
-const Test = styled.div`
-display: flex;
-align-items: center;
-justify-content: center;
+const Container = styled.div``;
+
+const ClippingAncestor = styled.div`
   position: relative;
-  border-radius: 0.8rem;
-  padding: 0.5rem;
-  text-align: center;
-  border: solid 0.1rem var(--color-primary);
-  background-color: rgba(var(--color-black-100-opacity), 0.7);
+  overflow: hidden;
+  border: 2px solid red;
+  margin-top: 2rem;
 
-
-`;
-
-const MockArrowContainer = styled.div`
-  position: relative;
-  border-radius: 0.8rem;
-  padding: 0.5rem;
-  text-align: center;
-  border: solid 0.1rem var(--color-primary);
-  background-color: rgba(var(--color-black-100-opacity), 0.7);
-`;
-const DemoContainer = styled.div`
-  padding: 32px;
-
-  h1 {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 24px;
-  }
-
-  h2 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 16px;
-  }
-
-  h3 {
-    font-weight: 600;
-    color: #b45309;
-  }
-`;
-
-const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 16px;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
 `;
 
 const Button = styled.button`
@@ -87,59 +52,104 @@ const Button = styled.button`
       background-color: #dc2626;
     }
   }
+
+  &.yellow {
+    background-color: #ffcc66;
+    color: #444;
+    &:hover {
+      background-color: #ffef99;
+    }
+  }
 `;
 
 export const TooltipsPage = () => {
-
-  // const SVG = generateBellCurveSvg(15, 0, 8, "red", "white")
-  const SVG = generateBellCurveSvg(0, 50, 21, "red", "white")
+  const boundaryRef = useRef<HTMLDivElement>(null);
+  const [containerSize, setContainerSize] = useState({
+    w: '200px',
+    h: '250px',
+  });
 
   return (
-    <DemoContainer>
-      <TooltipRenderer />
-
+    <Container>
       <Button
-        className="blue"
-        onMouseEnter={(e) =>
-          tooltips.withFloating(
-            'This appears on top',
-            e.currentTarget,
-            'right',
-            2000
+        className="yellow"
+        onClick={() =>
+          setContainerSize((prev) =>
+            prev.w === '200px'
+              ? { w: '550px', h: '300px' }
+              : { w: '200px', h: '250px' }
           )
         }
       >
-        Top Tooltip
+        Toggle size
       </Button>
+      <TooltipRenderer boundaryRef={boundaryRef} />
 
-      <Button
-        className="blue"
-        onMouseEnter={(e) =>
-          tooltips.withFloating(
-            'This appears on top',
-            e.currentTarget,
-            'top',
-            2000
-          )
-        }
+      <ClippingAncestor
+        ref={boundaryRef}
+        style={{
+          width: containerSize.w,
+          height: containerSize.h,
+        }}
       >
-        Top Tooltip
-      </Button>
+        <Button
+          className="blue"
+          onMouseEnter={(e) =>
+            tooltips.withFloating(
+              'This appears on top',
+              e.currentTarget,
+              'top',
+              9999999999
+            )
+          }
+        >
+          Top Tooltip
+        </Button>
 
-<Test>
-      {SVG}
-</Test>
+        <Button
+          className="green"
+          onMouseEnter={(e) =>
+            tooltips.withFloating(
+              'This appears on right',
+              e.currentTarget,
+              'right',
+              9999999999
+            )
+          }
+        >
+          Right Tooltip
+        </Button>
 
-    </DemoContainer>
+        <Button
+          className="purple"
+          onMouseEnter={(e) =>
+            tooltips.withFloating(
+              'This appears on left',
+              e.currentTarget,
+              'left',
+              9999999999
+            )
+          }
+        >
+          Left Tooltip
+        </Button>
+
+        <Button
+          className="red"
+          onMouseEnter={(e) =>
+            tooltips.withFloating(
+              'This appears on bottom',
+              e.currentTarget,
+              'bottom',
+              9999999999
+            )
+          }
+        >
+          Bottom Tooltip
+        </Button>
+      </ClippingAncestor>
+    </Container>
   );
 };
 
-//     <MockArrowContainer>
-//       Static Container for Arrow
-//       <Arrow side="top" />
-//       <Arrow side="bottom" />
-//       <Arrow side="left" />
-//       <Arrow side="right" />
-//     </MockArrowContainer>
-//   </ButtonGroup>
-// </div>
+// const SVG = generateBellCurveSvg(0, 50, 21, "red", "white")

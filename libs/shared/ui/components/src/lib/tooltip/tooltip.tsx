@@ -134,7 +134,7 @@ export const Tooltipx = ({
   // React Portal is outside main DOM tree, therefore we must add themes to it
   const savedTheme = localStorage.getItem('theme') as Themes | null;
 
-  const tooltipElement = !disabled && (
+  const tooltipElement = isVisible && !disabled && (
     <TooltipContainer
       ref={refs.setFloating}
       className={clsx(className, `theme-${savedTheme}`)}

@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
-import { Button as ButtonComponent, Tooltip } from '@shared/components';
-import { Tooltip as ReactTooltip } from 'react-tooltip';
+import { Tooltipx } from '@shared/components';
 
 const DemoContainer = styled.div`
   padding: 32px;
@@ -134,27 +133,27 @@ export const TooltipPage = () => {
         <div>
           <h2>Floating UI</h2>
           <ButtonGroup>
-            <Tooltip message="This tooltip appears on top" position="top">
+            <Tooltipx message="This tooltip appears on top" position="top">
               <Button className="blue">Top Tooltip</Button>
-            </Tooltip>
+            </Tooltipx>
 
-            <Tooltip
+            <Tooltipx
               message="This tooltip appears on the right"
               position="right"
             >
               <Button className="green">Right Tooltip</Button>
-            </Tooltip>
+            </Tooltipx>
 
-            <Tooltip
+            <Tooltipx
               message="This tooltip appears on the bottom"
               position="bottom"
             >
               <Button className="purple">Bottom Tooltip</Button>
-            </Tooltip>
+            </Tooltipx>
 
-            <Tooltip message="This tooltip appears on the left" position="left">
+            <Tooltipx message="This tooltip appears on the left" position="left">
               <Button className="red">Left Tooltip</Button>
-            </Tooltip>
+            </Tooltipx>
           </ButtonGroup>
         </div>
 

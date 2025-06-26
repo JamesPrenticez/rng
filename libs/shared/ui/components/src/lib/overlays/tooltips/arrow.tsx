@@ -11,23 +11,23 @@ const Container = styled.div`
   }
 `
 
-interface CustomFloatingArrowProps {
+interface ArrowProps {
   x?: number;
   y?: number;
   placement: Placement;
-  strategy: Strategy;
+  strategy?: Strategy;
   width?: number;
   height?: number;
   style?: React.CSSProperties;
 }
 
-export const CustomFloatingArrow = forwardRef<HTMLDivElement, CustomFloatingArrowProps>(
+export const Arrow = forwardRef<HTMLDivElement, ArrowProps>(
   (
     {
       x,
       y,
       placement,
-      strategy,
+      strategy = 'absolute',
       width = 50,
       height = 22.5,
       style = {},
@@ -47,9 +47,9 @@ export const CustomFloatingArrow = forwardRef<HTMLDivElement, CustomFloatingArro
     // Offset transform: shift 50% along opposite axis + rotate
     const transform = {
       top: 'translateX(0%) translateY(calc(100% - 1px)) rotate(180deg)',
-      bottom: 'translateX(-50%) rotate(0deg)',
-      left: 'translateY(-50%) rotate(90deg)',
-      right: 'translateY(-50%) rotate(-90deg)',
+      bottom: 'translateX(0%) translateY(calc(-100% + 1px)) rotate(0deg)',
+      left: 'translateY(0%) translateX(calc(100% - 7px)) rotate(90deg)',
+      right: 'translateY(0%) translateX(calc(-100% + 7px)) rotate(-90deg)',
     }[basePlacement];
 
     return (
@@ -95,4 +95,4 @@ export const CustomFloatingArrow = forwardRef<HTMLDivElement, CustomFloatingArro
   }
 );
 
-CustomFloatingArrow.displayName = 'CustomFloatingArrow';
+Arrow.displayName = 'Arrow';
