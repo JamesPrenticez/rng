@@ -1,12 +1,16 @@
+import { Placement, VirtualElement } from '@floating-ui/react-dom';
 import { create } from 'zustand';
 
 export type TooltipSide = 'top' | 'bottom' | 'left' | 'right';
 
 interface TooltipData {
+  type: 'element' | 'mouse' | 'absolute'
   message: string;
-  side: TooltipSide;
+  side: Placement;
   duration: number;
-  reference: HTMLElement;
+  reference: HTMLElement | VirtualElement;
+  coords?: { x: number; y: number };
+  withArrow?: boolean;
 }
 
 interface TooltipStore {

@@ -6,7 +6,6 @@ import {
   shift,
   autoUpdate,
   arrow,
-  limitShift,
 } from '@floating-ui/react';
 import styled from '@emotion/styled';
 import { useTooltipStore } from '../notification.store';
@@ -29,7 +28,7 @@ interface TooltipRendererProps {
 
 export const TooltipRenderer = ({ boundaryRef }: TooltipRendererProps ) => {
   const tooltip = useTooltipStore((s) => s.tooltip);
-  const { message, side, reference } = tooltip || {};
+  const { message, side, reference, withArrow } = tooltip || {};
   const arrowRef = useRef(null);
 
   const middleware = useMemo(() => {
@@ -70,13 +69,15 @@ export const TooltipRenderer = ({ boundaryRef }: TooltipRendererProps ) => {
         >
           {message} ({placement})
 
-          <Arrow
-            ref={arrowRef}
-            x={middlewareData.arrow?.x}
-            y={middlewareData.arrow?.y}
-            placement={placement}
-            strategy={strategy}
-          />
+          {withArrow && 
+            <Arrow
+              ref={arrowRef}
+              x={middlewareData.arrow?.x}
+              y={middlewareData.arrow?.y}
+              placement={placement}
+              strategy={strategy}
+            />
+          }
         </Tooltip>
       )}
     </Wrapper>
