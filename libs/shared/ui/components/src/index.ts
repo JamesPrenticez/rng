@@ -4,5 +4,6 @@ export * from './lib/select';
 export * from './lib/mock-iframe';
 export * from './lib/tooltip/tooltip'
 export * from './lib/overlays/tooltips'
+export * from './lib/overlays/tooltips-b4'
 export * from './lib/typography.title';
 export * from './lib/typography.subtitle';

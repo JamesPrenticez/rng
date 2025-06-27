@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import clsx from 'clsx';
 import { forwardRef } from 'react';
 
 const Container = styled.div`
@@ -26,19 +27,27 @@ const Container = styled.div`
   text-align: center;
 
   box-sizing: border-box;
+
+  opacity: 0;;
+  
+  &.visible {
+    opacity: 1;
+  }
 `;
 
 export interface TooltipProps extends React.HTMLAttributes<HTMLDivElement> {
-  hasArrow?: boolean;
+  visible: boolean;
 }
 
 export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(({ 
     children,
+    visible,
     style
   }, ref) => {
     return (
       <Container
         ref={ref}
+        className={clsx({visible})}
         style={{
           ...style,
         }}

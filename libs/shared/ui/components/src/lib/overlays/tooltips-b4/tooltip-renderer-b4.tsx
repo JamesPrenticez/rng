@@ -1,9 +1,8 @@
 import styled from '@emotion/styled';
 import { useEffect, useRef, useState } from 'react';
 
-import { useNotificationStore } from '../notification.store';
-import { BaseTooltip } from './base-tooltip';
-import { ITooltip } from './tooltip.types';
+import { TooltipData, useNotificationStore } from './notification-b4.store';
+import { BaseTooltip } from './base-tooltip-b4';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -16,16 +15,20 @@ const Wrapper = styled.div`
   z-index: 100;
 `;
 
-export const TooltipRenderer = () => {
-  const tooltip = useNotificationStore((s) => s.tooltip);
-  const clearTooltip = useNotificationStore((s) => s.clearTooltip);
-  const mousePosition = useRef({ x: 0, y: 0 });
+interface TooltipRendererProps {
+  boundaryRef: React.RefObject<HTMLElement>;
+}
 
-  const tooltipRef = useRef<HTMLElement | null>(null);
+export const TooltipRendererB4 = ({ boundaryRef }: TooltipRendererProps) => {
+  const tooltip = useNotificationStore((s) => s.tooltip);
+  console.log(tooltip)
+  const clearTooltip = useNotificationStore((s) => s.clearTooltip);
+
+  const mousePosition = useRef({ x: 0, y: 0 });
 
   // We need to sync the position update and render so the side transform doesn't apply before the position updates
   const [renderedTooltip, setRenderedTooltip] = useState<{
-    tooltip: ITooltip;
+    tooltip: TooltipData;
     position: { x: number | string; y: number | string };
   } | null>(null);
 

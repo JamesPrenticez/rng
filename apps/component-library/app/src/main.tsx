@@ -13,9 +13,9 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <StrictMode>
+  // <StrictMode>
     <BrowserRouter>
       <AppLayoutComponentLibrary />
     </BrowserRouter>
-  </StrictMode>
+  // </StrictMode>
 );

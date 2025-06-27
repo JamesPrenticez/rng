@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { TooltipRenderer, tooltips, useTooltipStore } from '@shared/components';
+import { TooltipRendererB4, tooltipsb4, useTooltipStore } from '@shared/components';
 import { useRef, useState } from 'react';
 
 const Container = styled.div``;
@@ -88,14 +88,14 @@ enum Method {
   ABSOLUTE = 'absolute',
 }
 
-export const TooltipsPage = () => {
+export const TooltipsB4Page = () => {
   const boundaryRef = useRef<HTMLDivElement>(null);
   const [containerSize, setContainerSize] = useState({
-    w: '200px',
-    h: '250px',
+    w: '550px',
+    h: '300px',
   });
 
-  const [method, setMethod] = useState<Method>(Method.MOUSE);
+  const [method, setMethod] = useState<Method>(Method.ELEMENT);
 
   let render = (() => {
     switch (method) {
@@ -105,7 +105,7 @@ export const TooltipsPage = () => {
             <Button
               className="blue"
               onMouseEnter={(e) =>
-                tooltips.atElement(
+                tooltipsb4.atElement(
                   'This appears on top',
                   e.currentTarget,
                   'top',
@@ -119,7 +119,7 @@ export const TooltipsPage = () => {
             <Button
               className="green"
               onMouseEnter={(e) =>
-                tooltips.atElement(
+                tooltipsb4.atElement(
                   'This appears on right',
                   e.currentTarget,
                   'right',
@@ -133,7 +133,7 @@ export const TooltipsPage = () => {
             <Button
               className="purple"
               onMouseEnter={(e) =>
-                tooltips.atElement(
+                tooltipsb4.atElement(
                   'This appears on left',
                   e.currentTarget,
                   'left',
@@ -147,7 +147,7 @@ export const TooltipsPage = () => {
             <Button
               className="red"
               onMouseEnter={(e) =>
-                tooltips.atElement(
+                tooltipsb4.atElement(
                   'This appears on bottom',
                   e.currentTarget,
                   'bottom',
@@ -159,42 +159,41 @@ export const TooltipsPage = () => {
             </Button>
           </>
         );
-      case Method.MOUSE:
-        return (
-          <Button
-            className="green grow"
-            onClick={(e) =>
-              tooltips.atMouse(
-                'This appears on top',
-                e,
-                'top',
-                1500
-              )
-            }
-          >
-            Top Tooltip
-            <span>(click anywhere)</span>
-            <span>(test the edges)</span>
-          </Button>
-        );
-      case Method.ABSOLUTE:
-        return (
-          <Button
-            className="purple grow"
-            onClick={() =>
-              tooltips.atAbsolute(
-                'This appears on top',
-                'top',
-                1500,
-                { x: 600, y: 600}
-              )
-            }
-          >
-            Absolute Tooltip
-            <span>(click anywhere)</span>
-            <span>(x: 100, y: 100)</span>
-          </Button>
-        );
+      // case Method.MOUSE:
+      //   return (
+      //     <Button
+      //       className="green grow"
+      //       onClick={(e) =>
+      //         tooltipsb4.atMouse(
+      //           'This appears on top',
+      //           'top',
+      //         )
+      //       }
+      //     >
+      //       Top Tooltip
+      //       <span>(click anywhere)</span>
+      //       <span>(test the edges)</span>
+      //     </Button>
+      //   );
+      // case Method.ABSOLUTE:
+      //   return (
+      //     <Button
+      //       className="purple grow"
+      //       onClick={() =>
+      //         tooltipsb4.atAbsolute(
+      //           'This appears on top',
+      //           x: 100,
+      //           y: 100,
+      //           'top',
+      //           1500,
+      //         )
+      //       }
+      //     >
+      //       Absolute Tooltip
+      //       <span>(click anywhere)</span>
+      //       <span>(x: 100, y: 100)</span>
+      //     </Button>
+      //   );
       default:
         return null;
     }
@@ -231,7 +230,7 @@ export const TooltipsPage = () => {
         ))}
       </TopButtonRow>
 
-      <TooltipRenderer boundaryRef={boundaryRef} />
+      <TooltipRendererB4 boundaryRef={boundaryRef} />
 
       <Boundry
         ref={boundaryRef}

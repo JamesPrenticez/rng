@@ -17,16 +17,29 @@ interface TooltipData {
 
 interface TooltipStore {
   tooltip: TooltipData | null;
-createTooltip: (data: Omit<TooltipData, 'id'>) => void;
+  createTooltip: (data: Omit<TooltipData, 'id'>) => void;
   clearTooltip: () => void;
 }
 
 export const useTooltipStore = create<TooltipStore>((set) => ({
   tooltip: null,
-  createTooltip: (data) => {
-    const id = uuidv4();
-    set({ tooltip: { ...data, id } });
-    // setTimeout(() => set({ tooltip: null }), data.duration);
-  },
+createTooltip: (data) =>
+  set((state) => {
+    const prev = state.tooltip;
+    if (
+      prev?.message === data.message &&
+      prev?.reference === data.reference &&
+      prev?.side === data.side
+    ) {
+      return state; // no update
+    }
+
+    return {
+      tooltip: {
+        ...data,
+        id: uuidv4(),
+      },
+    };
+  }),
   clearTooltip: () => set({ tooltip: null }),
 }));

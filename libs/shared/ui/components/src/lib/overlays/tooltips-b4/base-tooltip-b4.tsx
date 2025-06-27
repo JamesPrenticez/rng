@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { forwardRef, type PropsWithChildren } from 'react';
 
-import { Arrow } from './base-tooltip-arrow';
-import type { TooltipSide } from './tooltip.types';
+import { Arrow } from './arrow';
+import { TooltipSide } from './notification-b4.store';
 
 const Wrapper = styled.div`
     position: fixed;

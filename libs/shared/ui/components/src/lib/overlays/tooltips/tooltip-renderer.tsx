@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   useFloating,
   offset,
@@ -27,10 +27,26 @@ interface TooltipRendererProps {
   boundaryRef: React.RefObject<HTMLElement>;
 }
 
-export const TooltipRenderer = ({ boundaryRef }: TooltipRendererProps ) => {
+export const TooltipRenderer = React.memo(({ boundaryRef }: TooltipRendererProps) => {
   const tooltip = useTooltipStore((s) => s.tooltip);
-  const { message, side, reference, withArrow } = tooltip || {};
+  // const { message, side, reference, withArrow } = tooltip || {};
   const arrowRef = useRef(null);
+
+  const [visible, setVisible] = useState(false);
+  const [shouldRender, setShouldRender] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+const tooltipData = useMemo(() => {
+  if (!tooltip) return null;
+  return {
+    message: tooltip.message,
+    side: tooltip.side,
+    reference: tooltip.reference,
+    withArrow: tooltip.withArrow,
+    id: tooltip.id,
+    duration: tooltip.duration
+  };
+}, [tooltip]);
 
   const middleware = useMemo(() => {
     const boundaryEl = boundaryRef.current;
@@ -46,30 +62,55 @@ export const TooltipRenderer = ({ boundaryRef }: TooltipRendererProps ) => {
   }, [boundaryRef.current]);
 
   const { refs, floatingStyles, placement, middlewareData, strategy } = useFloating({
-    placement: side,
+    placement: tooltipData?.side,
     middleware,
     whileElementsMounted: autoUpdate,
   });
 
   useEffect(() => {
-    if (tooltip && reference) {
-      refs.setReference(reference);
+    if (tooltipData && tooltipData.reference) {
+      refs.setReference(tooltipData.reference);
     }
-  }, [tooltip, reference, refs]);
+  }, [tooltipData, refs]);
+
+    useEffect(() => {
+    if (tooltipData) {
+      setShouldRender(true);
+      setVisible(true);
+
+      // Schedule fade-out after tooltip duration
+      timeoutRef.current = setTimeout(() => {
+        setVisible(false); // triggers fade-out
+        timeoutRef.current = setTimeout(() => {
+          setShouldRender(false); // unmount after fade
+        }, 200); // match CSS duration
+      }, tooltipData.duration);
+    }
+
+    return () => {
+      // Clear any timeouts if component updates
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [tooltipData]);
+
+  if (!shouldRender || !tooltipData) return null;
+
+  console.log("render")
 
   return (
     <Wrapper>
-      {tooltip && (
+      {tooltipData && (
         <Tooltip
-          key={tooltip.id}
+          key={tooltipData.id}
           ref={refs.setFloating}
+          visible={visible}
           style={{
             ...floatingStyles,
           }}
         >
-          {message} ({placement})
+          {tooltipData.message} ({placement})
 
-          {withArrow && 
+          {tooltipData.withArrow && 
             <Arrow
               ref={arrowRef}
               x={middlewareData.arrow?.x}
@@ -82,4 +123,4 @@ export const TooltipRenderer = ({ boundaryRef }: TooltipRendererProps ) => {
       )}
     </Wrapper>
   );
-};
+});
