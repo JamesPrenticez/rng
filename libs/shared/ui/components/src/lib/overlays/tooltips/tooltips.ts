@@ -9,13 +9,15 @@ export const tooltips = {
     duration = 1500,
     withArrow = true
   ) => {
+    const virtualRef = fromElement(reference);
+
     useTooltipStore.getState().createTooltip({
       type: 'element',
       message,
       side,
       duration,
-      reference,
-      withArrow
+      reference: virtualRef,
+      withArrow,
     });
   },
   atMouse: (
@@ -35,7 +37,7 @@ export const tooltips = {
       duration,
       reference: virtualRef,
       coords: { x, y },
-      withArrow
+      withArrow,
     });
   },
 
@@ -43,7 +45,7 @@ export const tooltips = {
     message: string,
     side: TooltipSide = 'top',
     duration = 1500,
-    coords: { x: number, y: number },
+    coords: { x: number; y: number },
     withArrow = false
   ) => {
     const virtualRef = createVirtualReference(coords.x, coords.y);
@@ -55,7 +57,7 @@ export const tooltips = {
       duration,
       reference: virtualRef,
       coords: { x: coords.x, y: coords.y },
-      withArrow
+      withArrow,
     });
   },
 };
@@ -72,4 +74,25 @@ const createVirtualReference = (x: number, y: number): VirtualElement => ({
     y,
     toJSON: () => null,
   }),
+});
+
+// Wraps a Natural DOM element bounding box into a VirtualElement
+// Floating UI fails to update position when switching from HTMLElement to VirtualElement
+// Its a annoying bug and this is a work around...
+// You would think adding a tooltip.id would force a re-compte but it doesn't
+const fromElement = (el: HTMLElement): VirtualElement => ({
+  getBoundingClientRect: () => {
+    const rect = el.getBoundingClientRect();
+    return {
+      width: rect.width,
+      height: rect.height,
+      top: rect.top,
+      bottom: rect.bottom,
+      left: rect.left,
+      right: rect.right,
+      x: rect.left,
+      y: rect.top,
+      toJSON: () => null,
+    };
+  },
 });

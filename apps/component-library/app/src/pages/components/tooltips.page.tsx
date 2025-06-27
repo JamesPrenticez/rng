@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { TooltipRenderer, tooltips } from '@shared/components';
+import { TooltipRenderer, tooltips, useTooltipStore } from '@shared/components';
 import { useRef, useState } from 'react';
 
 const Container = styled.div``;
@@ -95,7 +95,7 @@ export const TooltipsPage = () => {
     h: '250px',
   });
 
-  const [method, setMethod] = useState<Method>(Method.ELEMENT);
+  const [method, setMethod] = useState<Method>(Method.MOUSE);
 
   let render = (() => {
     switch (method) {
@@ -218,8 +218,13 @@ export const TooltipsPage = () => {
 
         {Object.values(Method).map((method) => (
           <Button
+            key={method}
             className="yellow"
-            onClick={() => setMethod(method as Method)}
+            onClick={() => {
+              useTooltipStore.getState().clearTooltip();
+              setMethod(method as Method)
+            }
+          }
           >
             {method}
           </Button>

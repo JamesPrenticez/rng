@@ -6,6 +6,7 @@ import {
   shift,
   autoUpdate,
   arrow,
+  limitShift,
 } from '@floating-ui/react';
 import styled from '@emotion/styled';
 import { useTooltipStore } from '../notification.store';
@@ -38,8 +39,6 @@ export const TooltipRenderer = ({ boundaryRef }: TooltipRendererProps ) => {
       flip({ 
         boundary: boundaryEl ? [boundaryEl] : [],
         fallbackPlacements: ['top', 'bottom', 'right', 'left'],
-        crossAxis: true,
-        padding: 8,
       }),
       shift({ boundary: boundaryEl ? [boundaryEl] : [] }),
       arrow({ element: arrowRef }),
@@ -62,6 +61,7 @@ export const TooltipRenderer = ({ boundaryRef }: TooltipRendererProps ) => {
     <Wrapper>
       {tooltip && (
         <Tooltip
+          key={tooltip.id}
           ref={refs.setFloating}
           style={{
             ...floatingStyles,
@@ -83,28 +83,3 @@ export const TooltipRenderer = ({ boundaryRef }: TooltipRendererProps ) => {
     </Wrapper>
   );
 };
-
-// flip({
-//   // Add more boundary detection
-//   boundary: 'clippingAncestors',
-//   // Fallback placements in preferred order
-//   fallbackPlacements: ['top', 'bottom', 'right', 'left'],
-//   // Allow flipping to opposite axis
-//   crossAxis: true,
-//   // Add padding from viewport edges
-//   padding: 8,
-// }),
-// shift({
-//   // Add boundary detection for shift
-//   boundary: 'clippingAncestors',
-//   // Add padding from edges
-//   padding: 8,
-//   // Use limitShift to prevent tooltip from going too far
-//   limiter: limitShift({
-//     // Offset from the edge when limiting
-//     offset: 8,
-//     // Allow some overflow before limiting
-//     mainAxis: true,
-//     crossAxis: true,
-//   }),
-// }),
