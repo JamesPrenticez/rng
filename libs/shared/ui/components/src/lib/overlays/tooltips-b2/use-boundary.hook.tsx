@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 type Side = 'top' | 'bottom' | 'left' | 'right';
 
@@ -133,6 +133,7 @@ const findBestSide = (
   
   // If no side fits perfectly, return the preferred side with constrained position
   const position = calculateTooltipPosition(sourceX, sourceY, preferredSide, tooltipWidth, tooltipHeight, offset, elementRect);
+  
   return { side: preferredSide, position };
 };
 
@@ -146,6 +147,9 @@ export const useTooltipBoundary = ({
 }: UseTooltipBoundaryProps) => {
   const tooltipRef = useRef<any>(null);
   const boundaryRectRef = useRef<DOMRect | null>(null);
+  
+  // Track the actual side after adjustment
+  const [actualSide, setActualSide] = useState<Side | null>(null);
 
   // Track boundary changes (no re-renders)
   useEffect(() => {
@@ -184,16 +188,12 @@ export const useTooltipBoundary = ({
       sourceX = mousePosition.current.x;
       sourceY = mousePosition.current.y;
     } else if (tooltip.type === 'absolute') {
-      // For absolute positioning, use the position as-is (already offset)
-      // We'll treat this as the final position, not a source position
       sourceX = tooltip.position?.x ?? 0;
       sourceY = tooltip.position?.y ?? 0;
     } else if (tooltip.type === 'element') {
-      // For element positioning, use the center position and let hook calculate offset
       sourceX = tooltip.position?.x ?? 0;
       sourceY = tooltip.position?.y ?? 0;
     } else {
-      // For other types, use position as source
       sourceX = tooltip.position?.x ?? 0;
       sourceY = tooltip.position?.y ?? 0;
     }
@@ -232,11 +232,17 @@ export const useTooltipBoundary = ({
     if (bestSide !== preferredSide) {
       tooltipRef.current.className = tooltipRef.current.className.replace(/side-\w+/, `side-${bestSide}`);
     }
+    
+    // Update the actual side state so consumers get the correct value
+    setActualSide(bestSide);
   }, [tooltip, padding, mousePosition]);
 
   // Calculate initial position using estimated dimensions
   const initialPosition = useMemo(() => {
-    if (!tooltip || !boundaryRectRef.current) return null;
+    if (!tooltip || !boundaryRectRef.current) {
+      setActualSide(null);
+      return null;
+    }
     
     const sourceX = tooltip.type === 'mouse' 
       ? mousePosition.current.x 
@@ -271,6 +277,9 @@ export const useTooltipBoundary = ({
       Math.min(bestPosition.y, boundaryRectRef.current.bottom - estimatedHeight - padding)
     );
 
+    // Set initial side
+    setActualSide(bestSide);
+
     return {
       x: constrainedX,
       y: constrainedY,
@@ -288,6 +297,9 @@ export const useTooltipBoundary = ({
 
   return {
     tooltipRef,
-    position: initialPosition
+    position: initialPosition ? {
+      ...initialPosition,
+      side: actualSide ?? initialPosition.side // Use actualSide if available, fallback to initial
+    } : null
   };
 };
