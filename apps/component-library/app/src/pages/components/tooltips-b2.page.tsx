@@ -1,8 +1,16 @@
 import styled from '@emotion/styled';
-import { TooltipRendererB2, tooltipsb2, useTooltipStore } from '@shared/components';
+import {
+  TooltipRendererB2,
+  tooltipsb2,
+  useTooltipStore,
+} from '@shared/components';
 import { useRef, useState } from 'react';
 
-const Container = styled.div``;
+const Container = styled.div`
+display: flex;
+flex-direction: column;
+gap: 1rem;
+`;
 
 const Boundry = styled.div`
   position: relative;
@@ -10,6 +18,7 @@ const Boundry = styled.div`
   border: 2px solid red;
   margin-top: 2rem;
 
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -88,27 +97,27 @@ enum Method {
   ABSOLUTE = 'absolute',
 }
 
-const containerSizes = [
-  {type: 'small', w: '200px', h: '250px'},
-  {type: 'medium', w: '200px', h: '250px'},
-  {type: 'large', w: '550px', h: '350px'},
-]
+const containerSizes = {
+  small: { w: '200px', h: '250px' },
+  medium: { w: '300px', h: '250px' },
+  large: { w: '550px', h: '350px' },
+};
 
-const testSide = [
-  { type: 'top', align: '' },
-  { type: 'bottom', align: '' },
-  { type: 'left', align: '' },
-  { type: 'right', align: '' },
-]
+type Side = keyof typeof testSide;
+
+const testSide = {
+  center: { align: 'center', justify: 'center' },
+  top: { align: 'center', justify: 'flex-start' },
+  bottom: { align: 'center', justify: 'flex-end' },
+  left: { align: 'flex-start', justify: 'center' },
+  right: { align: 'flex-end', justify: 'center' },
+};
 
 export const TooltipsB2Page = () => {
   const boundaryRef = useRef<HTMLDivElement>(null);
-  const [containerSize, setContainerSize] = useState({
-    w: '550px',
-    h: '350px',
-  });
-
+  const [containerSize, setContainerSize] = useState(containerSizes.small);
   const [method, setMethod] = useState<Method>(Method.ELEMENT);
+  const [sideToTest, setSideToTest] = useState<Side>("center")
 
   let render = (() => {
     switch (method) {
@@ -176,11 +185,7 @@ export const TooltipsB2Page = () => {
         return (
           <Button
             className="green grow"
-            onClick={(e) =>
-              tooltipsb2.atMouse(
-                'This appears at mouse',
-              )
-            }
+            onClick={(e) => tooltipsb2.atMouse('This appears at mouse')}
           >
             Top Tooltip
             <span>(click anywhere)</span>
@@ -214,30 +219,40 @@ export const TooltipsB2Page = () => {
   return (
     <Container>
       <TopButtonRow>
-        <Button
-          className="yellow"
-          onClick={() =>
-            setContainerSize((prev) =>
-              prev.w === '200px'
-                ? { w: '550px', h: '350px' }
-                : { w: '200px', h: '250px' }
-            )
-          }
-        >
-          Toggle size
-        </Button>
-
         {Object.values(Method).map((method) => (
           <Button
             key={method}
             className="yellow"
             onClick={() => {
               useTooltipStore.getState().clearTooltip();
-              setMethod(method as Method)
-            }
-          }
+              setMethod(method as Method);
+            }}
           >
             {method}
+          </Button>
+        ))}
+      </TopButtonRow>
+
+      <TopButtonRow>
+        {Object.entries(containerSizes).map(([key, size]) => (
+          <Button
+            key={key}
+            className="yellow"
+            onClick={() => setContainerSize(size)}
+          >
+            {key}
+          </Button>
+        ))}
+      </TopButtonRow>
+
+      <TopButtonRow>
+        {Object.entries(testSide).map(([key, side]) => (
+          <Button
+            key={key}
+            className="yellow"
+            onClick={() => setSideToTest(key as Side)}
+          >
+            {key}
           </Button>
         ))}
       </TopButtonRow>
@@ -247,6 +262,8 @@ export const TooltipsB2Page = () => {
       <Boundry
         ref={boundaryRef}
         style={{
+          alignItems: testSide[sideToTest].align,
+          justifyContent: testSide[sideToTest].justify,
           width: containerSize.w,
           height: containerSize.h,
         }}
