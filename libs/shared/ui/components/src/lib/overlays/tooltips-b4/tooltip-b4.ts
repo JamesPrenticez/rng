@@ -41,6 +41,20 @@ export const tooltipsb4 = {
             hasArrow,
         });
     },
+    atMouse: (
+      message: string,
+      side: TooltipSide = 'top',
+      offset = 8,
+      duration = 1000,
+      hasArrow = false
+    ) => {
+        useNotificationStore.getState().createTooltip({
+            type: 'mouse',
+            message,
+            duration,
+            hasArrow,
+        });
+    },
     atAbsolute: (
         message: string,
         x: number | string,
@@ -52,14 +66,6 @@ export const tooltipsb4 = {
             message,
             position: { x, y },
             duration,
-        });
-    },
-    atMouse: (message: string, duration = 1000, hasArrow = false) => {
-        useNotificationStore.getState().createTooltip({
-            type: 'mouse',
-            message,
-            duration,
-            hasArrow,
         });
     },
 };

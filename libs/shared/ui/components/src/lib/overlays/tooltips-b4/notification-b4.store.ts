@@ -17,7 +17,6 @@ export interface TooltipData {
     hasArrow?: boolean;
 }
 
-
 interface NotificationState {
   tooltip: TooltipData | null;
   createTooltip: (data: Omit<TooltipData, 'id'>) => void;

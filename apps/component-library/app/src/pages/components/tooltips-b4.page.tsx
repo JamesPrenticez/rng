@@ -159,22 +159,21 @@ export const TooltipsB4Page = () => {
             </Button>
           </>
         );
-      // case Method.MOUSE:
-      //   return (
-      //     <Button
-      //       className="green grow"
-      //       onClick={(e) =>
-      //         tooltipsb4.atMouse(
-      //           'This appears on top',
-      //           'top',
-      //         )
-      //       }
-      //     >
-      //       Top Tooltip
-      //       <span>(click anywhere)</span>
-      //       <span>(test the edges)</span>
-      //     </Button>
-      //   );
+      case Method.MOUSE:
+        return (
+          <Button
+            className="green grow"
+            onClick={(e) =>
+              tooltipsb4.atMouse(
+                'This appears at mouse',
+              )
+            }
+          >
+            Top Tooltip
+            <span>(click anywhere)</span>
+            <span>(test the edges)</span>
+          </Button>
+        );
       // case Method.ABSOLUTE:
       //   return (
       //     <Button

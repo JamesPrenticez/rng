@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { TooltipData, useNotificationStore } from './notification-b4.store';
 import { BaseTooltip } from './base-tooltip-b4';
@@ -21,60 +21,49 @@ interface TooltipRendererProps {
 
 export const TooltipRendererB4 = ({ boundaryRef }: TooltipRendererProps) => {
   const tooltip = useNotificationStore((s) => s.tooltip);
-  console.log(tooltip)
   const clearTooltip = useNotificationStore((s) => s.clearTooltip);
-
   const mousePosition = useRef({ x: 0, y: 0 });
 
-  // We need to sync the position update and render so the side transform doesn't apply before the position updates
-  const [renderedTooltip, setRenderedTooltip] = useState<{
-    tooltip: TooltipData;
-    position: { x: number | string; y: number | string };
-  } | null>(null);
-
-  // Update tooltip position
+  // Quietly track mouse position quietly (no forcing re-renders)
   useEffect(() => {
-    if (!tooltip) {
-      setRenderedTooltip(null);
-      return;
-    }
+    let ticking = false;
+    const listener = (event: MouseEvent) => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          mousePosition.current = { x: event.clientX, y: event.clientY };
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    
+    document.addEventListener('mousemove', listener);
+    return () => document.removeEventListener('mousemove', listener);
+  }, []); // No dependency - always track mouse position
 
-    const x =
-      tooltip.type === 'mouse'
-        ? mousePosition.current.x
-        : tooltip.position?.x ?? 0;
+  // Derive the rendered tooltip directly
+  const renderedTooltip = useMemo(() => {
+    if (!tooltip) return null;
+    
+    const x = tooltip.type === 'mouse' 
+      ? mousePosition.current.x 
+      : tooltip.position?.x ?? 0;
+    const y = tooltip.type === 'mouse' 
+      ? mousePosition.current.y 
+      : tooltip.position?.y ?? 0;
+    
+    return { tooltip, position: { x, y } };
+  }, [tooltip]); // Only re-calculate when tooltip changes
 
-    const y =
-      tooltip.type === 'mouse'
-        ? mousePosition.current.y
-        : tooltip.position?.y ?? 0;
-
-    setRenderedTooltip({
-      tooltip,
-      position: {x, y},
-    });
-
+  // Handle timeout
+  useEffect(() => {
+    if (!tooltip) return;
     const timer = setTimeout(clearTooltip, tooltip.duration);
     return () => clearTimeout(timer);
-  }, [tooltip]);
+  }, [tooltip, clearTooltip]);
 
-  // Get mouse position
-  useEffect(() => {
-      if(tooltip?.type !== "mouse") return;
-      let ticking = false;
-      const listener = (event: MouseEvent) => {
-          if (!ticking) {
-              requestAnimationFrame(() => {
-                  mousePosition.current = { x: event.x, y: event.y };
-                  ticking = false;
-              });
-              ticking = true;
-          }
-      };
-      document.addEventListener('mousemove', listener);
-      return () => document.removeEventListener('mousemove', listener);
-  }, []);
-
+  console.log("re-renders");
+  
   return (
     <Wrapper>
       {renderedTooltip && (
