@@ -3,7 +3,7 @@ import { create } from 'zustand';
 export type TooltipSide = 'top' | 'bottom' | 'left' | 'right';
 
 export interface TooltipData {
-    type: 'mouse' | 'absolute';
+    type: 'element' | 'mouse' | 'absolute';
     message: string;
     position?: {
         x: number | string;
@@ -13,6 +13,7 @@ export interface TooltipData {
     offset?: number;
     duration: number;
     hasArrow?: boolean;
+    elementRect?: DOMRect;
 }
 
 interface NotificationState {

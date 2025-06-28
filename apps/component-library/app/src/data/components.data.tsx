@@ -8,6 +8,7 @@ import {
   InputPage,
   SelectPage,
   TooltipPage,
+  TooltipsB2Page,
   TooltipsB4Page,
   TooltipsPage,
   TypographyPage
@@ -28,5 +29,6 @@ export const COMPONENT_DATA: ComponentDataProps[] = [
   {id: '4', title: 'Select', path: Path.SELECT, page: <SelectPage />},
   {id: '5', title: 'Tooltip', path: Path.TOOLTIP, page: <TooltipPage />},
   {id: '6', title: 'Tooltips', path: Path.TOOLTIPS, page: <TooltipsPage />},
-  {id: '7', title: 'TooltipsB4', path: Path.TOOLTIPSB4, page: <TooltipsB4Page />},
+  {id: '7', title: 'TooltipsB2', path: Path.TOOLTIPSB2, page: <TooltipsB2Page />},
+  {id: '8', title: 'TooltipsB4', path: Path.TOOLTIPSB4, page: <TooltipsB4Page />},
 ]

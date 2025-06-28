@@ -17,6 +17,7 @@ export enum Path {
   TOGGLE = '/toggle',
   TOOLTIP = '/tooltip',
   TOOLTIPS = '/tooltips',
+  TOOLTIPSB2 = '/tooltips-b2',
   TOOLTIPSB4 = '/tooltips-b4',
   TYPOGRAPHY = '/typography'
 }

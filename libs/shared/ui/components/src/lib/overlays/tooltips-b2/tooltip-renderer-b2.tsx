@@ -1,8 +1,9 @@
+// Updated TooltipRenderer component
 import styled from '@emotion/styled';
-import { useEffect, useMemo, useRef, useState } from 'react';
-
-import { TooltipData, useNotificationStore } from './notification-b4.store';
-import { BaseTooltip } from './base-tooltip-b4';
+import { useEffect, useRef } from 'react';
+import { TooltipData, useNotificationStore } from './notification-b2.store';
+import { BaseTooltip } from './base-tooltip-b2';
+import { useTooltipBoundary } from './use-boundary.hook';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -10,7 +11,6 @@ const Wrapper = styled.div`
   left: 0;
   bottom: 0;
   right: 0;
-
   pointer-events: none;
   z-index: 100;
 `;
@@ -19,12 +19,12 @@ interface TooltipRendererProps {
   boundaryRef: React.RefObject<HTMLElement>;
 }
 
-export const TooltipRendererB4 = ({ boundaryRef }: TooltipRendererProps) => {
+export const TooltipRendererB2 = ({ boundaryRef }: TooltipRendererProps) => {
   const tooltip = useNotificationStore((s) => s.tooltip);
   const clearTooltip = useNotificationStore((s) => s.clearTooltip);
   const mousePosition = useRef({ x: 0, y: 0 });
 
-  // Quietly track mouse position
+  // Track mouse position
   useEffect(() => {
     let ticking = false;
     const listener = (event: MouseEvent) => {
@@ -39,21 +39,17 @@ export const TooltipRendererB4 = ({ boundaryRef }: TooltipRendererProps) => {
     
     document.addEventListener('mousemove', listener);
     return () => document.removeEventListener('mousemove', listener);
-  }, []); // No dependency - always track mouse position
+  }, []);
 
-  // Derive the rendered tooltip directly
-  const renderedTooltip = useMemo(() => {
-    if (!tooltip) return null;
-    
-    const x = tooltip.type === 'mouse' 
-      ? mousePosition.current.x 
-      : tooltip.position?.x ?? 0;
-    const y = tooltip.type === 'mouse' 
-      ? mousePosition.current.y 
-      : tooltip.position?.y ?? 0;
-    
-    return { tooltip, position: { x, y } };
-  }, [tooltip]); // Only re-calculate when tooltip changes
+  // Use the boundary hook
+  const { tooltipRef, position } = useTooltipBoundary({
+    tooltip,
+    boundaryRef,
+    mousePosition,
+    padding: 8,
+    estimatedWidth: 160, // min-width: 10rem = 160px
+    estimatedHeight: 45  // min-height: 2.8rem ≈ 44.8px
+  });
 
   // Handle timeout
   useEffect(() => {
@@ -66,16 +62,17 @@ export const TooltipRendererB4 = ({ boundaryRef }: TooltipRendererProps) => {
   
   return (
     <Wrapper>
-      {renderedTooltip && (
+      {tooltip && position && (
         <BaseTooltip
-          key={renderedTooltip.tooltip.message}
+          ref={tooltipRef}
+          key={tooltip.message}
           id="tooltip"
-          top={renderedTooltip.position.y}
-          left={renderedTooltip.position.x}
-          side={renderedTooltip.tooltip.side ?? 'top'}
-          hasArrow={renderedTooltip.tooltip.hasArrow ?? false}
+          top={position.y}
+          left={position.x}
+          side={position.side}
+          hasArrow={tooltip.hasArrow ?? false}
         >
-          {renderedTooltip.tooltip.message}
+          {tooltip.message} {position.side}
         </BaseTooltip>
       )}
     </Wrapper>
