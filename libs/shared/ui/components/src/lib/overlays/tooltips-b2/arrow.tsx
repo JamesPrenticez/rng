@@ -39,7 +39,6 @@ interface ArrowProps extends React.SVGAttributes<SVGElement> {
 }
 
 export const Arrow = ({ side, ...rest }: ArrowProps) => {
-  console.log(side)
     return (
         <StyledArrow
             xmlns="http://www.w3.org/2000/svg"

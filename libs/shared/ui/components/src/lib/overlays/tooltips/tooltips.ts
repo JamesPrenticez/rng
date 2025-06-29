@@ -1,5 +1,5 @@
 import { Placement, VirtualElement } from '@floating-ui/react-dom';
-import { TooltipSide, useTooltipStore } from '../notification.store';
+import { TooltipSide, useTooltipStore } from './notification.store';
 
 export const tooltips = {
   atElement: (

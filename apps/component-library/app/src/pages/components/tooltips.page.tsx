@@ -1,8 +1,16 @@
 import styled from '@emotion/styled';
-import { TooltipRenderer, tooltips, useTooltipStore } from '@shared/components';
+import {
+  TooltipRenderer,
+  tooltips,
+  useTooltipStore,
+} from '@shared/components';
 import { useRef, useState } from 'react';
 
-const Container = styled.div``;
+const Container = styled.div`
+display: flex;
+flex-direction: column;
+gap: 1rem;
+`;
 
 const Boundry = styled.div`
   position: relative;
@@ -10,6 +18,7 @@ const Boundry = styled.div`
   border: 2px solid red;
   margin-top: 2rem;
 
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -88,14 +97,27 @@ enum Method {
   ABSOLUTE = 'absolute',
 }
 
+const containerSizes = {
+  small: { w: '200px', h: '250px' },
+  medium: { w: '300px', h: '250px' },
+  large: { w: '550px', h: '350px' },
+};
+
+type Side = keyof typeof testSide;
+
+const testSide = {
+  center: { align: 'center', justify: 'center' },
+  top: { align: 'center', justify: 'flex-start' },
+  bottom: { align: 'center', justify: 'flex-end' },
+  left: { align: 'flex-start', justify: 'center' },
+  right: { align: 'flex-end', justify: 'center' },
+};
+
 export const TooltipsPage = () => {
   const boundaryRef = useRef<HTMLDivElement>(null);
-  const [containerSize, setContainerSize] = useState({
-    w: '200px',
-    h: '250px',
-  });
-
-  const [method, setMethod] = useState<Method>(Method.MOUSE);
+  const [containerSize, setContainerSize] = useState(containerSizes.small);
+  const [method, setMethod] = useState<Method>(Method.ELEMENT);
+  const [sideToTest, setSideToTest] = useState<Side>("center")
 
   let render = (() => {
     switch (method) {
@@ -106,7 +128,7 @@ export const TooltipsPage = () => {
               className="blue"
               onMouseEnter={(e) =>
                 tooltips.atElement(
-                  'This appears on top',
+                  'This appears on',
                   e.currentTarget,
                   'top',
                   1000
@@ -120,7 +142,7 @@ export const TooltipsPage = () => {
               className="green"
               onMouseEnter={(e) =>
                 tooltips.atElement(
-                  'This appears on right',
+                  'This appears on',
                   e.currentTarget,
                   'right',
                   1000
@@ -134,7 +156,7 @@ export const TooltipsPage = () => {
               className="purple"
               onMouseEnter={(e) =>
                 tooltips.atElement(
-                  'This appears on left',
+                  'This appears on',
                   e.currentTarget,
                   'left',
                   1000
@@ -148,7 +170,7 @@ export const TooltipsPage = () => {
               className="red"
               onMouseEnter={(e) =>
                 tooltips.atElement(
-                  'This appears on bottom',
+                  'This appears on',
                   e.currentTarget,
                   'bottom',
                   1000
@@ -163,38 +185,32 @@ export const TooltipsPage = () => {
         return (
           <Button
             className="green grow"
-            onClick={(e) =>
-              tooltips.atMouse(
-                'This appears on top',
-                e,
-                'top',
-                1500
-              )
-            }
+            onClick={(e) => tooltips.atMouse('This appears at mouse', e)}
           >
             Top Tooltip
             <span>(click anywhere)</span>
             <span>(test the edges)</span>
           </Button>
         );
-      case Method.ABSOLUTE:
-        return (
-          <Button
-            className="purple grow"
-            onClick={() =>
-              tooltips.atAbsolute(
-                'This appears on top',
-                'top',
-                1500,
-                { x: 600, y: 600}
-              )
-            }
-          >
-            Absolute Tooltip
-            <span>(click anywhere)</span>
-            <span>(x: 100, y: 100)</span>
-          </Button>
-        );
+      // case Method.ABSOLUTE:
+      //   return (
+      //     <Button
+      //       className="purple grow"
+      //       onClick={() =>
+      //         tooltipsb4.atAbsolute(
+      //           'This appears on top',
+      //           x: 100,
+      //           y: 100,
+      //           'top',
+      //           1500,
+      //         )
+      //       }
+      //     >
+      //       Absolute Tooltip
+      //       <span>(click anywhere)</span>
+      //       <span>(x: 100, y: 100)</span>
+      //     </Button>
+      //   );
       default:
         return null;
     }
@@ -203,30 +219,40 @@ export const TooltipsPage = () => {
   return (
     <Container>
       <TopButtonRow>
-        <Button
-          className="yellow"
-          onClick={() =>
-            setContainerSize((prev) =>
-              prev.w === '200px'
-                ? { w: '550px', h: '300px' }
-                : { w: '200px', h: '250px' }
-            )
-          }
-        >
-          Toggle size
-        </Button>
-
         {Object.values(Method).map((method) => (
           <Button
             key={method}
             className="yellow"
             onClick={() => {
               useTooltipStore.getState().clearTooltip();
-              setMethod(method as Method)
-            }
-          }
+              setMethod(method as Method);
+            }}
           >
             {method}
+          </Button>
+        ))}
+      </TopButtonRow>
+
+      <TopButtonRow>
+        {Object.entries(containerSizes).map(([key, size]) => (
+          <Button
+            key={key}
+            className="yellow"
+            onClick={() => setContainerSize(size)}
+          >
+            {key}
+          </Button>
+        ))}
+      </TopButtonRow>
+
+      <TopButtonRow>
+        {Object.entries(testSide).map(([key, side]) => (
+          <Button
+            key={key}
+            className="yellow"
+            onClick={() => setSideToTest(key as Side)}
+          >
+            {key}
           </Button>
         ))}
       </TopButtonRow>
@@ -236,6 +262,8 @@ export const TooltipsPage = () => {
       <Boundry
         ref={boundaryRef}
         style={{
+          alignItems: testSide[sideToTest].align,
+          justifyContent: testSide[sideToTest].justify,
           width: containerSize.w,
           height: containerSize.h,
         }}

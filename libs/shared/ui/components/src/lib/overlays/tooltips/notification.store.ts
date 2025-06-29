@@ -1,11 +1,9 @@
 import { Placement, VirtualElement } from '@floating-ui/react-dom';
 import { create } from 'zustand';
-import { v4 as uuidv4 } from 'uuid';
 
 export type TooltipSide = 'top' | 'bottom' | 'left' | 'right';
 
 interface TooltipData {
-  id: string;
   type: 'element' | 'mouse' | 'absolute'
   message: string;
   side: Placement;
@@ -23,23 +21,6 @@ interface TooltipStore {
 
 export const useTooltipStore = create<TooltipStore>((set) => ({
   tooltip: null,
-createTooltip: (data) =>
-  set((state) => {
-    const prev = state.tooltip;
-    if (
-      prev?.message === data.message &&
-      prev?.reference === data.reference &&
-      prev?.side === data.side
-    ) {
-      return state; // no update
-    }
-
-    return {
-      tooltip: {
-        ...data,
-        id: uuidv4(),
-      },
-    };
-  }),
+  createTooltip: (tooltip) => { set({ tooltip }) },
   clearTooltip: () => set({ tooltip: null }),
 }));
