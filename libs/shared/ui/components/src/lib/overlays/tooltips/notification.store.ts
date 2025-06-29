@@ -3,7 +3,7 @@ import { create } from 'zustand';
 
 export type TooltipSide = 'top' | 'bottom' | 'left' | 'right';
 
-interface TooltipData {
+export interface TooltipData {
   type: 'element' | 'mouse' | 'absolute'
   message: string;
   side: Placement;

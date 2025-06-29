@@ -94,6 +94,7 @@ const Button = styled.button`
 enum Method {
   ELEMENT = 'element',
   MOUSE = 'mouse',
+  MOUSE_EVENT = 'mouse-event',
   ABSOLUTE = 'absolute',
 }
 
@@ -185,7 +186,26 @@ export const TooltipsPage = () => {
         return (
           <Button
             className="green grow"
-            onClick={(e) => tooltips.atMouse('This appears at mouse', e)}
+            onClick={() => tooltips.atMouse(
+              'This appears at mouse',
+              "top",
+              1500,
+            )}
+          >
+            Top Tooltip
+            <span>(click anywhere)</span>
+            <span>(test the edges)</span>
+          </Button>
+        );
+      case Method.MOUSE_EVENT:
+        return (
+          <Button
+            className="green grow"
+            onClick={(e) => tooltips.atMouseEvent(
+              'This appears at mouse',
+              e,
+              "top"
+            )}
           >
             Top Tooltip
             <span>(click anywhere)</span>

@@ -12,6 +12,9 @@ import styled from '@emotion/styled';
 import { useTooltipStore } from './notification.store';
 import { Tooltip } from './tooltip';
 import { Arrow } from './arrow';
+import { useMousePosition } from './use-mouse-position.hook';
+import { useTooltipVisibility } from './use-tooltip-visability.hook';
+import { createVirtualReference } from './create-virtual-reference.util';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -30,23 +33,29 @@ interface TooltipRendererProps {
 export const TooltipRenderer = React.memo(
   ({ boundaryRef }: TooltipRendererProps) => {
     const tooltip = useTooltipStore((s) => s.tooltip);
-
     const arrowRef = useRef(null);
-    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-    const [visible, setVisible] = useState(false);
-    const [shouldRender, setShouldRender] = useState(false);
+    const mousePosition = useMousePosition();
 
     const tooltipData = useMemo(() => {
       if (!tooltip) return null;
-      return {
-        message: tooltip.message,
-        side: tooltip.side,
-        reference: tooltip.reference,
-        withArrow: tooltip.withArrow,
-        duration: tooltip.duration,
-      };
+      return tooltip;
     }, [tooltip]);
+
+    const { shouldRender, visible } = useTooltipVisibility(tooltipData);
+
+    const reference = useMemo(() => {
+      if (!tooltipData) return null;
+      
+      if (tooltipData.type === 'mouse') {
+        return createVirtualReference(
+          mousePosition.current.x,
+          mousePosition.current.y
+        );
+      }
+      
+      // For non-mouse tooltips, return the reference regardless of mouse position
+      return tooltipData.reference;
+    }, [tooltipData, tooltipData?.type === 'mouse' ? mousePosition : null]);
 
     const middleware = useMemo(() => {
       const boundaryEl = boundaryRef.current;
@@ -69,30 +78,10 @@ export const TooltipRenderer = React.memo(
       });
 
     useEffect(() => {
-      if (tooltipData && tooltipData.reference) {
-        refs.setReference(tooltipData.reference);
+      if (reference) {
+        refs.setReference(reference);
       }
-    }, [tooltipData, refs]);
-
-    useEffect(() => {
-      if (tooltipData) {
-        setShouldRender(true);
-        setVisible(true);
-
-        // Schedule fade-out after tooltip duration
-        timeoutRef.current = setTimeout(() => {
-          setVisible(false); // triggers fade-out
-          timeoutRef.current = setTimeout(() => {
-            setShouldRender(false); // unmount after fade
-          }, 200); // match CSS duration
-        }, tooltipData.duration);
-      }
-
-      return () => {
-        // Clear any timeouts if component updates
-        if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      };
-    }, [tooltipData]);
+    }, [reference, refs]);
 
     if (!shouldRender || !tooltipData) return null;
 

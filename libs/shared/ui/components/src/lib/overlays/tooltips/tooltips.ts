@@ -1,5 +1,6 @@
 import { Placement, VirtualElement } from '@floating-ui/react-dom';
 import { TooltipSide, useTooltipStore } from './notification.store';
+import { createVirtualReference } from './create-virtual-reference.util';
 
 export const tooltips = {
   atElement: (
@@ -22,6 +23,25 @@ export const tooltips = {
   },
   atMouse: (
     message: string,
+    side: TooltipSide = 'top',
+    duration = 1500,
+    // coords: { x: number; y: number },
+    withArrow = false
+  ) => {
+   // Create a placeholder virtual reference - actual position will be set in renderer
+    const virtualRef = createVirtualReference(0, 0);
+
+    useTooltipStore.getState().createTooltip({
+      type: 'mouse',
+      message,
+      side,
+      duration,
+      reference: virtualRef,
+      withArrow,
+    });
+  },
+  atMouseEvent: (
+    message: string,
     event: React.MouseEvent,
     side: TooltipSide = 'top',
     duration = 1500,
@@ -36,11 +56,9 @@ export const tooltips = {
       side,
       duration,
       reference: virtualRef,
-      coords: { x, y },
       withArrow,
     });
   },
-
   atAbsolute: (
     message: string,
     side: TooltipSide = 'top',
@@ -56,25 +74,12 @@ export const tooltips = {
       side,
       duration,
       reference: virtualRef,
-      coords: { x: coords.x, y: coords.y },
       withArrow,
     });
   },
 };
 
-const createVirtualReference = (x: number, y: number): VirtualElement => ({
-  getBoundingClientRect: () => ({
-    width: 0,
-    height: 0,
-    top: y,
-    bottom: y,
-    left: x,
-    right: x,
-    x,
-    y,
-    toJSON: () => null,
-  }),
-});
+
 
 // Wraps a Natural DOM element bounding box into a VirtualElement
 // Floating UI fails to update position when switching from HTMLElement to VirtualElement
