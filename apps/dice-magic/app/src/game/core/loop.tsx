@@ -11,18 +11,17 @@ import { useEffect } from 'react';
 
 export const GameLoop = () => {
   const tableCenter = new THREE.Vector3(0, 0, 0);
-  const { updatePosition, distances } = useDicePositions(tableCenter);
 
+  const { updatePosition, distances } = useDicePositions(tableCenter);
+  const { seatPositions, generatePositions } = usePositioningStore();
+  
   // console.log('Distances:', distances);
 
   // Some sort of gameConfig
   const numOfSeats = 4;
-
   // const {
   //   gameState: { seats },
   // } = useGameContext();
-
-  const { seatPositions, generatePositions } = usePositioningStore();
 
   useEffect(() => {
     generatePositions(numOfSeats);

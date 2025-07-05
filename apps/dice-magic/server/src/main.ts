@@ -30,7 +30,7 @@ io.on('connection', (socket: Socket) => {
 
   // Users
   handleUserJoin(io, socket);
-  handlePlayerSit(io, socket);
+  // handlePlayerSit(io, socket);
 
   socket.on('disconnect', () => {
     console.log("disconnect")
