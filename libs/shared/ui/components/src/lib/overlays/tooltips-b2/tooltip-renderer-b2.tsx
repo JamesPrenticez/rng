@@ -1,9 +1,14 @@
-// Updated TooltipRenderer component
+// Updated TooltipRenderer component with fixed implementations
 import styled from '@emotion/styled';
-import { useEffect, useRef } from 'react';
-import { TooltipData, useNotificationStore } from './notification-b2.store';
-import { BaseTooltip } from './base-tooltip-b2';
-import { useTooltipBoundary } from './use-boundary.hook';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { Tooltip } from './base-tooltip-b2';
+
+import { Arrow } from './arrow';
+import { useTooltipStore } from './notification.store';
+import { useMousePosition } from './use-mouse-position.hook';
+import { useTooltipVisibility } from './use-tooltip-visability.hook';
+import { createVirtualReference } from './create-virtual-reference.util';
+import { arrow, autoUpdate, flip, offset, shift, useFloating } from './hook';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -19,62 +24,94 @@ interface TooltipRendererProps {
   boundaryRef: React.RefObject<HTMLElement>;
 }
 
-export const TooltipRendererB2 = ({ boundaryRef }: TooltipRendererProps) => {
-  const tooltip = useNotificationStore((s) => s.tooltip);
-  const clearTooltip = useNotificationStore((s) => s.clearTooltip);
-  const mousePosition = useRef({ x: 0, y: 0 });
+export const TooltipRendererB2 = React.memo(
+  ({ boundaryRef }: TooltipRendererProps) => {
+    const tooltip = useTooltipStore((s) => s.tooltip);
+    const arrowRef = useRef<HTMLElement>(null);
+    const mousePosition = useMousePosition();
 
-  // Track mouse position
-  useEffect(() => {
-    let ticking = false;
-    const listener = (event: MouseEvent) => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          mousePosition.current = { x: event.clientX, y: event.clientY };
-          ticking = false;
-        });
-        ticking = true;
+    const tooltipData = useMemo(() => {
+      if (!tooltip) return null;
+      return tooltip;
+    }, [tooltip]);
+
+    const { shouldRender, visible } = useTooltipVisibility(tooltipData);
+
+    // Create reference element based on tooltip type
+    const reference = useMemo(() => {
+      if (!tooltipData) return null;
+      
+      if (tooltipData.type === 'mouse') {
+        // For mouse tooltips, create a new virtual reference each time
+        return createVirtualReference(
+          mousePosition.current.x,
+          mousePosition.current.y
+        );
       }
-    };
-    
-    document.addEventListener('mousemove', listener);
-    return () => document.removeEventListener('mousemove', listener);
-  }, []);
+      
+      // For element tooltips, return the existing reference
+      return tooltipData.reference;
+    }, [tooltipData, tooltipData?.type === 'mouse' ? mousePosition.current : null]);
 
-  // Use the boundary hook
-  const { tooltipRef, position } = useTooltipBoundary({
-    tooltip,
-    boundaryRef,
-    mousePosition,
-    padding: 8,
-    estimatedWidth: 160, // min-width: 10rem = 160px
-    estimatedHeight: 45  // min-height: 2.8rem ≈ 44.8px
-  });
+    // Memoize middleware configuration
+    const middleware = useMemo(() => {
+      const boundaryEl = boundaryRef.current;
+      
+      return [
+        offset(8),
+        flip({
+          boundary: boundaryEl ? [boundaryEl] : undefined,
+          fallbackPlacements: ['top', 'bottom', 'right', 'left'],
+          padding: 8,
+        }),
+        shift({ 
+          boundary: boundaryEl ? [boundaryEl] : undefined,
+          padding: 8,
+        }),
+        arrow({ 
+          element: arrowRef,
+          padding: 8,
+        }),
+      ];
+    }, [boundaryRef.current]);
 
-  // Handle timeout
-  useEffect(() => {
-    if (!tooltip) return;
-    const timer = setTimeout(clearTooltip, tooltip.duration);
-    return () => clearTimeout(timer);
-  }, [tooltip, clearTooltip]);
+    // Use the corrected useFloating hook
+    const { refs, floatingStyles, placement, middlewareData } = useFloating({
+      placement: tooltipData?.side || 'top',
+      middleware,
+      whileElementsMounted: autoUpdate,
+    });
 
-  console.log("re-renders");
-  
-  return (
-    <Wrapper>
-      {tooltip && position && (
-        <BaseTooltip
-          ref={tooltipRef}
-          key={tooltip.message}
-          id="tooltip"
-          top={position.y}
-          left={position.x}
-          side={position.side}
-          hasArrow={tooltip.hasArrow ?? false}
+    // Update reference when it changes
+    useEffect(() => {
+      if (reference) {
+        refs.setReference(reference);
+      }
+    }, [reference, refs]);
+
+    if (!shouldRender || !tooltipData) return null;
+
+    return (
+      <Wrapper>
+        <Tooltip
+          ref={refs.setFloating}
+          visible={visible}
+          style={floatingStyles}
         >
-          {tooltip.message} {position.side}
-        </BaseTooltip>
-      )}
-    </Wrapper>
-  );
-};
+          {tooltipData.message} ({placement})
+          {tooltipData.withArrow && (
+            <Arrow
+              ref={arrowRef}
+              x={middlewareData.arrow?.x}
+              y={middlewareData.arrow?.y}
+              placement={placement}
+              strategy="absolute"
+            />
+          )}
+        </Tooltip>
+      </Wrapper>
+    );
+  }
+);
+
+TooltipRendererB2.displayName = 'TooltipRendererB2';

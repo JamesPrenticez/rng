@@ -1,59 +1,98 @@
+import React, { forwardRef } from 'react';
+import { type Placement, type Strategy } from '@floating-ui/react';
 import styled from '@emotion/styled';
-import type React from 'react';
-import { TooltipSide } from './notification-b2.store';
 
 
-const OFFSET = 18;
-
-const StyledArrow = styled.svg`
-  position: absolute;
-  color: red;
-
-  &.side-top {
-    bottom: -${OFFSET}px;
-    left: 50%;
-    transform: translateX(-50%) rotate(90deg);
+const Container = styled.div`
+  svg {
+    height: auto;
+    width: 2rem;
+    /* border: red solid 1px; */
   }
+`
 
-  &.side-right {
-    left: -${OFFSET}px;
-    top: 50%;
-    transform: translateY(-50%) rotate(180deg);
-  }
-
-  &.side-bottom {
-    top: -${OFFSET}px;
-    left: 50%;
-    transform: translateX(-50%) rotate(-90deg);
-  }
-
-  &.side-left {
-    right: -${OFFSET}px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-`;
-
-interface ArrowProps extends React.SVGAttributes<SVGElement> {
-    side: TooltipSide;
+interface ArrowProps {
+  x?: number;
+  y?: number;
+  placement: Placement;
+  strategy?: Strategy;
+  width?: number;
+  height?: number;
+  style?: React.CSSProperties;
 }
 
-export const Arrow = ({ side, ...rest }: ArrowProps) => {
+export const Arrow = forwardRef<HTMLDivElement, ArrowProps>(
+  (
+    {
+      x,
+      y,
+      placement,
+      strategy = 'absolute',
+      width = 50,
+      height = 22.5,
+      style = {},
+    },
+    ref
+  ) => {
+    const basePlacement = placement.split('-')[0];
+
+    // Choose side for positioning and rotation
+    const staticSide = {
+      top: 'bottom',
+      bottom: 'top',
+      left: 'right',
+      right: 'left',
+    }[basePlacement] as keyof React.CSSProperties;
+
+    // Offset transform: shift 50% along opposite axis + rotate
+    const transform = {
+      top: 'translateX(0%) translateY(calc(100% - 1px)) rotate(180deg)',
+      bottom: 'translateX(0%) translateY(calc(-100% + 1px)) rotate(0deg)',
+      left: 'translateY(0%) translateX(calc(100% - 7px)) rotate(90deg)',
+      right: 'translateY(0%) translateX(calc(-100% + 7px)) rotate(-90deg)',
+    }[basePlacement];
+
     return (
-        <StyledArrow
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            className={`side-${side}`}
-            {...rest}
-        >
-            <polygon points="6 3 20 12 6 21 6 3" />
-        </StyledArrow>
+      <Container
+        ref={ref}
+        style={{
+          position: strategy,
+          left: x != null ? `${x}px` : '',
+          top: y != null ? `${y}px` : '',
+          [staticSide]: '-1px',
+          transform,
+          pointerEvents: 'none',
+          ...style,
+        }}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 50 22.5" width={width} height={height}>
+          <path
+            d="
+              M0 21 
+              C 12.5 21, 
+                12.5 0, 
+                25 0, 
+                37.5 0, 
+                37.5 21, 
+                50 21 
+              L50 22 
+              L0 22 
+              Z
+            "
+            fill="var(--color-black-100)"
+            stroke="none"
+          />
+          <path
+            d="M0 21 C 12.5 21, 12.5 0, 25 0, 37.5 0, 37.5 21, 50 21"
+            fill="var(--color-black-100)"
+            stroke="var(--color-primary)"
+            strokeWidth={1}
+            vectorEffect="non-scaling-stroke"
+          />
+        </svg>
+      </Container>
     );
-};
+  }
+);
+
+Arrow.displayName = 'Arrow';

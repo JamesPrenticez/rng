@@ -156,20 +156,41 @@ export const Tooltipx = ({
     </TooltipContainer>
   );
 
-  return (
-    <>
-      <TriggerWrapper
-        ref={refs.setReference}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        aria-describedby={isVisible ? 'tooltip' : undefined}
-        tabIndex={0} // makes the element focusable for accessibility  
+return (
+  <div style={{ display: 'inline-block', position: 'relative' }}>
+    <TriggerWrapper
+      ref={refs.setReference}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      aria-describedby={isVisible ? 'tooltip' : undefined}
+      tabIndex={0}
+    >
+      {children}
+    </TriggerWrapper>
+
+    {isVisible && !disabled && (
+      <TooltipContainer
+        ref={refs.setFloating}
+        className={clsx(className, `theme-${savedTheme}`)}
+        style={floatingStyles}
+        role="tooltip"
+        aria-hidden={!isVisible}
       >
-        {children}
-      </TriggerWrapper>
-      {createPortal(tooltipElement, container)}
-    </>
-  );
-};
+        {message}
+        <FloatingArrow
+          ref={arrowRef}
+          context={context}
+          fill="var(--color-black-20)"
+          stroke="var(--color-primary)"
+          strokeWidth={1}
+          path=""
+          tipRadius={2}
+          height={10}
+        />
+      </TooltipContainer>
+    )}
+  </div>
+)
+}
