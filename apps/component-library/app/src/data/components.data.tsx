@@ -7,7 +7,6 @@ import {
   ButtonPage,
   InputPage,
   SelectPage,
-  TooltipPage,
   TypographyPage
  } from '../pages/components';
 
@@ -23,6 +22,5 @@ export const COMPONENT_DATA: ComponentDataProps[] = [
   {id: '1', title: 'Typography', path: Path.TYPOGRAPHY, page: <TypographyPage/> },
   {id: '2', title: 'Button', path: Path.BUTTON, page: <ButtonPage/> },
   {id: '3', title: 'Input', path: Path.INPUT_TEXT, page: <InputPage />},
-  {id: '4', title: 'Tooltip', path: Path.TOOLTIP, page: <TooltipPage />},
   {id: '5', title: 'Select', path: Path.SELECT, page: <SelectPage />},
 ]
