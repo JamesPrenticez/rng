@@ -1,0 +1,8 @@
+{
+  "name": "game-state-logger",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/game/game-state-logger/src",
+  "projectType": "library",
+  "tags": ["scope:shared"],
+  "targets": {}
+}

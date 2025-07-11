@@ -67,9 +67,13 @@ To generate a new Node library in the /libs/rgs directory we run:
   npx nx g @nx/node:library models --directory=libs/shared/events
   npx nx g @nx/node:library utils --directory=libs/shared/utils
   npx nx g @nx/node:library websockets --directory=libs/shared/websockets
+  npx nx g @nx/node:library state-machine --directory=libs/shared/state-machine
+  npx nx g @nx/node:library game-state-logger --directory=libs/shared/game/game-state-logger
+  npx nx g @nx/node:library game-user-events --directory=libs/shared/game/game-user-events
 
   npx nx g @nx/node:library dice-magic --directory=libs/dice-magic/handlers
   npx nx g @nx/node:library dice-magic --directory=libs/dice-magic/models
+  npx nx g @nx/node:library dice-magic --directory=libs/dice-magic/services
 
   npx nx g @nx/node:library dice-magic --directory=libs/dice-magic/ui/stores
   npx nx g @nx/node:library dice-magic --directory=libs/dice-magic/ui/contexts

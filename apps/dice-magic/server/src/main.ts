@@ -1,42 +1,33 @@
-import { Server, Socket } from 'socket.io';
-import { createServer } from 'http';
-import { 
-  handlePasscodeAccepted,
-  handlePasscodeRequired,
-  handleUserJoin,
-  mockUserMiddleware
-} from '@shared/websocket';
+import { UserServer } from '@shared/websocket';
+// import { DiceMagicGame } from '@dice-magic/services'
+
+// import { GameSettings } from "@dice-magic/models"
 
 const PORT = 3201;
-const GAME_UUID = "123456789"
-const GAME_SETTINGS = {}
+// const GAME_UUID = "123456789"
+// const GAME_SETTINGS = {}
 
-const httpServer = createServer();
-const io = new Server(httpServer, {
-  cors: {
-    origin: '*',
-  },
+// const gameSettings: GameSettings = {
+//   name: "dice-magic",
+//   tableSeatLimit: 4,
+// }
+
+const playerServer = UserServer(
+  {
+    port: PORT,
+    useMockServer: true,
+    disableEvents: false,
+    cors: "",
+  }
+)
+
+// const dmg = DiceMagicGame(pServer, gameSettings);
+
+process.on('exit', () => {
+    // log.info('BLACKJACK', 'Cleaning up server');
+    // dmg.cleanup();
+
+    playerServer.cleanup();
 });
 
-// Fetch the user data from the session token provided by the host for use in the game
-io.use(mockUserMiddleware(GAME_UUID, GAME_SETTINGS));
-
-io.on('connection', (socket: Socket) => {
-  console.log('[server] Socket.IO connection made');
-
-  // Passcode
-  handlePasscodeRequired(socket);
-  handlePasscodeAccepted(socket);
-
-  // Users
-  handleUserJoin(io, socket);
-  // handlePlayerSit(io, socket);
-
-  socket.on('disconnect', () => {
-    console.log("disconnect")
-  });
-});
-
-httpServer.listen(PORT, () => {
-  console.log(`[server] Socket.IO server running at http://localhost:${PORT}`);
-});
+export default {};

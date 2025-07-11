@@ -1,71 +1,39 @@
-// middleware.ts
-import type { ExtendedError } from 'socket.io/dist/namespace';
 import type { Socket } from 'socket.io';
-import { BaseEvents } from '@shared/events';
+import { v4 as uuidv4 } from 'uuid';
+import { createMockUser, createMockUserSessionToken } from '@shared/utils';
 
-import { createMockUser } from "@shared/utils"
+export function mockUserMiddleware() {
+  return (socket: Socket, next: (err?: Error) => void) => {
+    socket.data.type = 'mock';
 
-import type {
-  UserGameSettings,
-  MockSessionData,
-  MockUserData,
-} from '@shared/models';
+    const sessionId = uuidv4();
 
-export const mockUserMiddleware =
-  (gameUuid: string, gameSettings: UserGameSettings) =>
-  async (socket: Socket, next: (err?: ExtendedError) => void) => {
-    try {
-      const raw = socket.handshake.auth.session
-        ?? socket.handshake.headers['x-session'];
+    const user = createMockUser({
+      username: 'Guest',
+      sessionId,
+      balance: 1000,
+      currency: 'USD',
+    });
 
-      let user = undefined;
+    const sessionToken = createMockUserSessionToken(
+      user.username,
+      user.balance,
+      user.currency
+    );
 
-      if (raw) {
-        try {
-          const data = JSON.parse(
-            Buffer.from(raw, 'base64').toString(),
-          ) as MockSessionData;
+    socket.data.user = user;
+    socket.data.sessionToken = sessionToken;
 
-          if (data.type === 'user') {
-            const u = data as MockUserData;
-
-            user = createMockUser(
-              {
-                username: u.username,
-                balance: u.credits,
-                currency: u.currency,
-                sessionId: raw,
-                nicknamePrompt: u.nicknamePrompt,
-              },
-              gameUuid,
-              gameSettings,
-            );
-          }
-        } catch {
-          /* ignore parse errors and fall through */
-        }
-      }
-
-      // if (!user) {
-      //   const session = createMockSession();
-      //   user = createMockAnimoUser(
-      //     { sessionId: session },
-      //     gameUuid,
-      //     gameSettings,
-      //   );
-      // }
-
-      socket.data.user = user;
-      socket.emit(BaseEvents.User, { payload: { user }, requireNameChange: false });
-      next();
-    } catch (e) {
-      next(e as ExtendedError);
-    }
+    next();
   };
+}
 
-// Exploring the code base
-// mockUserMiddlewate // libs\shared\websocket\src\lib\mock-user.middleware.ts
-// PlayerServer // libs\shared\websocket\src\lib\player-server.ts
-// UserServer // libs\shared\websocket\src\lib\user-server.ts
-// RouletteBackend // apps\roulette\server\src\roulette-backend.service.ts
-// which then get called here to main.ts.
+export function userMiddleware() {
+  return (socket: Socket, next: (err?: Error) => void) => {
+    socket.data.type = 'user';
+
+    // Here you'd usually parse token from headers, validate, and set socket.data.user
+    // For now, just leave it empty
+    next();
+  };
+}

@@ -1,6 +1,5 @@
-import { UserGameSettings } from '@shared/models';
+import { OrbitUserData } from '@shared/models';
 import { v4 as uuidv4 } from 'uuid';
-
 interface CreateMockUserOptions {
   username?: string;
   balance?: number;
@@ -9,30 +8,15 @@ interface CreateMockUserOptions {
   nicknamePrompt?: boolean;
 }
 
-export interface GameUser {
-  id: string;
-  username: string;
-  balance: number;
-  currency: string;
-  sessionId: string;
-  nicknamePrompt: boolean;
-  gameUuid: string;
-  createdAt: number;
-}
-
 export const createMockUser = (
   options: CreateMockUserOptions,
-  gameUuid: string,
-  settings: UserGameSettings
-): GameUser => {
+): OrbitUserData => {
   return {
     id: uuidv4(),
     username: options.username || 'Guest',
-    balance: 1000, // options.balance ?? settings.defaultCredits ?? 1000,
-    currency: 'USD', // options.currency ?? settings.defaultCurrency ?? 'USD',
+    name: "mock",
     sessionId: options.sessionId,
-    nicknamePrompt: options.nicknamePrompt ?? false,
-    gameUuid,
-    createdAt: Date.now(),
+    balance: 1000,
+    currency: 'USD', 
   };
 };

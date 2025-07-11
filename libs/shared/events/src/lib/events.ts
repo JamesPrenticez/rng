@@ -1,5 +1,20 @@
-import type { User } from '@shared/models';
+import type { OrbitUserData } from '@shared/models';
 import { v4 as uuidv4 } from 'uuid';
+
+export const BaseGameStates = {
+    Starting: 'Starting',
+    Paused: 'Paused',
+    Maintenance: 'Maintenance',
+    Scheduled: 'Scheduled',
+    Unknown: 'Unknown',
+    Offline: 'Offline',
+    WaitingForDealer: 'WaitingForDealer',
+    WaitingForPlayers: 'WaitingForPlayers',
+    WaitingForBets: 'WaitingForBets',
+    FinishedBetting: 'FinishedBetting',
+    PlayerEndTurn: 'PlayerEndTurn',
+    RoundEnd: 'RoundEnd',
+};
 
 export enum FromServerEvents {
   // ChatMessage = 'ChatMessage',
@@ -43,7 +58,7 @@ export enum FromUserEvents {
 export enum InternalEvents {
   UserJoin = 'UserJoin',
   UserDisconnect = 'UserDisconnect',
-  UsersUpdate = 'UsersUpdate',
+  UserUpdated = 'UserUpdated',
 
   Ready = 'Ready',
   // DeleteChatMessage = 'DeleteChatMessage',
@@ -84,6 +99,19 @@ export type ResponseMessage<T = undefined> = {
 
 export type ResponseEvent = IBaseEvent<'response', ResponseMessage>[1];
 
+export const createResponseEvent = <T = undefined>(
+    messageId: string,
+    response: ResponseMessage<T>
+) => {
+    const ev = createEvent(BaseEvents.Response, response);
+    ev[1].message_id = messageId;
+
+    return ev;
+};
+
+// TODO why is there two types of responce events???? _self?
+export type _ResponseEvent = ReturnType<typeof createResponseEvent>[1];
+
 export const createEvent = <T, D = unknown>(
   type: T,
   data: D
@@ -104,18 +132,18 @@ export const createReadyEvent = () => {
 export type ReadyEvent = ReturnType<typeof createReadyEvent>[1];
 
 // USER - JOIN
-export const createUserJoinEvent = (user: User) => {
+export const createUserJoinEvent = (user: OrbitUserData) => {
   return createEvent(BaseEvents.UserJoin, { user });
 };
 
 export type UserJoinEvent = ReturnType<typeof createUserJoinEvent>[1];
 
 // USER - UPDATE
-export const createUsersUpdateEvent = (users: User[]) => {
-  return createEvent(BaseEvents.UsersUpdate, users);
+export const createUserUpdatedEvent = (user: OrbitUserData) => {
+    return createEvent(BaseEvents.UserUpdated, { user });
 };
 
-export type UsersUpdateEvent = ReturnType<typeof createUsersUpdateEvent>[1];
+export type UserUpdatedEvent = ReturnType<typeof createUserUpdatedEvent>[1];
 
 // PASSCODE
 export const createPasscodeRequiredEvent = () => {
@@ -151,7 +179,7 @@ export type PasscodeRequestEvent = ReturnType<
 >[1];
 
 export const createUserEvent = (
-  user: User,
+  user: OrbitUserData,
   requireNameChange?: boolean
 ) => {
   return createEvent(BaseEvents.User, { user, requireNameChange });

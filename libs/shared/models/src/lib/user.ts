@@ -1,31 +1,38 @@
-export interface User {
-    id: string;
-    username: string;
-    name: string;
-    source: string;
-    sessionId: string;
-
-    balance: number;
-    currency: string;
-
-    flags?: string;
-
-    language?: string;
-    country?: string;
-}
-
-
 export interface UserGameSettings {
-    [key: string]: unknown;
+  [key: string]: unknown;
 }
 
 export interface MockSessionData {
-    type: string;
+  type: string;
 }
 
-export interface MockUserData extends MockSessionData {
-    username: string;
-    credits: number;
-    currency: string;
-    nicknamePrompt?: boolean;
+export interface OrbitUserData {
+  id: string;
+  username: string;
+  name: string;
+  sessionId: string;
+
+  balance: number;
+  currency: string;
+
+  flags?: string;
+
+  language?: string;
+  country?: string;
 }
+
+export interface IOrbitUserFunctions {
+  getDisplayName(): string;
+  updateDisplayName(
+    displayName: string
+  ): Promise<{ success: boolean; error?: string }>;
+  // Settings
+  getSettings(): UserGameSettings;
+  updateSettings(data: Partial<UserGameSettings>): void;
+}
+
+export type OrbitUser<T> = {
+  socket: T;
+  settings: UserGameSettings;
+} & OrbitUserData &
+  IOrbitUserFunctions;

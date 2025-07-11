@@ -1,7 +1,7 @@
 {
-  "name": "websocket",
+  "name": "state-machine",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/shared/websocket/src",
+  "sourceRoot": "libs/shared/state-machine/src",
   "projectType": "library",
   "tags": ["scope:shared"],
   "targets": {}

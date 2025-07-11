@@ -1,7 +1,7 @@
 {
-  "name": "websocket",
+  "name": "services",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/shared/websocket/src",
+  "sourceRoot": "libs/dice-magic/services/src",
   "projectType": "library",
   "tags": ["scope:shared"],
   "targets": {}

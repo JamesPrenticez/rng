@@ -9,13 +9,13 @@ import {
 } from 'react';
 import { useSocket } from '@shared/contexts';
 
-import { createPlayerSitEvent, DiceMagicEvents, GameState } from '@dice-maic/models';
+import { createPlayerSitEvent, DiceMagicEvents, GameState } from '@dice-magic/models';
 import {
   IBaseEvent,
   BaseEvents,
   RoundStartEvent,
   RoundEndEvent,
-  UsersUpdateEvent,
+  UserUpdatedEvent,
   ResponseEvent,
 } from '@shared/events';
 import { useUserStore } from '@shared/stores';
@@ -47,8 +47,8 @@ type GameReducer = (
 
 const gameReducer: GameReducer = (state, event): GameState => {
   switch (event.event) {
-    case BaseEvents.UsersUpdate: {
-      const eventData = event as UsersUpdateEvent;
+    case BaseEvents.UserUpdated: {
+      const eventData = event as UserUpdatedEvent;
       return {
         ...state,
         users: eventData.payload,
@@ -123,7 +123,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
 
     socket.emit(BaseEvents.UserJoin, currentUser);
 
-    const handleUsersUpdate = (event: UsersUpdateEvent) => {
+    const handleUsersUpdate = (event: UsersUpdatedEvent) => {
       dispatch(event);
     };
 

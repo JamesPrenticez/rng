@@ -1,3 +1,3 @@
-import { User } from "@shared/models";
+import { OrbitUserData } from "@shared/models";
 
-export const users = new Map<string, User>();
+export const users = new Map<string, OrbitUserData>();
