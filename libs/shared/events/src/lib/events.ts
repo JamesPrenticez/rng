@@ -1,4 +1,4 @@
-import type { User } from '@shared/models';
+import type { OrbitUserData } from '@shared/models';
 import { v4 as uuidv4 } from 'uuid';
 
 export enum FromServerEvents {
@@ -95,14 +95,14 @@ export const createReadyEvent = () => {
 export type ReadyEvent = ReturnType<typeof createReadyEvent>[1];
 
 // USER - JOIN
-export const createUserJoinEvent = (user: User) => {
+export const createUserJoinEvent = (user: OrbitUserData) => {
   return createEvent(BaseEvents.UserJoin, { user });
 };
 
 export type UserJoinEvent = ReturnType<typeof createUserJoinEvent>[1];
 
 // USER - UPDATE
-export const createUsersUpdateEvent = (users: User[]) => {
+export const createUsersUpdateEvent = (users: OrbitUserData[]) => {
   return createEvent(BaseEvents.UsersUpdate, users);
 };
 
@@ -142,7 +142,7 @@ export type PasscodeRequestEvent = ReturnType<
 >[1];
 
 export const createUserEvent = (
-  user: User,
+  user: OrbitUserData,
   requireNameChange?: boolean
 ) => {
   return createEvent(BaseEvents.User, { user, requireNameChange });

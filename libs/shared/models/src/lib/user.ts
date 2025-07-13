@@ -1,4 +1,4 @@
-export interface User {
+export interface OrbitUserData {
     id: string;
     username: string;
     name: string;
@@ -19,6 +19,14 @@ export interface UserGameSettings {
     [key: string]: unknown;
 }
 
+export type OrbitUser<T> = {
+    socket: T;
+    settings: UserGameSettings;
+} & OrbitUserData;
+
+// ================================================
+// This is from the Host / Auth Provider
+// ================================================
 export interface MockSessionData {
     type: string;
 }
@@ -29,3 +37,4 @@ export interface MockUserData extends MockSessionData {
     currency: string;
     nicknamePrompt?: boolean;
 }
+
