@@ -13,7 +13,6 @@ export const Dice = ({ position, color = 'white', onPositionChange }: PhysicsDic
   const rigidBody = useRef<RigidBodyApi>(null);
   const { camera } = useThree();
 
-  // Report dice position every frame
   useFrame(() => {
     if (rigidBody.current && onPositionChange) {
       const pos = rigidBody.current.translation();
@@ -23,27 +22,26 @@ export const Dice = ({ position, color = 'white', onPositionChange }: PhysicsDic
 
   const throwDice = () => {
     if (!rigidBody.current) return;
-
     const impulseDir = new THREE.Vector3()
       .subVectors(rigidBody.current.translation(), camera.position)
       .normalize()
       .multiplyScalar(10);
-
     rigidBody.current.applyImpulse(impulseDir, true);
   };
 
   return (
     <RigidBody
       ref={rigidBody}
-      colliders="cuboid"
+      colliders="trimesh"
       restitution={0.6}
       friction={0.5}
       position={position}
     >
       <mesh castShadow onClick={throwDice}>
-        <boxGeometry args={[1, 1, 1]} />
+        <icosahedronGeometry args={[1, 0]} />
         <meshStandardMaterial color={color} />
       </mesh>
+
     </RigidBody>
   );
 };
