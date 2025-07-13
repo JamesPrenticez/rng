@@ -1,0 +1,8 @@
+{
+  "name": "services",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/dice-magic/services/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {}
+}
