@@ -14,6 +14,8 @@ export const DesktopAppLayout = () => {
   return (
     <Container>
       <GameCanvas />
+
+      {/* Overlay AKA dice distance */}
     </Container>
   );
 };

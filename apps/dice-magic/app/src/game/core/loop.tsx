@@ -6,14 +6,24 @@ import * as THREE from 'three';
 import { useDicePositions } from '../components/dice/use-dice-position';
 import { usePositioningStore } from '@dice-magic/stores';
 import { Seat } from '../components/table/seat';
+import { useMemo } from 'react';
 
 export const GameLoop = () => {
   const tableCenter = new THREE.Vector3(0, 0, 0);
 
   const { updatePosition, distances } = useDicePositions(tableCenter);
   const { seatPositions } = usePositioningStore();
-  
 
+  const diceRender = useMemo(() =>
+    seatPositions.map((seatPos, i) => (
+      <Dice
+        key={i}
+        position={[seatPos[0], 3, seatPos[2]]} // spawn above each seat
+      />
+    ))
+  , [seatPositions]);
+
+  
   return (
     <PhysicsWorld>
       <Table />
@@ -27,17 +37,8 @@ export const GameLoop = () => {
         />
       ))}
 
-      <Dice
-        position={[-2, 5, 0]}
-        color="red"
-        onPositionChange={(pos) => updatePosition('red', pos)}
-      />
+{diceRender}
 
-      <Dice
-        position={[2, 5, 0]}
-        color="blue"
-        onPositionChange={(pos) => updatePosition('blue', pos)}
-      />
     </PhysicsWorld>
   );
 };

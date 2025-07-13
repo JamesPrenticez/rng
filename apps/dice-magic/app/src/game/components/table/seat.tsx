@@ -15,7 +15,7 @@ export const Seat = ({ seatNum, position }: SeatProps) => {
 
       <Html
         center
-        distanceFactor={10} // controls scale vs camera distance
+        distanceFactor={33} // controls scale vs camera distance
         position={[0, 0.1, 0]} // put above seat
         occlude // hide behind gemoerty / camera
       >

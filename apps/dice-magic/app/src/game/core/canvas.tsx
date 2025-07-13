@@ -5,7 +5,7 @@ import * as THREE from 'three';
 
 export const GameCanvas = () => {
   return (
-    <Canvas camera={{ position: [0, 5, 10], fov: 50 }}>
+    <Canvas camera={{ position: [0, 0, 40], fov: 50 }}>
       <ambientLight intensity={0.1} />
       <directionalLight
         castShadow

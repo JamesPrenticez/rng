@@ -8,7 +8,7 @@ type PositioningStore = {
 
 export const usePositioningStore = create<PositioningStore>(() => {
   const numberOfSeats = 4;
-  const radius = 12;
+  const radius = 33 - 2;
   const initialPositions: Position[] = Array.from(
     { length: numberOfSeats },
     (_, i) => {

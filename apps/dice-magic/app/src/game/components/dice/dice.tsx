@@ -4,7 +4,7 @@ import { useThree, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import {
    useGLTF,
-  //  useTexture
+   useTexture
 } from '@react-three/drei';
 
 type PhysicsDiceProps = {
@@ -52,7 +52,7 @@ export const Dice = ({
     const impulseDir = new THREE.Vector3()
       .subVectors(rigidBody.current.translation(), camera.position)
       .normalize()
-      .multiplyScalar(10);
+      .multiplyScalar(33);
     rigidBody.current.applyImpulse(impulseDir, true);
   };
 
