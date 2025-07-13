@@ -1,16 +1,15 @@
-import { User } from '@shared/models';
-import { Socket, Server } from 'socket.io';
-import { users } from '../stores/users.store';
+import { Socket } from 'socket.io';
 import { BaseEvents, createEvent } from '@shared/events';
+import { OrbitGameUser, UserServerContext } from '../user-server';
 
-export const handleUserJoin = (io: Server, socket: Socket) => {
-  socket.on(BaseEvents.UserJoin, (user: User) => {
-    users.set(socket.id, user);
-    io.emit(...createEvent(BaseEvents.UsersUpdate, Array.from(users.values())));
+export const handleUserJoin = (context: UserServerContext, socket: Socket) => {
+  socket.on(BaseEvents.UserJoin, (user: OrbitGameUser) => {
+    context.users.set(socket.id, user);
+    context.io.emit(...createEvent(BaseEvents.UsersUpdate, Array.from(context.users.values())));
   });
 
   socket.on('disconnect', () => {
-    users.delete(socket.id);
-    io.emit(...createEvent(BaseEvents.UsersUpdate, Array.from(users.values())));
+    context.users.delete(socket.id);
+    context.io.emit(...createEvent(BaseEvents.UsersUpdate, Array.from(context.users.values())));
   });
 };

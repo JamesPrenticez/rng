@@ -1,14 +1,14 @@
-import { User } from '@shared/models';
+import { OrbitUserData } from '@shared/models';
 import { produce } from 'immer';
 import { create } from 'zustand';
 
 export interface UserState {
-    user?: User;
+    user?: OrbitUserData;
 
     totalWon?: number;
 
-    setUser: (user: User) => void;
-    updateUser: (data: Partial<User>) => void;
+    setUser: (user: OrbitUserData) => void;
+    updateUser: (data: Partial<OrbitUserData>) => void;
 
     updateTotalWon: (won?: number) => void;
 }
