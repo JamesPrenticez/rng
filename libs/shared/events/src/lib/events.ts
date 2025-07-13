@@ -6,7 +6,7 @@ export enum FromServerEvents {
   // ChatMessageDeleted = 'ChatMessageDeleted',
   // DuplicateSession = 'DuplicateSession',
   // Error = 'Error',
-  Response = 'Response',
+  // Response = 'Response',
   User = 'User',
   // ServerInfo = 'ServerInfo',
   // WaitingForCard = 'WaitingForCard',
@@ -74,15 +74,6 @@ export type IBaseEvent<T, D = unknown> = [
   T,
   { event: T; message_id: string; payload: D; timestamp: number },
 ];
-
-// Response Event
-export type ResponseMessage<T = undefined> = {
-    status: number;
-    message: string;
-    data?: T;
-};
-
-export type ResponseEvent = IBaseEvent<'response', ResponseMessage>[1];
 
 export const createEvent = <T, D = unknown>(
   type: T,
