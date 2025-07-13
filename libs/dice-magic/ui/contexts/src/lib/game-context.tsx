@@ -3,13 +3,10 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
   useReducer,
   ReactNode,
 } from 'react';
 import { useSocket } from '@shared/contexts';
-
-import { User } from '@shared/models';
 
 import { DiceMagicEvents, GameState } from '@dice-maic/models';
 import {

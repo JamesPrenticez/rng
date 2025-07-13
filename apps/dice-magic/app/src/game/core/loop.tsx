@@ -5,26 +5,14 @@ import { CenterPoint } from '../components/table/center-point';
 import * as THREE from 'three';
 import { useDicePositions } from '../components/dice/use-dice-position';
 import { usePositioningStore } from '@dice-magic/stores';
-import { useEffect } from 'react';
 import { Seat } from '../components/table/seat';
 
 export const GameLoop = () => {
   const tableCenter = new THREE.Vector3(0, 0, 0);
 
   const { updatePosition, distances } = useDicePositions(tableCenter);
-  const { seatPositions, generatePositions } = usePositioningStore();
+  const { seatPositions } = usePositioningStore();
   
-  // console.log('Distances:', distances);
-
-  // Some sort of gameConfig
-  const numOfSeats = 4;
-  // const {
-  //   gameState: { seats },
-  // } = useGameContext();
-
-  useEffect(() => {
-    generatePositions(numOfSeats);
-  }, [numOfSeats, generatePositions]);
 
   return (
     <PhysicsWorld>
