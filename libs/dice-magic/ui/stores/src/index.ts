@@ -1,1 +1,1 @@
-export * from './lib/positioning.store';
+export * from './lib/stores';
