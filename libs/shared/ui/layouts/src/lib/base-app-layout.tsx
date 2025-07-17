@@ -4,7 +4,7 @@ import { DemoCasino } from "@shared/demo-casino";
 import { GAME } from "@shared/models";
 
 export const BaseAppLayout = ({ children }: PropsWithChildren) => {
-  const socketUrl = 'ws://localhost:3201'; // TODO update this for different apps
+  const socketUrl = 'ws://localhost:3202'; // TODO update this for different apps
 
   const params = new URLSearchParams(window.location.search);
   const isRoot = window.top === window.self; // Effectivly rending itself, inside itself this prevent recursion.

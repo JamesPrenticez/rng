@@ -15,7 +15,7 @@ export const mockUserMiddleware =
   (gameUuid: string, gameSettings: UserGameSettings) =>
   async (socket: Socket, next: (err?: ExtendedError) => void) => {
     try {
-      const raw = socket.handshake.auth.session
+      const raw = socket.handshake.auth.token
         ?? socket.handshake.headers['x-session'];
 
       let user = undefined;

@@ -13,7 +13,7 @@ import {
   ReadyEvent,
   UserEvent,
 } from '@shared/events';
-import { useSocket } from './websocket.context';
+import { useWebsocketContext } from './websocket.context';
 import { useUserStore } from '@shared/stores';
 
 export interface BaseState {
@@ -50,8 +50,6 @@ const isReady = (
   return event.event === BaseEvents.Ready;
 };
 
-
-
 const baseReducer: BaseReducer = (state, event): BaseState => {
   if (isReady(event)) {
     return {
@@ -66,7 +64,7 @@ const baseReducer: BaseReducer = (state, event): BaseState => {
 type BaseProviderProps = PropsWithChildren
 
 export const BaseAppProvider = ({ children }: BaseProviderProps) => {
-  const socket = useSocket();
+  const socket = useWebsocketContext();
   const [baseState, dispatch] = useReducer(baseReducer, initialState);
   const [hasLoaded, setHasLoaded] = useState(false);
 
@@ -100,8 +98,8 @@ export const BaseAppProvider = ({ children }: BaseProviderProps) => {
     // });
 
     socket.on(BaseEvents.User, (userEvent: UserEvent) => {
-      // console.log("user")
-      // console.log(userEvent)
+      console.log("user")
+      console.log(userEvent)
       setUser(userEvent.payload.user);
 
       if (userEvent.payload.requireNameChange) {
@@ -121,8 +119,6 @@ export const BaseAppProvider = ({ children }: BaseProviderProps) => {
     setUser,
     updateUser,
   ]);
-
-
 
   const value = useMemo(() => {
     return {

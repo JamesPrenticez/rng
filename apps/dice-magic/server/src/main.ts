@@ -6,7 +6,7 @@ import {
 import { createRoundStartEvent, Events } from "@dice-magic/models"
 
 const userServer = UserServer({
-  port: 3201
+  port: 3202
 })
 
 const startBetTimer = () => {

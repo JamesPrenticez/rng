@@ -5,10 +5,11 @@ import {
   useMemo,
   useReducer,
   ReactNode,
+  useCallback,
 } from 'react';
-import { useSocket } from '@shared/contexts';
+import { useWebsocketContext } from '@shared/contexts';
 
-import { DiceMagicEvents, GameState } from '@dice-magic/models';
+import { createPlayerSitEvent, DiceMagicEvents, GameState } from '@dice-magic/models';
 import {
   IBaseEvent,
   BaseEvents,
@@ -20,6 +21,7 @@ import { useUserStore } from '@shared/stores';
 
 interface GameContextProps {
   gameState: GameState;
+  // handlePlayerSit: (seatId: number) => void;
 }
 
 interface GameProviderProps {
@@ -82,26 +84,38 @@ const gameReducer: GameReducer = (state, event): GameState => {
 };
 
 export const GameProvider = ({ children }: GameProviderProps) => {
-  const socket = useSocket();
+  // const socket = useSocket();
+
+  const socket = useWebsocketContext(); //hmmm
 
   const currentUser = useUserStore((s) => s.user);
   const [gameState, dispatch] = useReducer(gameReducer, initialState);
 
-useEffect(() => {
-  if (!currentUser) return;
+  // const handlePlayerSit = useCallback(
+  //   (seatId: number) => {
+  //     const event = createPlayerSitEvent(seatId);
 
-  socket.emit(BaseEvents.UserJoin, currentUser);
+  //     socket.emitWithResponse(event).then(responseHandler);
+  //   },
+  //   [socket]
+  // );
 
-  const handleUsersUpdate = (event: UsersUpdateEvent) => {
-    dispatch(event);
-  };
+  useEffect(() => {
+    if (!currentUser) return;
+    console.log("here", currentUser)
 
-  socket.on(BaseEvents.UsersUpdate, handleUsersUpdate);
+    socket.emit(BaseEvents.UserJoin, currentUser);
 
-  return () => {
-    socket.off(BaseEvents.UsersUpdate, handleUsersUpdate);
-  };
-}, [currentUser, socket]);
+    const handleUsersUpdate = (event: UsersUpdateEvent) => {
+      dispatch(event);
+    };
+
+    socket.on(BaseEvents.UsersUpdate, handleUsersUpdate);
+
+    return () => {
+      socket.off(BaseEvents.UsersUpdate, handleUsersUpdate);
+    };
+  }, [currentUser, socket]);
 
   const value = useMemo(
     () => ({
