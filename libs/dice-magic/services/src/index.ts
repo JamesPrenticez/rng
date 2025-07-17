@@ -1,1 +1,1 @@
-export * from './lib/services';
+export * from './lib/game-dice-magic.service';

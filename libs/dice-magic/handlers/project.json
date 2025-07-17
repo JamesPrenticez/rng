@@ -1,0 +1,8 @@
+{
+  "name": "handlers",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/dice-magic/handlers/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {}
+}

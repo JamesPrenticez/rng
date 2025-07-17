@@ -1,5 +1,5 @@
 import { PlayerPayout, RoundEndEvent, RoundStartEvent } from "@shared/events";
-import { User } from "@shared/models";
+import { OrbitUserData } from "@shared/models";
 
 export type RoundData = Partial<
     RoundStartEvent['payload'] & RoundEndEvent['payload']
@@ -7,7 +7,7 @@ export type RoundData = Partial<
 
 export interface GameState {
   roundInfo: RoundData | null;
-  players: User[];
+  players: OrbitUserData[];
   payouts: PlayerPayout[];
   endTime: number;
 }

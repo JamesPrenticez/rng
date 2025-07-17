@@ -2,6 +2,28 @@ import {
   UserServer
 } from '@shared/websocket';
 
-UserServer({
+// Eventually move this to DiceMagicService.. but for now we are just testing out userServer.Broadcast
+import { createRoundStartEvent, Events } from "@dice-magic/models"
+
+const userServer = UserServer({
   port: 3201
 })
+
+const startBetTimer = () => {
+    const startTime = Date.now();
+
+    userServer.broadcast(
+        createRoundStartEvent(
+            "123",
+            [1, 2, 3],
+            userServer.users(),
+            startTime,
+            15000
+        ),
+        [Events.RoundStart]
+    );
+};
+
+// on player join
+// call startBetTimer?
+

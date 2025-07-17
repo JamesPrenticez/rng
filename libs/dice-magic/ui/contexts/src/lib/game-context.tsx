@@ -8,7 +8,7 @@ import {
 } from 'react';
 import { useSocket } from '@shared/contexts';
 
-import { DiceMagicEvents, GameState } from '@dice-maic/models';
+import { DiceMagicEvents, GameState } from '@dice-magic/models';
 import {
   IBaseEvent,
   BaseEvents,

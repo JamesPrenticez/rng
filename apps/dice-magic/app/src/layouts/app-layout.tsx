@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useAspectRatio } from '@shared/hooks'
 import { MobileAppLayout } from './app-layout-mobile';
 import { DesktopAppLayout } from './app-layout-desktop';
-import { useGameContext } from '@dice-maigic/contexts';
+import { useGameContext } from '@dice-magic/contexts';
 import { useUserStore } from '@shared/stores';
 import { BaseGameLayout } from '@shared/layouts';
 import { Themes } from '@shared/theme';

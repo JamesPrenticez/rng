@@ -1,12 +1,29 @@
 import type { OrbitUserData } from '@shared/models';
 import { v4 as uuidv4 } from 'uuid';
 
+export const BaseGameStates = {
+    Starting: 'Starting',
+    Paused: 'Paused',
+    Maintenance: 'Maintenance',
+    Scheduled: 'Scheduled',
+    Unknown: 'Unknown',
+    Offline: 'Offline',
+    WaitingForDealer: 'WaitingForDealer',
+    WaitingForPlayers: 'WaitingForPlayers',
+    WaitingForBets: 'WaitingForBets',
+    FinishedBetting: 'FinishedBetting',
+    PlayerEndTurn: 'PlayerEndTurn',
+    RoundEnd: 'RoundEnd',
+};
+
+export type BaseGameStates = keyof typeof BaseGameStates;
+
 export enum FromServerEvents {
   // ChatMessage = 'ChatMessage',
   // ChatMessageDeleted = 'ChatMessageDeleted',
   // DuplicateSession = 'DuplicateSession',
   // Error = 'Error',
-  // Response = 'Response',
+  Response = 'Response',
   User = 'User',
   // ServerInfo = 'ServerInfo',
   // WaitingForCard = 'WaitingForCard',
@@ -86,6 +103,25 @@ export const createEvent = <T, D = unknown>(
   ];
 };
 
+export type ResponseMessage<T = undefined> = {
+    status: number;
+    message: string;
+    data?: T;
+};
+
+export type ResponseEvent = IBaseEvent<'response', ResponseMessage>[1];
+
+export const createResponseEvent = <T = undefined>(
+    messageId: string,
+    response: ResponseMessage<T>
+) => {
+    const ev = createEvent(BaseEvents.Response, response);
+    ev[1].message_id = messageId;
+
+    return ev;
+};
+
+export type _ResponseEvent = ReturnType<typeof createResponseEvent>[1];
 
 // USER - READY
 export const createReadyEvent = () => {
@@ -107,39 +143,6 @@ export const createUsersUpdateEvent = (users: OrbitUserData[]) => {
 };
 
 export type UsersUpdateEvent = ReturnType<typeof createUsersUpdateEvent>[1];
-
-// PASSCODE
-export const createPasscodeRequiredEvent = () => {
-  return createEvent(BaseEvents.PasscodeRequired, {});
-};
-
-export type PasscodeRequiredEvent = ReturnType<
-  typeof createPasscodeRequiredEvent
->[1];
-
-export const createPasscodeIncorrectEvent = (message: string) => {
-  return createEvent(BaseEvents.PasscodeIncorrect, { message });
-};
-
-export type PasscodeIncorrectEvent = ReturnType<
-  typeof createPasscodeIncorrectEvent
->[1];
-
-export const createPasscodeAcceptedEvent = () => {
-  return createEvent(BaseEvents.PasscodeAccepted, {});
-};
-
-export type PasscodeAcceptedEvent = ReturnType<
-  typeof createPasscodeAcceptedEvent
->[1];
-
-export const createPasscodeRequestEvent = (passcode: string) => {
-  return createEvent(BaseEvents.PasscodeRequest, { passcode });
-};
-
-export type PasscodeRequestEvent = ReturnType<
-  typeof createPasscodeRequestEvent
->[1];
 
 export const createUserEvent = (
   user: OrbitUserData,
