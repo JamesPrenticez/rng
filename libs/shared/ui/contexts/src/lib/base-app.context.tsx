@@ -10,21 +10,19 @@ import {
 import {
   BaseEvents,
   IBaseEvent,
-  ReadyEvent,
   UserEvent,
+  UsersUpdateEvent,
 } from '@shared/events';
 import { useWebsocketContext } from './websocket.context';
 import { useUserStore } from '@shared/stores';
+import { OrbitUserData } from '@shared/models';
 
-export interface BaseState {
-  isReady: boolean;
-  passcodeRequired: boolean;
-  passcodeState: string;
-  passcodeRetriesLeft: number;
+export interface BaseAppState {
+  users: OrbitUserData[];
 }
 
 export interface BaseAppContextProps {
-  baseState: BaseState;
+  baseAppState: BaseAppState;
   hasLoaded: boolean;
 
   setHasLoaded: (loaded: boolean) => void;
@@ -32,101 +30,66 @@ export interface BaseAppContextProps {
 
 const BaseAppContext = createContext<BaseAppContextProps | undefined>(undefined);
 
-export const initialState: BaseState = {
-  isReady: false,
-  passcodeRequired: false,
-  passcodeState: '',
-  passcodeRetriesLeft: 0,
+export const initialState: BaseAppState = {
+  users: [],
 };
 
 type BaseReducer = (
-  state: BaseState,
+  baseAppState: BaseAppState,
   event: IBaseEvent<BaseEvents, unknown>[1]
-) => BaseState;
+) => BaseAppState;
 
-const isReady = (
-  event: IBaseEvent<BaseEvents, unknown>[1]
-): event is ReadyEvent => {
-  return event.event === BaseEvents.Ready;
-};
+const baseReducer: BaseReducer = (state, event): BaseAppState => {
+  switch (event.event) {
+    case BaseEvents.UsersUpdate: {
+      const eventData = event as UsersUpdateEvent;
+      return {
+        ...state,
+        users: eventData.payload,
+      };
+    }
 
-const baseReducer: BaseReducer = (state, event): BaseState => {
-  if (isReady(event)) {
-    return {
-      ...state,
-      isReady: true,
-    };
+    default:
+      return state;
   }
-
-  return state;
-};
+}
 
 type BaseProviderProps = PropsWithChildren
 
 export const BaseAppProvider = ({ children }: BaseProviderProps) => {
   const socket = useWebsocketContext();
-  const [baseState, dispatch] = useReducer(baseReducer, initialState);
+  const [baseAppState, dispatch] = useReducer(baseReducer, initialState);
   const [hasLoaded, setHasLoaded] = useState(false);
 
   const setUser = useUserStore((s) => s.setUser);
-  const updateUser = useUserStore((s) => s.updateUser);
 
   useEffect(() => {
-    socket.on(BaseEvents.Ready, (readyEvent) => {
-      // log.socket(BaseEvents.Ready);
-      dispatch(readyEvent);
-    });
-
-    socket.on(BaseEvents.PasscodeRequired, (passcodeRequired) => {
-      // log.socket(BaseEvents.PasscodeRequired);
-      dispatch(passcodeRequired);
-    });
-
-    socket.on(BaseEvents.PasscodeIncorrect, (passcodeIncorrect) => {
-      // log.socket(BaseEvents.PasscodeIncorrect);
-      dispatch(passcodeIncorrect);
-    });
-
-    socket.on(BaseEvents.PasscodeAccepted, (passcodeAccepted) => {
-      // log.socket(BaseEvents.PasscodeAccepted);
-      dispatch(passcodeAccepted);
-    });
-
-    // TODO
-    // socket.on(BaseEvents.ServerInfo, (event: ServerInfoEvent) => {
-    //   setServerInfo({ ...event.payload });
-    // });
-
+    // Get User from server session and set in Store
     socket.on(BaseEvents.User, (userEvent: UserEvent) => {
-      console.log("user")
-      console.log(userEvent)
       setUser(userEvent.payload.user);
+    });
 
-      if (userEvent.payload.requireNameChange) {
-        // TODO
-      }
-  });
+    // Get all Users
+    socket.on(BaseEvents.UsersUpdate, (event) => {
+      dispatch(event);
+    });
 
     return () => {
-      socket.off(BaseEvents.Ready);
-      socket.off(BaseEvents.PasscodeRequired);
-      socket.off(BaseEvents.PasscodeIncorrect);
-      socket.off(BaseEvents.PasscodeAccepted);
       socket.off(BaseEvents.User);
+      socket.off(BaseEvents.UsersUpdate);
     };
   }, [
     socket,
     setUser,
-    updateUser,
   ]);
 
   const value = useMemo(() => {
     return {
+        baseAppState,
         hasLoaded,
         setHasLoaded,
-        baseState,
     };
-  }, [baseState, hasLoaded]);
+  }, [baseAppState, hasLoaded]);
 
   return (
     <BaseAppContext.Provider value={value}>{children}</BaseAppContext.Provider>
@@ -136,7 +99,7 @@ export const BaseAppProvider = ({ children }: BaseProviderProps) => {
 export const useBaseAppContext = (): BaseAppContextProps => {
   const context = useContext(BaseAppContext);
   if (!context) {
-      throw new Error('useSocket must be used within a WebSocketProvider');
+      throw new Error('useBaseAppContext must be used within a BaseAppProvider');
   }
   return context;
 };

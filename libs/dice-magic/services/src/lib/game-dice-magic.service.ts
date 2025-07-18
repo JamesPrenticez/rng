@@ -123,7 +123,6 @@ export const DiceMagicGame = (
   // NOTE: Emitter is two way
   // emitter.on = recieve
   // emitter.emit = send 
-  
   userServer.emitter.on(
     Events.PlayerSit,
     Handler<PlayerSitEvent>(PlayerSitHandler)

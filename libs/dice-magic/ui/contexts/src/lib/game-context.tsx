@@ -16,17 +16,26 @@ import {
   RoundStartEvent,
   RoundEndEvent,
   UsersUpdateEvent,
+  ResponseEvent,
 } from '@shared/events';
 import { useUserStore } from '@shared/stores';
 
 interface GameContextProps {
   gameState: GameState;
-  // handlePlayerSit: (seatId: number) => void;
+  handlePlayerSit: (seatId: number) => void;
 }
 
 interface GameProviderProps {
   children: ReactNode;
 }
+
+const responseHandler = (response: ResponseEvent) => {
+    if (response.payload.status > 400) {
+      // This handles "seat taken"
+      console.log(response.payload.message)
+      // toast(response.payload.message);
+    }
+};
 
 const GameContext = createContext<GameContextProps | undefined>(undefined);
 
@@ -51,32 +60,7 @@ const gameReducer: GameReducer = (state, event): GameState => {
         players: eventData.payload,
       };
     }
-    case BaseEvents.RoundStart: {
-      const eventData = event as RoundStartEvent;
-      return {
-        ...initialState,
-        roundInfo: eventData.payload,
-        payouts: [],
-        endTime: Date.now() + (eventData.payload?.remainingBetDuration || 0),
-        // resultHistory: [...state.resultHistory],
-      };
-    }
-    case BaseEvents.RoundEnd: {
-      const eventData = event as RoundEndEvent;
-      return {
-        ...state,
-        roundInfo: eventData.payload,
-        // resultHistory: [...state.resultHistory],
-      };
-    }
 
-    // case Events.ResultHistory: {
-    //     const eventData = event as ResultedHistoryEvent;
-    //     return {
-    //         ...state,
-    //         resultHistory: eventData.payload.resultedNumbers,
-    //     };
-    // }
 
     default:
       return state;
@@ -84,44 +68,42 @@ const gameReducer: GameReducer = (state, event): GameState => {
 };
 
 export const GameProvider = ({ children }: GameProviderProps) => {
-  // const socket = useSocket();
-
-  const socket = useWebsocketContext(); //hmmm
+  const socket = useWebsocketContext();
 
   const currentUser = useUserStore((s) => s.user);
   const [gameState, dispatch] = useReducer(gameReducer, initialState);
 
-  // const handlePlayerSit = useCallback(
-  //   (seatId: number) => {
-  //     const event = createPlayerSitEvent(seatId);
+  const handlePlayerSit = useCallback(
+    (seatId: number) => {
+      const event = createPlayerSitEvent(seatId);
 
-  //     socket.emitWithResponse(event).then(responseHandler);
-  //   },
-  //   [socket]
-  // );
+      socket.emitWithResponse(event).then(responseHandler);
+    },
+    [socket]
+  );
 
   useEffect(() => {
     if (!currentUser) return;
-    console.log("here", currentUser)
-
+    // User joined game
     socket.emit(BaseEvents.UserJoin, currentUser);
 
-    const handleUsersUpdate = (event: UsersUpdateEvent) => {
-      dispatch(event);
-    };
-
-    socket.on(BaseEvents.UsersUpdate, handleUsersUpdate);
+    // User took a seat
+    // socket.on(BaseEvents.UserSit, handlePlayerSit);
 
     return () => {
-      socket.off(BaseEvents.UsersUpdate, handleUsersUpdate);
+      // socket.off(BaseEvents.UserSit, handlePlayerSit);
     };
   }, [currentUser, socket]);
 
   const value = useMemo(
     () => ({
       gameState,
+      handlePlayerSit
     }),
-    [gameState]
+    [
+      gameState,
+      handlePlayerSit
+    ]
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

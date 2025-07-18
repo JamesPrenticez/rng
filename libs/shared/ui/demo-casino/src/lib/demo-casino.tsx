@@ -164,7 +164,7 @@ export const DemoCasino = ({ app }: DemoCasinoProps) => {
     return CURRENCY_MAP[form.currency as keyof typeof CURRENCY_MAP].symbol;
   }, [form.currency]);
 
-  console.log(gameUrl)
+  // console.log(gameUrl)
   return (
     <Container className={clsx({ mobile: isMobile })}>
       <Header>

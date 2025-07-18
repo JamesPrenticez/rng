@@ -9,21 +9,4 @@ const userServer = UserServer({
   port: 3202
 })
 
-const startBetTimer = () => {
-    const startTime = Date.now();
-
-    userServer.broadcast(
-        createRoundStartEvent(
-            "123",
-            [1, 2, 3],
-            userServer.users(),
-            startTime,
-            15000
-        ),
-        [Events.RoundStart]
-    );
-};
-
-// on player join
-// call startBetTimer?
 
