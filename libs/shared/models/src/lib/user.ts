@@ -14,6 +14,8 @@ export interface OrbitUserData {
     country?: string;
 }
 
+export type OrbitPublicUserData = Omit<OrbitUserData, 'sessionId' | 'flags' | 'currency'>
+
 export interface IOrbitUserFunctions {
     // // Transactions / bets
     // getBalance(): ResultPromise<UserBalanceResponse>;
@@ -46,7 +48,7 @@ export interface IOrbitUserFunctions {
 
     // updateData(data: Partial<AnimoUserData>): void;
 
-    // toData(internal: false): AnimoPublicUserData;
+    toData(internal: false): OrbitPublicUserData;
     // toData(internal: true): AnimoUserData;
     // toData(internal: boolean): AnimoPublicUserData | AnimoPublicUserData;
     // // Settings
@@ -104,3 +106,9 @@ export interface MockUserData extends MockSessionData {
     nicknamePrompt?: boolean;
 }
 
+export type MockOrbitUser = Pick<
+    OrbitUserData,
+    'username' | 'balance' | 'currency' | 'sessionId'
+> & {
+    nicknamePrompt?: boolean;
+};

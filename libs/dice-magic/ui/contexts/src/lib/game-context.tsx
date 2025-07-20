@@ -77,6 +77,8 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     (seatId: number) => {
       const event = createPlayerSitEvent(seatId);
 
+      console.log(event)
+
       socket.emitWithResponse(event).then(responseHandler);
     },
     [socket]
@@ -85,7 +87,8 @@ export const GameProvider = ({ children }: GameProviderProps) => {
   useEffect(() => {
     if (!currentUser) return;
     // User joined game
-    socket.emit(BaseEvents.UserJoin, currentUser);
+    // TODO add this to valid event
+    // socket.emit(BaseEvents.UserJoin, currentUser);
 
     // User took a seat
     // socket.on(BaseEvents.UserSit, handlePlayerSit);

@@ -15,6 +15,8 @@ export const PlayerSitHandler = (
 ) => {
     const { seat } = event.payload;
 
+    console.log("here")
+
     // Seat Taken
     if (context.players.get(seat)) {
         return {
@@ -38,7 +40,8 @@ export const PlayerSitHandler = (
 
     const diceMagicPlayer = DiceMagicPlayer(
         user.id,
-        user.getDisplayName(),
+        "test",
+        // user.getDisplayName(),
         event.payload.seat
     );
 

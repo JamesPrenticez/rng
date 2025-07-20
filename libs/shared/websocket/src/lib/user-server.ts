@@ -1,10 +1,14 @@
-import { OrbitUser } from '@shared/models';
+import { OrbitUser, UserGameSettings } from '@shared/models';
 import { Server, Socket } from 'socket.io';
 import { createServer } from 'node:http';
 import { EventEmitter } from 'node:events';
-import { handleUserJoin } from './handlers/user-join.handler';
+// import { handleUserJoin } from './handlers/user-join.handler';
 import { mockUserMiddleware } from './mock-user.middleware';
 import os from 'node:os';
+import { UserServerContext, UserServerOptions } from './types';
+import { PlayerServer } from './player-server';
+import { BaseEvents, createEvent } from '@shared/events';
+import { handleUserJoin } from './handlers/user-join.handler';
 
 export type OrbitGameUser = OrbitUser<Socket>;
 
@@ -50,18 +54,12 @@ const getCors = (port: number, cors?: string | string[]) => {
     return cors;
 };
 
-export interface UserServerContext {
-  users: Map<string, OrbitGameUser>;
-  emitter: EventEmitter;
-  io: Server;
-}
 
-interface UserServerOptions {
-  port: number;
-  cors?: string | string[];
-}
 
-export const UserServer = (options: UserServerOptions) => {
+export const UserServer = (
+  options: UserServerOptions,
+  userGameSettings?: UserGameSettings
+) => {
   const httpServer = createServer();
 
   const context: UserServerContext = {
@@ -73,12 +71,25 @@ export const UserServer = (options: UserServerOptions) => {
         credentials: true,
       },
     }),
+    options,
+    defaultGameSettings: userGameSettings ?? {},
+    validServices: new Set<string>(),
+    validEvents: new Map<string, string[]>(),
+    validOutgoingEvents: new Map<string, string[]>(),
   };
 
   // Player server goes here
-  const GAME_UUID = '123456789';
-  const GAME_SETTINGS = {};
-  context.io.use(mockUserMiddleware(GAME_UUID, GAME_SETTINGS));
+  // const GAME_UUID = '123456789';
+  // const GAME_SETTINGS = {};
+  // context.io.use(mockUserMiddleware(GAME_UUID, GAME_SETTINGS));
+
+  // Listeners
+  PlayerServer(context);
+
+  // SO there should be a better way to do this?
+  context.emitter.on(BaseEvents.UsersUpdate, (users) => {
+    context.io.emit(...createEvent(BaseEvents.UsersUpdate, users));
+  });
 
   // Broadcast - send event updates to all users
   const broadcast = <T>(
@@ -88,11 +99,6 @@ export const UserServer = (options: UserServerOptions) => {
       context.io.to(type).emit(data[0], data[1]);
       context.io.of('/service').to(type).emit(data[0], data[1]);
   };
-
-  // listen for new connections
-  context.io.on('connection', (socket) => {
-    handleUserJoin(context, socket);
-  });
 
   httpServer.listen(options.port);
 

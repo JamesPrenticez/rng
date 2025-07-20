@@ -109,6 +109,8 @@ export const DiceMagicGame = (
     ) => ResponseMessage | Promise<ResponseMessage>
   ) => {
     return async (user: OrbitGameUser, event: T) => {
+      console.log("handler called")
+
       const res = await cb(user, event, context);
 
       if (res.status !== 200) {
@@ -133,5 +135,13 @@ export const DiceMagicGame = (
     Handler<PlayerLeaveSeatEvent>(PlayerLeaveSeatHandler)
   );
 
-  return;
+  // return {
+  //     stop: () => {
+  //         listener.remove();
+  //         userServer.cleanup();
+  //     },
+  //     cleanup: () => {
+  //         listener.remove();
+  //     },
+  // };
 };

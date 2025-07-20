@@ -1,38 +1,45 @@
-import { UserGameSettings } from '@shared/models';
-import { v4 as uuidv4 } from 'uuid';
+import { MockOrbitUser, OrbitPublicUserData, OrbitUser, OrbitUserData, UserGameSettings } from '@shared/models';
+import { v5 as uuidv5 } from 'uuid';
 
-interface CreateMockUserOptions {
-  username?: string;
-  balance?: number;
-  currency?: string;
-  sessionId: string;
-  nicknamePrompt?: boolean;
-}
+const MOCK_NAMESPACE = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
 
-export interface GameUser {
-  id: string;
-  username: string;
-  balance: number;
-  currency: string;
-  sessionId: string;
-  nicknamePrompt: boolean;
-  gameUuid: string;
-  createdAt: number;
-}
+export const getDisplayName = (userData: MockOrbitUser) => {
+  return userData.username ?? ""
+};
 
-export const createMockUser = (
-  options: CreateMockUserOptions,
-  gameUuid: string,
-  settings: UserGameSettings
-): GameUser => {
-  return {
-    id: uuidv4(),
-    username: options.username || 'Guest',
-    balance: 1000, // options.balance ?? settings.defaultCredits ?? 1000,
-    currency: 'USD', // options.currency ?? settings.defaultCurrency ?? 'USD',
-    sessionId: options.sessionId,
-    nicknamePrompt: options.nicknamePrompt ?? false,
-    gameUuid,
-    createdAt: Date.now(),
+export const createMockUser = <T>(
+  userData: MockOrbitUser,
+  settings: UserGameSettings,
+  socket: T,
+): OrbitUser<T> => {
+
+  const context = {
+    id: uuidv5(userData.username, MOCK_NAMESPACE),
+    username: userData.username,
+    name: "",
+    source: "Mock",
+    sessionId: userData.sessionId
   };
+
+  const user: OrbitUser<T> = {
+    settings,
+    id: context.id,
+    username: context.username,
+    name: context.name,
+    source: context.source,
+    sessionId: context.sessionId,
+    balance: 10000,
+    currency: 'USD',
+    getDisplayName: () => getDisplayName(userData),
+    toData: () => ({
+      id: context.id,
+      username: userData.username,
+      balance: 10000,
+      name: "",
+      source: "mock",
+    }),
+    socket
+  };
+  
+  return user;
 };

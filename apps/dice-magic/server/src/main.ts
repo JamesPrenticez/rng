@@ -1,12 +1,29 @@
-import { 
-  UserServer
-} from '@shared/websocket';
+import { UserServer } from '@shared/websocket';
 
-// Eventually move this to DiceMagicService.. but for now we are just testing out userServer.Broadcast
-import { createRoundStartEvent, Events } from "@dice-magic/models"
+import { DiceMagicGame } from '@dice-magic/services';
+import { IDiceMagicSettings } from '@dice-magic/models';
 
-const userServer = UserServer({
-  port: 3202
-})
+const gameSettings: IDiceMagicSettings = {
+  name: 'Dice Magic',
+  tableSeatLimit: 4,
+};
 
+const userServer = UserServer(
+  {
+    port: 3202,
+    useMockServer: true,
+  },
+  {
+    theme: 'gold',
+  }
+);
 
+const dmg = DiceMagicGame(userServer, gameSettings);
+
+// process.on('exit', () => {
+//     // log.info('BLACKJACK', 'Cleaning up server');
+//     dmg.cleanup();
+//     userServer.cleanup();
+// });
+
+export default {};

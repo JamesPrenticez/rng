@@ -11,8 +11,7 @@ import type {
   MockUserData,
 } from '@shared/models';
 
-export const mockUserMiddleware =
-  (gameUuid: string, gameSettings: UserGameSettings) =>
+export const mockUserMiddleware = (gameSettings: UserGameSettings) =>
   async (socket: Socket, next: (err?: ExtendedError) => void) => {
     try {
       const raw = socket.handshake.auth.token
@@ -35,14 +34,14 @@ export const mockUserMiddleware =
                 balance: u.credits,
                 currency: u.currency,
                 sessionId: raw,
-                nicknamePrompt: u.nicknamePrompt,
               },
-              gameUuid,
               gameSettings,
+              socket
             );
           }
         } catch {
           /* ignore parse errors and fall through */
+          console.log("error")
         }
       }
 
@@ -56,16 +55,12 @@ export const mockUserMiddleware =
       // }
 
       socket.data.user = user;
-      socket.emit(BaseEvents.User, { payload: { user }, requireNameChange: false });
+      // TODO this is actually only suppose to emit a JWT
+      //  const token = jwt.sign(service, 'ANIMO-MOCK');
+      //  socket.emit(...createAuthTokenEvent(token));
+      socket.emit(BaseEvents.User, { payload: { user: user?.toData(false) }, requireNameChange: false });
       next();
     } catch (e) {
       next(e as ExtendedError);
     }
   };
-
-// Exploring the code base
-// mockUserMiddlewate // libs\shared\websocket\src\lib\mock-user.middleware.ts
-// PlayerServer // libs\shared\websocket\src\lib\player-server.ts
-// UserServer // libs\shared\websocket\src\lib\user-server.ts
-// RouletteBackend // apps\roulette\server\src\roulette-backend.service.ts
-// which then get called here to main.ts.

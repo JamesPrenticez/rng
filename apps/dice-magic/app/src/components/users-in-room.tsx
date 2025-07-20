@@ -14,6 +14,8 @@ const Container = styled.div`
   font-size: 2.4rem;
   display: flex;
   flex-direction: column;
+
+  z-index: 9999;
 `;
 
 export const UsersInRoom = () => {
@@ -30,14 +32,12 @@ export const UsersInRoom = () => {
 
       <p>Users: {baseAppState.users.length}</p>
 
-      {gameState.players.length > 0 && (
-        <>
-          <p>Seat 1: {gameState.players[0]?.username ?? 'Empty'} <Button onClick={() => handlePlayerSit(0)}>Sit</Button></p>
-          <p>Seat 2: {gameState.players[1]?.username ?? 'Empty'} <Button onClick={() => handlePlayerSit(1)}>Sit</Button></p>
-          <p>Seat 3: {gameState.players[2]?.username ?? 'Empty'} <Button onClick={() => handlePlayerSit(2)}>Sit</Button></p>
-          <p>Seat 4: {gameState.players[3]?.username ?? 'Empty'} <Button onClick={() => handlePlayerSit(3)}>Sit</Button></p>
-        </>
-      )}
+      <>
+        <p>Seat 1: {gameState.players[0]?.username ?? 'Empty'} <Button onClick={() => handlePlayerSit(0)}>Sit</Button></p>
+        <p>Seat 2: {gameState.players[1]?.username ?? 'Empty'} <Button onClick={() => handlePlayerSit(1)}>Sit</Button></p>
+        <p>Seat 3: {gameState.players[2]?.username ?? 'Empty'} <Button onClick={() => handlePlayerSit(2)}>Sit</Button></p>
+        <p>Seat 4: {gameState.players[3]?.username ?? 'Empty'} <Button onClick={() => handlePlayerSit(3)}>Sit</Button></p>
+      </>
     </Container>
   );
 };
