@@ -41,12 +41,12 @@ interface WebSocketProviderProps {
 }
 
 export const createSocket = (
-  url: string,
+  hostUrl: string,
   session?: string,
   token?: string
 ): GameSocket => {
 
-  const socket = io(url, {
+  const socket = io(hostUrl, {
     autoConnect: true,
     auth: {
       token: token || session,
@@ -85,9 +85,9 @@ export const WebSocketProvider = ({
 }: WebSocketProviderProps) => {
   const session = new URLSearchParams(window.location.search).get('session');
   
-  const socket = useRef<GameSocket>(
-    createSocket(url, session ?? undefined, token)
-  ).current;
+  const socket = useMemo(() => {
+    return createSocket(url, session ?? undefined, token);
+  }, [url, session, token]);
 
   const reconnectTries = useRef(0);
   const [connected, setConnected] = useState(false);
