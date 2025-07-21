@@ -14,7 +14,7 @@ const userServer = UserServer(
     useMockServer: true,
   },
   {
-    theme: 'gold',
+    theme: 'blue',
   }
 );
 

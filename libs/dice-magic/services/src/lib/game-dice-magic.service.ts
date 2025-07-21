@@ -14,7 +14,11 @@ import {
 } from '@dice-magic/models';
 import { GameStatus } from '@shared/models';
 import { StateMachine } from '@shared/state-machine';
-import { PlayerLeaveSeatHandler, PlayerSitHandler, RoundEndState } from '@dice-magic/handlers';
+import {
+  PlayerLeaveSeatHandler,
+  PlayerSitHandler,
+  RoundEndState,
+} from '@dice-magic/handlers';
 import {
   createResponseEvent,
   IBaseEvent,
@@ -70,13 +74,21 @@ export const DiceMagicGame = (
   userServer: IUserServer,
   settings: IDiceMagicSettings
 ) => {
-  
+
+  userServer.configureValidEvents(
+    ['players'],
+    [
+      Events.PlayerSit,
+      Events.PlayerLeaveSeat,
+    ]
+  );
+
   const context: IGameContext = {
     players: Players(),
     stateMachine, // Not being used yet
     userServer,
     intervalTimer: null,
-    settings
+    settings,
   };
 
   // const listener = stateMachine.onStateChange(StateChangeHandler(context));
@@ -109,7 +121,7 @@ export const DiceMagicGame = (
     ) => ResponseMessage | Promise<ResponseMessage>
   ) => {
     return async (user: OrbitGameUser, event: T) => {
-      console.log("handler called")
+      console.log('handler called with event', event);
 
       const res = await cb(user, event, context);
 
@@ -122,9 +134,11 @@ export const DiceMagicGame = (
     };
   };
 
+  // The PlayerSit event is first received from the client via socket.io and then re-emitted through userServer.emitter,
+  // which the DiceMagicGame code listens to with emitter.on(Events.PlayerSit, ...).
   // NOTE: Emitter is two way
   // emitter.on = recieve
-  // emitter.emit = send 
+  // emitter.emit = send
   userServer.emitter.on(
     Events.PlayerSit,
     Handler<PlayerSitEvent>(PlayerSitHandler)

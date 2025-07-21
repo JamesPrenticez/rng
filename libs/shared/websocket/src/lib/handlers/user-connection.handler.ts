@@ -1,4 +1,4 @@
-import { BaseEvents, createEvent, createUserEvent } from "@shared/events";
+import { BaseEvents, createUserEvent } from "@shared/events";
 import { Socket } from "socket.io";
 import { isValidEvent } from "../utils/is-valid-event";
 import { UserServerContext } from "../types";
@@ -29,11 +29,12 @@ export const UserConnectionHandler =
         context.users.set(user.id, user);
         socket.emit(...createUserEvent(user.toData(false), user.name === ''));
 
+        // We dont really need to do this but I like having the users avaliable in BaseAppContext
         const safeUsers = Array.from(context.users.values()).map((u) => u.toData(false));
         context.emitter.emit(BaseEvents.UsersUpdate, safeUsers);
 
         socket.onAny((eventName, ...args) => {
-            if (!isValidEvent(context)('players', eventName)) {
+          if (!isValidEvent(context)('players', eventName)) {
                 console.log("Invalid Player Event:", eventName)
                 return;
             }
