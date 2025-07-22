@@ -48,7 +48,7 @@ export interface IGameContext {
     stateMachine: IStateMachine<DiceMagicState, DiceMagicStates>;
     userServer: IUserServer;
     intervalTimer: ReturnType<typeof setInterval> | null;
-    // broadcastPlayers: () => void;
+    broadcastPlayers: () => void;
     // leaderRank: string[];
     // kickedPlayers: KickedPlayers;
     // playersToBeKicked: string[];

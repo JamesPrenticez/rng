@@ -18,6 +18,7 @@ import {
   PlayerLeaveSeatHandler,
   PlayerSitHandler,
   RoundEndState,
+  StateChangeHandler,
 } from '@dice-magic/handlers';
 import {
   createResponseEvent,
@@ -83,17 +84,7 @@ export const DiceMagicGame = (
     ]
   );
 
-  const context: IGameContext = {
-    players: Players(),
-    stateMachine, // Not being used yet
-    userServer,
-    intervalTimer: null,
-    settings,
-  };
-
-  // const listener = stateMachine.onStateChange(StateChangeHandler(context));
-
-  // Broadcast to all Players
+    // Broadcast to all Players
   const broadcastPlayers = () => {
     const data = context.players.toArray().map((p) => p.toData());
 
@@ -101,15 +92,28 @@ export const DiceMagicGame = (
 
     if (dealer) {
       userServer.broadcast(
+        // < Events.Players is made here!
         createPlayersEvent(
           data,
           {} as PlayerData, //dealer.toData(),
           '' //context.leaderRank[0] || ''
         ),
-        [DiceMagicEvents.Players]
+        ["players"]
       );
     }
   };
+
+  const context: IGameContext = {
+    players: Players(),
+    stateMachine, // Not being used yet
+    userServer,
+    intervalTimer: null,
+    settings,
+    broadcastPlayers
+  };
+
+  // context.stateMachine.transitionTo(DiceMagicStates.RoundEnded);
+  const listener = stateMachine.onStateChange(StateChangeHandler(context));
 
   // Any event that happens runs through this Handler
   // Which broadcasts it to all players
@@ -149,13 +153,13 @@ export const DiceMagicGame = (
     Handler<PlayerLeaveSeatEvent>(PlayerLeaveSeatHandler)
   );
 
-  // return {
-  //     stop: () => {
-  //         listener.remove();
-  //         userServer.cleanup();
-  //     },
-  //     cleanup: () => {
-  //         listener.remove();
-  //     },
-  // };
+  return {
+      stop: () => {
+          listener.remove();
+          userServer.cleanup();
+      },
+      cleanup: () => {
+          listener.remove();
+      },
+  };
 };

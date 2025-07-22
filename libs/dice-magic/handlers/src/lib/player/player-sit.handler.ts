@@ -15,8 +15,6 @@ export const PlayerSitHandler = (
 ) => {
     const { seat } = event.payload;
 
-    console.log("here")
-
     // Seat Taken
     if (context.players.get(seat)) {
         return {
@@ -40,8 +38,7 @@ export const PlayerSitHandler = (
 
     const diceMagicPlayer = DiceMagicPlayer(
         user.id,
-        "test",
-        // user.getDisplayName(),
+        user.username,
         event.payload.seat
     );
 
@@ -69,7 +66,9 @@ export const PlayerSitHandler = (
     // }
 
     context.players.add(seat, diceMagicPlayer);
-    context.stateMachine.update({ players: context.players.cloneArray() });
+
+    // This mutates the state data, but does NOT transition to another state.
+     context.stateMachine.update({ players: context.players.cloneArray() });
 
     return {
         status: 200,

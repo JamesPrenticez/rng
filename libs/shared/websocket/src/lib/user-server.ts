@@ -85,7 +85,7 @@ export const UserServer = (
   // Broadcast - send event updates to all users
   const broadcast = <T>(
     data: [string, T],
-    type: string | string[] = 'player' // DiceMagicEvents.Player (circular dep)
+    type: string | string[] = 'player' // THIS IS A ROOM not a fucking type
   ) => {
     context.io.to(type).emit(data[0], data[1]);
     context.io.of('/service').to(type).emit(data[0], data[1]);
@@ -105,6 +105,10 @@ export const UserServer = (
     emitter: context.emitter,
     configureValidEvents,
     context,
+
+    cleanup: () => {
+      context.io.close();
+    },
   };
 };
 

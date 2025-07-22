@@ -20,10 +20,10 @@ const userServer = UserServer(
 
 const dmg = DiceMagicGame(userServer, gameSettings);
 
-// process.on('exit', () => {
-//     // log.info('BLACKJACK', 'Cleaning up server');
-//     dmg.cleanup();
-//     userServer.cleanup();
-// });
+process.on('exit', () => {
+    // log.info('BLACKJACK', 'Cleaning up server');
+    dmg.cleanup();
+    userServer.cleanup();
+});
 
 export default {};

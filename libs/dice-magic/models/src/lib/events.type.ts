@@ -26,9 +26,27 @@ export enum DiceMagicEvents {
   Players = 'Players', // broadcast to all players
   PlayerSit = 'PlayerSit',
   PlayerLeaveSeat = 'PlayerLeaveSeat',
+  GameState = 'GameState',
 }
 
 export const Events = Object.assign({}, DiceMagicEvents);
+
+// Game State Event
+export const createGameStateEvent = (
+    previousState: DiceMagicStates,
+    nextState: DiceMagicStates,
+    seatId: number,
+    hand: number
+) => {
+    return createEvent(Events.GameState, {
+        previous_state: previousState,
+        next_state: nextState,
+        seat_id: seatId,
+        hand,
+    });
+};
+
+export type GameStateEvent = ReturnType<typeof createGameStateEvent>[1];
 
 // RoundStartEvent
 export const createRoundStartEvent = (

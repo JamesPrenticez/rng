@@ -33,6 +33,9 @@ export const UserConnectionHandler =
         const safeUsers = Array.from(context.users.values()).map((u) => u.toData(false));
         context.emitter.emit(BaseEvents.UsersUpdate, safeUsers);
 
+        // IMPORTANT - Add the user to the 'players' ROOM
+        socket.join('players');
+
         socket.onAny((eventName, ...args) => {
           if (!isValidEvent(context)('players', eventName)) {
                 console.log("Invalid Player Event:", eventName)
