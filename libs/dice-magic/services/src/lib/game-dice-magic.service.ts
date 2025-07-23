@@ -75,16 +75,12 @@ export const DiceMagicGame = (
   userServer: IUserServer,
   settings: IDiceMagicSettings
 ) => {
-
   userServer.configureValidEvents(
     ['players'],
-    [
-      Events.PlayerSit,
-      Events.PlayerLeaveSeat,
-    ]
+    [Events.PlayerSit, Events.PlayerLeaveSeat]
   );
 
-    // Broadcast to all Players
+  // Broadcast to all Players
   const broadcastPlayers = () => {
     const data = context.players.toArray().map((p) => p.toData());
 
@@ -98,7 +94,7 @@ export const DiceMagicGame = (
           {} as PlayerData, //dealer.toData(),
           '' //context.leaderRank[0] || ''
         ),
-        ["players"]
+        ['players']
       );
     }
   };
@@ -109,7 +105,7 @@ export const DiceMagicGame = (
     userServer,
     intervalTimer: null,
     settings,
-    broadcastPlayers
+    broadcastPlayers,
   };
 
   // context.stateMachine.transitionTo(DiceMagicStates.RoundEnded);
@@ -129,10 +125,11 @@ export const DiceMagicGame = (
 
       const res = await cb(user, event, context);
 
-      if (res.status !== 200) {
-        console.log(event.event, res);
-      }
       user.socket.emit(...createResponseEvent(event.message_id, res));
+
+      if (res.status !== 200) {
+        return console.log(event.event, res);
+      }
 
       broadcastPlayers();
     };
@@ -154,12 +151,12 @@ export const DiceMagicGame = (
   );
 
   return {
-      stop: () => {
-          listener.remove();
-          userServer.cleanup();
-      },
-      cleanup: () => {
-          listener.remove();
-      },
+    stop: () => {
+      listener.remove();
+      userServer.cleanup();
+    },
+    cleanup: () => {
+      listener.remove();
+    },
   };
 };

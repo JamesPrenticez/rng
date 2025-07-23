@@ -43,6 +43,10 @@ export interface IDiceMagicSettings {
     // videoStreamData?: VideoStreamData;
 }
 
+export interface GameInfo {
+  settings: IDiceMagicSettings
+}
+
 export interface IGameContext {
     players: IDiceMagicPlayers;
     stateMachine: IStateMachine<DiceMagicState, DiceMagicStates>;

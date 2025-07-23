@@ -6,6 +6,7 @@ import {
   useReducer,
   ReactNode,
   useCallback,
+  useState,
 } from 'react';
 import { useWebsocketContext } from '@shared/contexts';
 
@@ -13,6 +14,7 @@ import {
   createPlayerSitEvent,
   DiceMagicEvents,
   Events,
+  GameInfo,
   GameState,
   PlayersEvent,
 } from '@dice-magic/models';
@@ -21,10 +23,11 @@ import {
   BaseEvents,
   ResponseEvent,
 } from '@shared/events';
-import { useUserStore } from '@shared/stores';
+import { toast } from "react-hot-toast"
 
 interface GameContextProps {
   gameState: GameState;
+  gameInfo: GameInfo;
   handlePlayerSit: (seatId: number) => void;
 }
 
@@ -35,20 +38,26 @@ interface GameProviderProps {
 const responseHandler = (response: ResponseEvent) => {
   if (response.payload.status > 400) {
     // This handles "seat taken"
-    console.log(response.payload.message);
-    // toast(response.payload.message);
+    toast.error(response.payload.message);
   }
 };
 
 const GameContext = createContext<GameContextProps | undefined>(undefined);
 
-const initialState: GameState = {
+const initialGameState: GameState = {
   user: null,
   roundInfo: null,
   players: [],
   payouts: [],
   endTime: 0,
 };
+
+const initialGameInfo: GameInfo = {
+  settings: {
+    name: " Dice Magic",
+    tableSeatLimit: 4
+  }
+}
 
 type GameReducer = (
   state: GameState,
@@ -58,7 +67,6 @@ type GameReducer = (
 const gameReducer: GameReducer = (state, event): GameState => {
   switch (event.event) {
     case Events.Players: {
-      console.log("Event.Players aka pplz in seats")
       const eventData = event as PlayersEvent;
       // const currentPlayerSeats = eventData.payload.players.reduce(
       //   (acc: number[], player) => {
@@ -90,8 +98,8 @@ const gameReducer: GameReducer = (state, event): GameState => {
 
 export const GameProvider = ({ children }: GameProviderProps) => {
   const socket = useWebsocketContext();
-  // const currentUser = useUserStore((s) => s.user);
-  const [gameState, dispatch] = useReducer(gameReducer, initialState);
+  const [gameState, dispatch] = useReducer(gameReducer, initialGameState);
+  const [gameInfo, setGameInfo] = useState(initialGameInfo)
 
   const handlePlayerSit = useCallback(
     (seatId: number) => {
@@ -120,6 +128,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
   const value = useMemo(
     () => ({
       gameState,
+      gameInfo,
       handlePlayerSit,
     }),
     [gameState, handlePlayerSit]

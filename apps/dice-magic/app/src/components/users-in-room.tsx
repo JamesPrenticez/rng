@@ -21,23 +21,21 @@ const Container = styled.div`
 `;
 
 export const UsersInRoom = () => {
-// TODO move to a zustand store
-// TODO fix seated users...
+  // TODO move to a zustand store
+  // TODO fix seated users...
 
   const { baseAppState } = useBaseAppContext();
-  const { gameState, handlePlayerSit } = useGameContext(); 
+  const { gameState, gameInfo, handlePlayerSit } = useGameContext();
   const user = useUserStore((s) => s.user);
-  const totalSeats =  4; // gameState.totalSeats ??
+  const totalSeats = gameInfo.settings.tableSeatLimit;
 
-  console.log("Players:", gameState.players)
-
-const seatToPlayer = useMemo(() => {
-  const map = new Map<number, PlayerData>();
-  for (const player of gameState.players) {
-    map.set(player.seat, player);
-  }
-  return map;
-}, [gameState.players]);
+  const seatToPlayer = useMemo(() => {
+    const map = new Map<number, PlayerData>();
+    for (const player of gameState.players) {
+      map.set(player.seat, player);
+    }
+    return map;
+  }, [gameState.players]);
 
   return (
     <Container>
@@ -45,15 +43,15 @@ const seatToPlayer = useMemo(() => {
 
       <p>Users: {baseAppState.users.length}</p>
 
-{Array.from({ length: totalSeats }).map((_, seat) => {
-  const player = seatToPlayer.get(seat);
-  return (
-    <p key={seat}>
-      Seat {seat + 1}: {player?.name ?? 'Empty'}{' '}
-      <Button onClick={() => handlePlayerSit(seat)}>Sit</Button>
-    </p>
-  );
-})}
+      {Array.from({ length: totalSeats }).map((_, seat) => {
+        const player = seatToPlayer.get(seat);
+        return (
+          <p key={seat}>
+            Seat {seat + 1}: {player?.name ?? 'Empty'}{' '}
+            <Button onClick={() => handlePlayerSit(seat)}>Sit</Button>
+          </p>
+        );
+      })}
     </Container>
   );
 };
