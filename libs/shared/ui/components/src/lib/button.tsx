@@ -114,11 +114,12 @@ export const Button = ({
   children,
   onClick,
   isMobile,
+  className,
   ...rest
 }: ButtonProps) => {
   return (
     <ButtonContainer
-      className={clsx(variant, { mobile: isMobile })}
+      className={clsx(variant, { mobile: isMobile }, className)}
       onClick={onClick}
       {...rest}
     >
