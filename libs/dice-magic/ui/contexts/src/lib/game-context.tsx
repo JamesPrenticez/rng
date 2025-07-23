@@ -11,6 +11,7 @@ import {
 import { useWebsocketContext } from '@shared/contexts';
 
 import {
+  createPlayerLeaveSeatEvent,
   createPlayerSitEvent,
   DiceMagicEvents,
   Events,
@@ -29,6 +30,7 @@ interface GameContextProps {
   gameState: GameState;
   gameInfo: GameInfo;
   handlePlayerSit: (seatId: number) => void;
+  handlePlayerLeaveSeat: (seatId: number) => void;
 }
 
 interface GameProviderProps {
@@ -109,6 +111,14 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     [socket]
   );
 
+  const handlePlayerLeaveSeat = useCallback(
+    (seatId: number) => {
+        const event = createPlayerLeaveSeatEvent(seatId);
+        socket.emitWithResponse(event).then((res) => console.log(res));
+    },
+    [socket]
+  );
+
   useEffect(() => {
     // Effectivly the Responce of Player Sit Handler
     socket.on(DiceMagicEvents.Players, (playerEvent) => {
@@ -130,6 +140,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
       gameState,
       gameInfo,
       handlePlayerSit,
+      handlePlayerLeaveSeat
     }),
     [gameState, handlePlayerSit]
   );

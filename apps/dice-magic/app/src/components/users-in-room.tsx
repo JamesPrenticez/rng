@@ -21,13 +21,15 @@ const Container = styled.div`
 `;
 
 export const UsersInRoom = () => {
-  // TODO move to a zustand store
-  // TODO fix seated users...
-
   const { baseAppState } = useBaseAppContext();
-  const { gameState, gameInfo, handlePlayerSit } = useGameContext();
+  const { gameState, gameInfo, handlePlayerSit, handlePlayerLeaveSeat } =
+    useGameContext();
   const user = useUserStore((s) => s.user);
   const totalSeats = gameInfo.settings.tableSeatLimit;
+
+  const handleSitOrLeave = (seat: number, isPlayer: boolean) => {
+    return !isPlayer ? handlePlayerSit(seat) : handlePlayerLeaveSeat(seat);
+  };
 
   const seatToPlayer = useMemo(() => {
     const map = new Map<number, PlayerData>();
@@ -45,10 +47,16 @@ export const UsersInRoom = () => {
 
       {Array.from({ length: totalSeats }).map((_, seat) => {
         const player = seatToPlayer.get(seat);
+        const isCurrentPlayer = player?.name === user?.username;
+
         return (
           <p key={seat}>
-            Seat {seat + 1}: {player?.name ?? 'Empty'}{' '}
-            <Button onClick={() => handlePlayerSit(seat)}>Sit</Button>
+            Seat {seat + 1}: {player?.name ?? 'Empty'}
+            {(!player || isCurrentPlayer) && (
+              <Button onClick={() => handleSitOrLeave(seat, !!player)}>
+                {isCurrentPlayer ? 'leave' : 'sit'}
+              </Button>
+            )}
           </p>
         );
       })}
