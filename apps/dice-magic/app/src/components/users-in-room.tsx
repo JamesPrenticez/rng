@@ -15,7 +15,7 @@ const Container = styled.div`
   padding: 1rem;
 
   color: var(--color-text);
-  font-family: "Quicksand";
+  font-family: 'Quicksand';
   font-size: 2.4rem;
   font-weight: 400;
   display: flex;
@@ -28,17 +28,17 @@ const Container = styled.div`
     color: var(--color-accent);
     font-weight: 700;
     overflow: hidden;
-  text-overflow: ellipsis;
+    text-overflow: ellipsis;
   }
 `;
 
 const SeatContainer = styled.div`
   display: flex;
-  
+
   p {
     color: var(--color-grey-40);
-      overflow: hidden;
-  text-overflow: ellipsis;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .plus {
@@ -86,38 +86,36 @@ export const UsersInRoom = () => {
 
   return (
     <Container>
-      <p className='user-title'>{user?.username}</p>
+      <p className="user-title">{user?.username}</p>
 
       {Array.from({ length: totalSeats }).map((_, seat) => {
         const player = seatToPlayer.get(seat);
         const isCurrentPlayer = player?.name === user?.username;
 
         return (
-          <SeatContainer
-            key={seat}
-            className={clsx()}
-          >
+          <SeatContainer key={seat} className={clsx()}>
             <p>
-              {/* {seat + 1}: {player?.name ?? 'Empty'} */}{player?.name ?? 'Empty'}
+              {seat + 1}: {player?.name ?? 'Empty'}
             </p>
-            {(!player || isCurrentPlayer) ? (
+            {!player || isCurrentPlayer ? (
               <SeatButton
                 variant={ButtonVariants.SKELETON}
                 onClick={() => handleSitOrLeave(seat, !!player)}
               >
-                {isCurrentPlayer ? <UserRoundMinus className='minus' /> : <UserRoundPlus className='plus'/>}
+                {isCurrentPlayer ? (
+                  <UserRoundMinus className="minus" />
+                ) : (
+                  <UserRoundPlus className="plus" />
+                )}
               </SeatButton>
             ) : (
-               <SeatButton          variant={ButtonVariants.SKELETON}>
-              <UserLock className='lock'/>
-               </SeatButton>
+              <SeatButton variant={ButtonVariants.SKELETON}>
+                <UserLock className="lock" />
+              </SeatButton>
             )}
           </SeatContainer>
         );
-        
-      })
-      }
-
+      })}
     </Container>
   );
 };
