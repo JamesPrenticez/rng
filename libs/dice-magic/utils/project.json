@@ -1,0 +1,8 @@
+{
+  "name": "dice-magic/utils",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/dice-magic/utils/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {}
+}
