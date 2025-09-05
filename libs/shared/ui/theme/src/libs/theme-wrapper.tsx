@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
 import { ThemeSwitcher } from './theme-switcher';
@@ -37,10 +37,12 @@ export const ThemeWrapper = ({
     localStorage.setItem('theme', theme);
   };
 
+    useEffect(() => {
+        document.documentElement.className = `theme-${activeTheme}`;
+    }, [activeTheme]);
+
   return (
-    <Container
-      className={`theme-${activeTheme}`}
-    >
+    <Container>
       {showSwitcher && <ThemeSwitcher handleSetTheme={handleSetTheme} />}
 
       {children}

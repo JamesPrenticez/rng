@@ -1,10 +1,8 @@
 import { useGameContext } from '@dice-magic/contexts';
-import { PlayerData } from '@dice-magic/models';
 import styled from '@emotion/styled';
 import { Button, ButtonVariants } from '@shared/components';
-import { useBaseAppContext } from '@shared/contexts';
 import { useUserStore } from '@shared/stores';
-import { useMemo } from 'react';
+import { usePlayersBySeat } from '@dice-magic/hooks'
 import { UserRoundPlus, UserRoundMinus, UserLock } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -66,23 +64,15 @@ const SeatButton = styled(Button)`
 `;
 
 export const UsersInRoom = () => {
-  const { baseAppState } = useBaseAppContext();
-  const { gameState, gameInfo, handlePlayerSit, handlePlayerLeaveSeat } =
+  const { gameInfo, handlePlayerSit, handlePlayerLeaveSeat } =
     useGameContext();
   const user = useUserStore((s) => s.user);
   const totalSeats = gameInfo.settings.tableSeatLimit;
-
+  const seatToPlayer = usePlayersBySeat();
+  
   const handleSitOrLeave = (seat: number, isPlayer: boolean) => {
     return !isPlayer ? handlePlayerSit(seat) : handlePlayerLeaveSeat(seat);
   };
-
-  const seatToPlayer = useMemo(() => {
-    const map = new Map<number, PlayerData>();
-    for (const player of gameState.players) {
-      map.set(player.seat, player);
-    }
-    return map;
-  }, [gameState.players]);
 
   return (
     <Container>
