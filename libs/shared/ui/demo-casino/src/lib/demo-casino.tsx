@@ -194,7 +194,7 @@ export const DemoCasino = ({ app }: DemoCasinoProps) => {
             />
           </fieldset>
 
-<fieldset>
+        <fieldset>
           <Select 
             value={form.currency} onChange={updateForm('currency')}
             >
