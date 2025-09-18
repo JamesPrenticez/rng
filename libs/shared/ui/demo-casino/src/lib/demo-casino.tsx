@@ -2,10 +2,11 @@ import styled from '@emotion/styled';
 import { type FormEvent, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import type { APP, GAME } from '@shared/models';
-import { useAspectRatio } from '@shared/hooks';
+import { useIsMobile } from '@shared/hooks';
 import { getSessionUrl } from './get-session-url';
 import { createRandomUsername, CURRENCIES, CURRENCY_MAP } from '@shared/utils';
-import { Button, ButtonVariants, Input, Select } from '@shared/components'
+import { Button, ButtonVariants, Input, Select } from '@shared/components';
+import { useSwipeable } from 'react-swipeable';
 
 const HEADER_HEIGHT = 60;
 
@@ -15,12 +16,68 @@ const MIN = `
 
 const Container = styled.div`
   box-sizing: border-box;
+  background-color: var(--color-grey-60);
 
-  background-color: #09090a;
-  border: lime 1px solid;
   height: 100dvh;
 
   overflow: hidden;
+
+  &.mobile .floating-button {
+    display: flex;
+    width: 100vw;
+    height: 14px;
+    bottom: 0;
+    background-color: transparent;
+
+    position: fixed;
+  }
+
+  .modal {
+    width: 100vw;
+    height: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    position: fixed;
+
+    display: flex;
+
+    transition: height 500ms ease-in-out;
+
+    form {
+      display: none;
+    }
+
+    &.show {
+      height: 100vh;
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    .close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      position: absolute;
+
+      right: 20px;
+      top: 20px;
+
+      width: 30px;
+      height: 30px;
+
+      border: 2px solid rgba(255, 255, 255, 0.4);
+
+      border-radius: 50%;
+
+      color: white;
+      font-family: sans-serif;
+      font-size: 24px;
+    }
+  }
 
   form {
     margin-left: 2rem;
@@ -47,7 +104,7 @@ const Container = styled.div`
     margin-right: -1rem;
   }
 
-  &.moible {
+  &.mobile {
     iframe {
       margin: 0px;
       box-sizing: border-box;
@@ -57,27 +114,65 @@ const Container = styled.div`
   }
 `;
 
-// Replace with Title?
 const Header = styled.div`
   display: flex;
   align-items: center;
   box-sizing: border-box;
   width: 100vw;
   height: ${HEADER_HEIGHT}px;
-  font-size: 4rem;
-  font-family: 'Aronui';
-  color: var(--color-primary);
-  background-color: var(--color-black-20);
-  border-bottom: silver 1px solid;
+  background-color: #000;
+  border-bottom: 1px solid #242424;
 
-  padding: 0rem 1rem;
+  padding: 0px 40px;
 
-  &.mobile {
+  font-family: 'Chakra Petch';
+
+  &.vertical {
     align-items: center;
     justify-content: center;
     padding: 0px 10px;
+
+    input[type='text'],
+    select {
+      width: 100%;
+      font-size: 18px;
+    }
   }
+
+  .currency-symbol {
+    color: var(--color-grey-60);
+  }
+
+  form {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    box-sizing: border-box;
+  }
+
 `;
+
+// Replace with Title?
+// const Header = styled.div`
+//   display: flex;
+//   align-items: center;
+//   box-sizing: border-box;
+//   width: 100vw;
+//   height: ${HEADER_HEIGHT}px;
+//   font-size: 4rem;
+//   font-family: 'Aronui';
+//   color: var(--color-primary);
+//   background-color: var(--color-black-20);
+//   border-bottom: silver 1px solid;
+
+//   padding: 0rem 1rem;
+
+//   &.mobile {
+//     align-items: center;
+//     justify-content: center;
+//     padding: 0px 10px;
+//   }
+// `;
 
 const SubmitButton = styled(Button)`
   && {
@@ -86,22 +181,15 @@ const SubmitButton = styled(Button)`
       background-color: rgba(var(--color-rag-green-opacity), 1);
     }
   }
-`
+`;
 
 interface DemoCasinoProps {
   app: APP | GAME;
 }
 
 export const DemoCasino = ({ app }: DemoCasinoProps) => {
-  const isMobile = useAspectRatio();
-  // const [gameUrl, setGameUrl] = useState('http://localhost:4202/'); // TODO update for different apps
-  const [gameUrl, setGameUrl] = useState(
-      localStorage.getItem(`${app}_demo_casino_url`)
-  );
-
-  const randomName = () => {
-    setForm((p) => ({ ...p, username: createRandomUsername() }));
-  };
+  const isMobile = useIsMobile();
+  const [showModal, setShowModal] = useState(false);
 
   const [form, setForm] = useState<{
     username: string;
@@ -117,20 +205,9 @@ export const DemoCasino = ({ app }: DemoCasinoProps) => {
     nicknamePrompt: false,
   });
 
-  const updateUser = (e: FormEvent) => {
-    e.preventDefault();
-    const data = getSessionUrl(
-      form.username,
-      form.credits,
-      form.currency,
-      form.nicknamePrompt
-    );
-    localStorage.setItem(`${app}_demo_casino_url`, data.url);
-    localStorage.setItem(`${app}_demo_casino_session`, data.token);
-    localStorage.setItem(`${app}_demo_casino_username`, form.username);
-
-    setGameUrl(data.url);
-  };
+  const [gameUrl, setGameUrl] = useState(
+    localStorage.getItem(`${app}_demo_casino_url`)
+  );
 
   const updateForm = (
     field: 'username' | 'credits' | 'currency' | 'nicknamePrompt'
@@ -160,15 +237,50 @@ export const DemoCasino = ({ app }: DemoCasinoProps) => {
     };
   };
 
+  const updateUser = (e: FormEvent) => {
+    e.preventDefault();
+    const data = getSessionUrl(
+      form.username,
+      form.credits,
+      form.currency,
+      form.nicknamePrompt
+    );
+    localStorage.setItem(`${app}_demo_casino_url`, data.url);
+    localStorage.setItem(`${app}_demo_casino_session`, data.token);
+    localStorage.setItem(`${app}_demo_casino_username`, form.username);
+
+    setGameUrl(data.url);
+  };
+
   const symbol = useMemo(() => {
     return CURRENCY_MAP[form.currency as keyof typeof CURRENCY_MAP].symbol;
   }, [form.currency]);
 
-  console.log(gameUrl)
+  const randomName = () => {
+    setForm((p) => ({ ...p, username: createRandomUsername() }));
+  };
+
+  const handlers = useSwipeable({
+    onSwiped: (eventData) => {
+      if (eventData.dir === 'Up') setShowModal(true);
+    },
+  });
+
   return (
     <Container className={clsx({ mobile: isMobile })}>
-      <Header>
-        Demo Casino
+      <div className="floating-button" {...handlers} />
+      <Header
+        className={clsx({
+          modal: isMobile,
+          vertical: isMobile,
+          show: showModal,
+        })}
+      >
+        {isMobile && (
+          <div className="close" onClick={() => setShowModal(false)}>
+            x
+          </div>
+        )}
 
         <form onSubmit={updateUser}>
           <fieldset>
@@ -180,9 +292,9 @@ export const DemoCasino = ({ app }: DemoCasinoProps) => {
             />
             <Button className={'random-name'} onClick={randomName}>
               ?
-            </Button> 
+            </Button>
           </fieldset>
-          
+
           <fieldset>
             <div className="currency-symbol">{symbol}</div>
             <Input
@@ -194,25 +306,25 @@ export const DemoCasino = ({ app }: DemoCasinoProps) => {
             />
           </fieldset>
 
-        <fieldset>
-          <Select 
-            value={form.currency} onChange={updateForm('currency')}
-            >
-            {CURRENCIES.map((cur) => (
-              <option key={cur.value} value={cur.value} label={cur.label} />
-            ))}
-          </Select>
-            </fieldset>
-          <SubmitButton 
+          <fieldset>
+            <Select value={form.currency} onChange={updateForm('currency')}>
+              {CURRENCIES.map((cur) => (
+                <option key={cur.value} value={cur.value} label={cur.label} />
+              ))}
+            </Select>
+          </fieldset>
+          <SubmitButton
             type="submit"
             value="Update"
             variant={ButtonVariants.FILLED}
-          > 
+          >
             Update
-          </SubmitButton> 
+          </SubmitButton>
         </form>
       </Header>
-      {gameUrl && <iframe src={gameUrl} title="Game Studio" />}
+      {gameUrl && (
+        <iframe src={gameUrl} title="Orbit Studio" allow="fullscreen" />
+      )}
     </Container>
   );
 };

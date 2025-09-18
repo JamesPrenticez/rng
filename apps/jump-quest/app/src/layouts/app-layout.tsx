@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useAspectRatio } from '@shared/hooks'
+import { useIsMobile } from '@shared/hooks'
 import { MobileAppLayout } from './app-layout-mobile';
 import { DesktopAppLayout } from './app-layout-desktop';
 
@@ -9,7 +9,7 @@ import { Themes } from '@shared/theme';
 // import { useUserStore } from '@shared/stores';
 
 export const JumpQuestAppLayout = () => {
-  const isMobile = useAspectRatio();
+  const isMobile = useIsMobile();
 
   const render = useMemo(() => {
     if (isMobile) {
