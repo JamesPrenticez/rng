@@ -1,0 +1,3 @@
+procs:
+  'jump-quest:app':
+    shell: 'nx serve jump-quest-app'
