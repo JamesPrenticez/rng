@@ -1,73 +1,105 @@
 import styled from '@emotion/styled';
-import MobileDetect from 'mobile-detect';
 import { useMemo } from 'react';
+
 import { useWindowSize } from './use-window-size.hook';
 
 // document.documentElement refers to the root element of the HTML document, which is typically the <html> element.
 // In the context of a web page, it represents the highest level in the DOM hierarchy
 // We want update font size which in-turn effects the scaling of all other rem units in our app
 // We use "isVertical" as a js variable instead of using a hardcoded media query width
-// refer to libs\shared\assets\styles\globals.css
-
-const isTablet = () => {
-    return (
-        window.matchMedia('(min-width: 600px) and (max-width: 1280px)')
-            .matches && navigator.maxTouchPoints > 0
-    );
+const size = {
+    mobile: '768px',
+    mobileHeight: '600px',
+    tablet: '1024px',
 };
 
-const isPortrait = () => {
+export const device = {
+    mobilePortrait: `(max-width: ${size.mobile}) and (orientation : portrait)`,
+    mobile: `(max-height: ${size.mobileHeight}), (max-width: ${size.mobile})`,
+    tablet: `(max-width: ${size.tablet}) and (orientation : portrait)`,
+    mobileLandscape: `(max-height: ${size.mobileHeight}) and (orientation : landscape), (max-width: ${size.mobile}) and (orientation : landscape)`,
+};
+
+export const isPortrait = () => {
     return window.matchMedia('(orientation: portrait)').matches;
 };
+export const isLandscape = () => {
+    return window.matchMedia('(orientation: landscape)').matches;
+};
 
-export const useAspectRatio = () => {
+export type isMobileType =
+    | undefined
+    | { landscape: boolean; portrait: boolean };
+
+export const useIsMobile = (): isMobileType => {
     const [width, height] = useWindowSize();
 
-    const isDesktopOrTablet = useMemo(() => {
-        // Not really a determiner of desktop
-        if (isPortrait()) {
-            return isTablet();
-        }
-
-        if (width > height) {
-            return true;
-        }
-        const md = new MobileDetect(window.navigator.userAgent);
-
-        return isTablet() || !!md.tablet();
+    const isMobile = useMemo(() => {
+        return (
+            window.matchMedia(device.mobileLandscape).matches ||
+            window.matchMedia(device.mobilePortrait).matches
+        );
     }, [width, height]);
 
-    return !isDesktopOrTablet;
+    const landscape = useMemo(() => {
+        return isLandscape();
+    }, [width, height]);
+
+    const portrait = useMemo(() => {
+        return isPortrait();
+    }, [width, height]);
+
+    return isMobile
+        ? {
+              landscape,
+              portrait,
+          }
+        : undefined;
 };
 
 export const AspectRatioComponent = styled.div<{
-    isVertical: boolean;
+    isMobile: isMobileType;
     backgroundImage?: string;
 }>`
     position: relative;
     box-sizing: border-box;
-    width: ${({ isVertical }) => (isVertical ? '100vw' : '192rem')};
-    height: ${({ isVertical }) => (isVertical ? '100dvh' : '108rem')};
+    width: ${({ isMobile }) => (isMobile ? '100vw' : '192rem')};
+    height: ${({ isMobile }) => (isMobile ? '100dvh' : '108rem')};
 
     max-height: 100%;
 
+    min-width: 320px;
+
+    aspect-ratio: 16 / 9;
+
     overflow: hidden;
 
-    min-width: 320px;
+    display: flex;
+    flex-direction: column;
 
     background-image: url(${(props) => props.backgroundImage});
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center center;
 
-    box-sizing: border-box;
-    border: solid 1px red;
+    transition: background-image 500ms ease-in-out;
+
+
+    z-index: 0;
+`;
+
+const Wrapper = styled.div`
+    position: relative;
+
+    width: 100vw;
+    height: 100vh;
 
     display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
 
-    transition: background-image 500ms ease-in-out;
+    background-color: black;
+
 `;
 
 interface AspectRatioWrapperProps
@@ -80,14 +112,16 @@ interface AspectRatioWrapperProps
 }
 
 export const AspectRatioWrapper = (props: AspectRatioWrapperProps) => {
-    const isVertical = useAspectRatio();
+    const isMobile = useIsMobile();
 
     return (
-        <AspectRatioComponent
-            isVertical={isVertical}
-            backgroundImage={props.backgroundImage}
-        >
-            {props.children}
-        </AspectRatioComponent>
+        <Wrapper>
+            <AspectRatioComponent
+                isMobile={isMobile}
+                backgroundImage={props.backgroundImage}
+            >
+                {props.children}
+            </AspectRatioComponent>
+        </Wrapper>
     );
 };
