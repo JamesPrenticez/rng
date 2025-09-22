@@ -5,35 +5,61 @@ import {
   useMemo,
   useReducer,
   ReactNode,
+  useCallback,
+  useState,
 } from 'react';
-import { useSocket } from '@shared/contexts';
+import { useWebsocketContext } from '@shared/contexts';
 
-import { DiceMagicEvents, GameState } from '@dice-maic/models';
+import {
+  createPlayerLeaveSeatEvent,
+  createPlayerSitEvent,
+  DiceMagicEvents,
+  Events,
+  GameInfo,
+  GameState,
+  PlayersEvent,
+} from '@dice-magic/models';
 import {
   IBaseEvent,
   BaseEvents,
-  RoundStartEvent,
-  RoundEndEvent,
-  UsersUpdateEvent,
+  ResponseEvent,
 } from '@shared/events';
-import { useUserStore } from '@shared/stores';
+import { toast } from "react-hot-toast"
 
 interface GameContextProps {
   gameState: GameState;
+  gameInfo: GameInfo;
+  handlePlayerSit: (seatId: number) => void;
+  handlePlayerLeaveSeat: (seatId: number) => void;
 }
 
 interface GameProviderProps {
   children: ReactNode;
 }
 
+const responseHandler = (response: ResponseEvent) => {
+  if (response.payload.status > 400) {
+    // This handles "seat taken"
+    toast.error(response.payload.message);
+  }
+};
+
 const GameContext = createContext<GameContextProps | undefined>(undefined);
 
-const initialState: GameState = {
+const initialGameState: GameState = {
+  user: null,
   roundInfo: null,
   players: [],
   payouts: [],
   endTime: 0,
 };
+
+const initialGameInfo: GameInfo = {
+  settings: {
+    name: " Dice Magic",
+    tableSeatLimit: 4
+  }
+}
 
 type GameReducer = (
   state: GameState,
@@ -42,39 +68,30 @@ type GameReducer = (
 
 const gameReducer: GameReducer = (state, event): GameState => {
   switch (event.event) {
-    case BaseEvents.UsersUpdate: {
-      const eventData = event as UsersUpdateEvent;
-      return {
-        ...state,
-        players: eventData.payload,
-      };
-    }
-    case BaseEvents.RoundStart: {
-      const eventData = event as RoundStartEvent;
-      return {
-        ...initialState,
-        roundInfo: eventData.payload,
-        payouts: [],
-        endTime: Date.now() + (eventData.payload?.remainingBetDuration || 0),
-        // resultHistory: [...state.resultHistory],
-      };
-    }
-    case BaseEvents.RoundEnd: {
-      const eventData = event as RoundEndEvent;
-      return {
-        ...state,
-        roundInfo: eventData.payload,
-        // resultHistory: [...state.resultHistory],
-      };
-    }
+    case Events.Players: {
+      const eventData = event as PlayersEvent;
+      // const currentPlayerSeats = eventData.payload.players.reduce(
+      //   (acc: number[], player) => {
+      //     if (player.user_id === state?.user?.id) {
+      //       acc.push(player.seat);
+      //     }
+      //     return acc;
+      //   },
+      //   []
+      // );
 
-    // case Events.ResultHistory: {
-    //     const eventData = event as ResultedHistoryEvent;
-    //     return {
-    //         ...state,
-    //         resultHistory: eventData.payload.resultedNumbers,
-    //     };
-    // }
+      return {
+        ...state,
+        players: eventData.payload.players,
+        // userSeatIds: currentPlayerSeats,
+        // dealer: eventData.payload.dealer,
+        // gameLeader: {
+        //   ...state.gameLeader,
+        //   gameLeaderId: eventData.payload.gameLeader,
+        //   isGameLeader: eventData.payload.gameLeader === state.user?.id,
+        // },
+      };
+    }
 
     default:
       return state;
@@ -82,32 +99,50 @@ const gameReducer: GameReducer = (state, event): GameState => {
 };
 
 export const GameProvider = ({ children }: GameProviderProps) => {
-  const socket = useSocket();
+  const socket = useWebsocketContext();
+  const [gameState, dispatch] = useReducer(gameReducer, initialGameState);
+  const [gameInfo, setGameInfo] = useState(initialGameInfo)
 
-  const currentUser = useUserStore((s) => s.user);
-  const [gameState, dispatch] = useReducer(gameReducer, initialState);
+  const handlePlayerSit = useCallback(
+    (seatId: number) => {
+      const event = createPlayerSitEvent(seatId);
+      socket.emitWithResponse(event).then(responseHandler);
+    },
+    [socket]
+  );
 
-useEffect(() => {
-  if (!currentUser) return;
+  const handlePlayerLeaveSeat = useCallback(
+    (seatId: number) => {
+        const event = createPlayerLeaveSeatEvent(seatId);
+        socket.emitWithResponse(event).then((res) => console.log(res));
+    },
+    [socket]
+  );
 
-  socket.emit(BaseEvents.UserJoin, currentUser);
+  useEffect(() => {
+    // Effectivly the Responce of Player Sit Handler
+    socket.on(DiceMagicEvents.Players, (playerEvent) => {
+        console.log(DiceMagicEvents.Players, playerEvent.payload);
+        dispatch(playerEvent);
+    });
 
-  const handleUsersUpdate = (event: UsersUpdateEvent) => {
-    dispatch(event);
-  };
+    socket.onAny((event, ...args) => {
+      console.log("Received event:", event, args);
+    });
 
-  socket.on(BaseEvents.UsersUpdate, handleUsersUpdate);
-
-  return () => {
-    socket.off(BaseEvents.UsersUpdate, handleUsersUpdate);
-  };
-}, [currentUser, socket]);
+    return () => {
+      socket.off(DiceMagicEvents.Players);   
+    };
+  }, [socket]);
 
   const value = useMemo(
     () => ({
       gameState,
+      gameInfo,
+      handlePlayerSit,
+      handlePlayerLeaveSeat
     }),
-    [gameState]
+    [gameState, handlePlayerSit]
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

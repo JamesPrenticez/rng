@@ -20,10 +20,12 @@
     "noPropertyAccessFromIndexSignature": false,
     "baseUrl": ".",
     "paths": {
+      "@dice-magic/contexts": ["libs/dice-magic/ui/contexts/src/index.ts"],
+      "@dice-magic/handlers": ["libs/dice-magic/handlers/src/index.ts"],
+      "@dice-magic/models": ["libs/dice-magic/models/src/index.ts"],
+      "@dice-magic/services": ["libs/dice-magic/services/src/index.ts"],
       "@dice-magic/stores": ["libs/dice-magic/ui/stores/src/index.ts"],
       "@dice-magic/ui": ["libs/dice-magic/ui/src/index.ts"],
-      "@dice-maic/models": ["libs/dice-magic/models/src/index.ts"],
-      "@dice-maigic/contexts": ["libs/dice-magic/ui/contexts/src/index.ts"],
       "@shared/assets/audio/*": ["libs/shared/assets/audio/*"],
       "@shared/assets/fonts/*": ["libs/shared/assets/fonts/*"],
       "@shared/assets/icons/*": ["libs/shared/assets/icons/*"],
@@ -36,11 +38,14 @@
       "@shared/hooks": ["libs/shared/ui/hooks/src/index.ts"],
       "@shared/layouts": ["libs/shared/ui/layouts/src/index.ts"],
       "@shared/models": ["libs/shared/models/src/index.ts"],
+      "@shared/state-machine": ["libs/shared/state-machine/src/index.ts"],
       "@shared/stores": ["libs/shared/ui/stores/src/index.ts"],
       "@shared/theme": ["libs/shared/ui/theme/src/index.ts"],
       "@shared/ui/theme": ["libs/shared/ui/theme/src/index.ts"],
       "@shared/utils": ["libs/shared/utils/src/index.ts"],
-      "@shared/websocket": ["libs/shared/websocket/src/index.ts"]
+      "@shared/websocket": ["libs/shared/websocket/src/index.ts"],
+      "@dice-magic/hooks": ["libs/dice-magic/ui/hooks/src/index.ts"],
+      "@dice-magic/utils": ["libs/dice-magic/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

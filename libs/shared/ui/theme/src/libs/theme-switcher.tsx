@@ -3,7 +3,7 @@ import { Themes } from './theme-wrapper';
 
 const Container = styled.div`
   position: absolute;
-  top: 3rem; /* half of 6rem navbar height */
+  bottom: 3rem; /* half of 6rem navbar height */
   transform: translateY(-50%);
   right: 2rem;
   z-index: 9999;

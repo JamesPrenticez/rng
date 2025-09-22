@@ -5,182 +5,91 @@ import {
   useEffect,
   useState,
   useReducer,
-  useCallback,
   useMemo,
 } from 'react';
 import {
   BaseEvents,
-  createPasscodeRequestEvent,
   IBaseEvent,
-  PasscodeAcceptedEvent,
-  PasscodeIncorrectEvent,
-  PasscodeRequiredEvent,
-  ReadyEvent,
   UserEvent,
+  UsersUpdateEvent,
 } from '@shared/events';
-import { useSocket } from './websocket.context';
+import { useWebsocketContext } from './websocket.context';
 import { useUserStore } from '@shared/stores';
+import { OrbitUserData } from '@shared/models';
 
-export interface BaseState {
-  isReady: boolean;
-  passcodeRequired: boolean;
-  passcodeState: string;
-  passcodeRetriesLeft: number;
+export interface BaseAppState {
+  users: OrbitUserData[];
 }
 
 export interface BaseAppContextProps {
-  baseState: BaseState;
+  baseAppState: BaseAppState;
   hasLoaded: boolean;
 
   setHasLoaded: (loaded: boolean) => void;
-  submitPasscode: (passcode: string) => void;
 }
 
 const BaseAppContext = createContext<BaseAppContextProps | undefined>(undefined);
 
-export const initialState: BaseState = {
-  isReady: false,
-  passcodeRequired: false,
-  passcodeState: '',
-  passcodeRetriesLeft: 0,
+export const initialState: BaseAppState = {
+  users: [],
 };
 
 type BaseReducer = (
-  state: BaseState,
+  baseAppState: BaseAppState,
   event: IBaseEvent<BaseEvents, unknown>[1]
-) => BaseState;
+) => BaseAppState;
 
-const isReady = (
-  event: IBaseEvent<BaseEvents, unknown>[1]
-): event is ReadyEvent => {
-  return event.event === BaseEvents.Ready;
-};
+const baseReducer: BaseReducer = (state, event): BaseAppState => {
+  switch (event.event) {
+    case BaseEvents.UsersUpdate: {
+      const eventData = event as UsersUpdateEvent;
+      return {
+        ...state,
+        users: eventData.payload,
+      };
+    }
 
-const isPasscodeRequired = (
-  event: IBaseEvent<BaseEvents, unknown>[1]
-): event is PasscodeRequiredEvent => {
-  return event.event === BaseEvents.PasscodeRequired;
-};
-
-const isPasscodeIncorrect = (
-  event: IBaseEvent<BaseEvents, unknown>[1]
-): event is PasscodeIncorrectEvent => {
-  return event.event === BaseEvents.PasscodeIncorrect;
-};
-
-const isPasscodeAccepted = (
-  event: IBaseEvent<BaseEvents, unknown>[1]
-): event is PasscodeAcceptedEvent => {
-  return event.event === BaseEvents.PasscodeAccepted;
-};
-
-const baseReducer: BaseReducer = (state, event): BaseState => {
-  if (isReady(event)) {
-    return {
-      ...state,
-      isReady: true,
-    };
+    default:
+      return state;
   }
-
-  if (isPasscodeRequired(event)) {
-    return {
-      ...state,
-      passcodeRequired: true,
-    };
-  }
-
-  if (isPasscodeIncorrect(event)) {
-    return {
-      ...state,
-      passcodeState: event.payload.message,
-    };
-  }
-
-  if (isPasscodeAccepted(event)) {
-    return {
-      ...state,
-      passcodeRequired: false,
-      passcodeRetriesLeft: 0,
-    };
-  }
-
-  return state;
-};
+}
 
 type BaseProviderProps = PropsWithChildren
 
 export const BaseAppProvider = ({ children }: BaseProviderProps) => {
-  const socket = useSocket();
-  const [baseState, dispatch] = useReducer(baseReducer, initialState);
+  const socket = useWebsocketContext();
+  const [baseAppState, dispatch] = useReducer(baseReducer, initialState);
   const [hasLoaded, setHasLoaded] = useState(false);
 
   const setUser = useUserStore((s) => s.setUser);
-  const updateUser = useUserStore((s) => s.updateUser);
 
   useEffect(() => {
-    socket.on(BaseEvents.Ready, (readyEvent) => {
-      // log.socket(BaseEvents.Ready);
-      dispatch(readyEvent);
-    });
-
-    socket.on(BaseEvents.PasscodeRequired, (passcodeRequired) => {
-      // log.socket(BaseEvents.PasscodeRequired);
-      dispatch(passcodeRequired);
-    });
-
-    socket.on(BaseEvents.PasscodeIncorrect, (passcodeIncorrect) => {
-      // log.socket(BaseEvents.PasscodeIncorrect);
-      dispatch(passcodeIncorrect);
-    });
-
-    socket.on(BaseEvents.PasscodeAccepted, (passcodeAccepted) => {
-      // log.socket(BaseEvents.PasscodeAccepted);
-      dispatch(passcodeAccepted);
-    });
-
-    // TODO
-    // socket.on(BaseEvents.ServerInfo, (event: ServerInfoEvent) => {
-    //   setServerInfo({ ...event.payload });
-    // });
-
+    // Get User from server session and set in Store
     socket.on(BaseEvents.User, (userEvent: UserEvent) => {
-      // console.log("user")
-      // console.log(userEvent)
       setUser(userEvent.payload.user);
+    });
 
-      if (userEvent.payload.requireNameChange) {
-        // TODO
-      }
-  });
+    // Get all Users
+    socket.on(BaseEvents.UsersUpdate, (event) => {
+      dispatch(event);
+    });
 
     return () => {
-      socket.off(BaseEvents.Ready);
-      socket.off(BaseEvents.PasscodeRequired);
-      socket.off(BaseEvents.PasscodeIncorrect);
-      socket.off(BaseEvents.PasscodeAccepted);
       socket.off(BaseEvents.User);
+      socket.off(BaseEvents.UsersUpdate);
     };
   }, [
     socket,
     setUser,
-    updateUser,
   ]);
-
-  const submitPasscode = useCallback(
-    (passcode: string) => {
-        socket.emit(...createPasscodeRequestEvent(passcode));
-    },
-    [socket]
-  );
 
   const value = useMemo(() => {
     return {
+        baseAppState,
         hasLoaded,
         setHasLoaded,
-        baseState,
-        submitPasscode,
     };
-  }, [baseState, submitPasscode, hasLoaded]);
+  }, [baseAppState, hasLoaded]);
 
   return (
     <BaseAppContext.Provider value={value}>{children}</BaseAppContext.Provider>
@@ -190,7 +99,7 @@ export const BaseAppProvider = ({ children }: BaseProviderProps) => {
 export const useBaseAppContext = (): BaseAppContextProps => {
   const context = useContext(BaseAppContext);
   if (!context) {
-      throw new Error('useSocket must be used within a WebSocketProvider');
+      throw new Error('useBaseAppContext must be used within a BaseAppProvider');
   }
   return context;
 };

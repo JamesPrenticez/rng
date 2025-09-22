@@ -1,0 +1,8 @@
+{
+  "name": "dice-magic:hooks",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/dice-magic/ui/hooks/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {}
+}
