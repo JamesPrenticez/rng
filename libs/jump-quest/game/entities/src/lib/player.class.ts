@@ -11,6 +11,8 @@ export class Player {
   radius: number = 10;
   color: string = "#FFF";
   velocity: Velocity = { x: 0, y: 0 };
+
+  // Movement Values
   speed: number = 0;
   baseAcceleration: number = 0.07;
   acceleration: number = 0.07;
@@ -20,6 +22,7 @@ export class Player {
   walkFriction: number = 0.95;
   friction: number = 0.95;
   runFriction: number = 0.98;
+  jumpVelocity: number = 10;
 
   // Gravity and ground detection
   gravity: number = 0.12;
@@ -41,9 +44,9 @@ export class Player {
   frameLength: number = 7;
   frameWidth: number = 512;
   frameHeight: number = 512;
-  frameXOffset: number = 200;
-  frameYOffset: number = 200;
-  frameScale: number = 0.25;
+  frameXOffset: number = 0;
+  frameYOffset: number = 100;
+  frameScale: number = 0.33;
   action: string = "idle";
   facingRight: boolean = true;
   img: HTMLImageElement;
@@ -154,15 +157,11 @@ export class Player {
   }
 
   checkCollisions = (newPos: Position, vel: Velocity) => {
-    const playerRect = {
-      x: newPos.x - this.radius,
-      y: newPos.y - this.radius,
-      width: this.radius * 2,
-      height: this.radius * 2
-    };
-
     let onGround = false;
+    const margin = 0.1; // Small margin to prevent floating point issues
 
+    // Check horizontal collisions first
+    const nextX = newPos.x + vel.x;
     for (const block of this.collisionBlocks) {
       const blockRect = {
         x: block.position.x,
@@ -171,41 +170,76 @@ export class Player {
         height: block.h
       };
 
-      // Check if collision would occur
+      // Check horizontal collision
       if (
-        playerRect.x < blockRect.x + blockRect.width &&
-        playerRect.x + playerRect.width > blockRect.x &&
-        playerRect.y < blockRect.y + blockRect.height &&
-        playerRect.y + playerRect.height > blockRect.y
+        nextX - this.radius < blockRect.x + blockRect.width + margin &&
+        nextX + this.radius > blockRect.x - margin &&
+        newPos.y - this.radius < blockRect.y + blockRect.height &&
+        newPos.y + this.radius > blockRect.y
       ) {
-        // Determine collision side
-        const overlapX = Math.min(
-          playerRect.x + playerRect.width - blockRect.x,
-          blockRect.x + blockRect.width - playerRect.x
-        );
-        const overlapY = Math.min(
-          playerRect.y + playerRect.height - blockRect.y,
-          blockRect.y + blockRect.height - playerRect.y
-        );
+        // Horizontal collision detected
+        if (vel.x > 0) {
+          // Moving right
+          newPos.x = blockRect.x - this.radius - margin;
+        } else if (vel.x < 0) {
+          // Moving left
+          newPos.x = blockRect.x + blockRect.width + this.radius + margin;
+        }
+        vel.x = 0;
+        break;
+      }
+    }
 
-        if (overlapX < overlapY) {
-          // Horizontal collision
-          if (playerRect.x < blockRect.x) {
-            newPos.x = blockRect.x - this.radius;
-          } else {
-            newPos.x = blockRect.x + blockRect.width + this.radius;
-          }
-          vel.x = 0;
-        } else {
-          // Vertical collision
-          if (playerRect.y < blockRect.y) {
-            newPos.y = blockRect.y - this.radius;
-            onGround = true;
-            vel.y = 0;
-          } else {
-            newPos.y = blockRect.y + blockRect.height + this.radius;
-            vel.y = 0;
-          }
+    // Check vertical collisions second
+    const nextY = newPos.y + vel.y;
+    for (const block of this.collisionBlocks) {
+      const blockRect = {
+        x: block.position.x,
+        y: block.position.y,
+        width: block.w,
+        height: block.h
+      };
+
+      // Check vertical collision
+      if (
+        newPos.x - this.radius < blockRect.x + blockRect.width + margin &&
+        newPos.x + this.radius > blockRect.x - margin &&
+        nextY - this.radius < blockRect.y + blockRect.height + margin &&
+        nextY + this.radius > blockRect.y - margin
+      ) {
+        // Vertical collision detected
+        if (vel.y > 0) {
+          // Falling down - landing on top of block
+          newPos.y = blockRect.y - this.radius - margin;
+          onGround = true;
+        } else if (vel.y < 0) {
+          // Moving up - hitting ceiling
+          newPos.y = blockRect.y + blockRect.height + this.radius + margin;
+        }
+        vel.y = 0;
+        break;
+      }
+    }
+
+    // Additional ground check for stability
+    if (!onGround) {
+      const groundCheckY = newPos.y + this.radius + 2; // Check slightly below player
+      for (const block of this.collisionBlocks) {
+        const blockRect = {
+          x: block.position.x,
+          y: block.position.y,
+          width: block.w,
+          height: block.h
+        };
+
+        if (
+          newPos.x - this.radius < blockRect.x + blockRect.width &&
+          newPos.x + this.radius > blockRect.x &&
+          groundCheckY >= blockRect.y &&
+          groundCheckY <= blockRect.y + 5
+        ) {
+          onGround = true;
+          break;
         }
       }
     }
@@ -229,7 +263,7 @@ export class Player {
       this.isCrouching = false;
       this.isJumping = true;
       this.isOnGround = false;
-      this.velocity.y = -15;
+      this.velocity.y = -this.jumpVelocity;
       this.isCrouchingForJump = false;
     }
 
@@ -240,18 +274,21 @@ export class Player {
       accelerationX += this.acceleration;
     }
 
+    // Apply acceleration
+    this.velocity.x += accelerationX;
+
     // Calculate the combined speed
     this.speed = Math.abs(this.velocity.x);
 
-    // Normalize the velocity vector if the speed exceeds maxSpeed
+    // Limit speed
     if (this.speed > this.maxSpeed) {
       const ratio = this.maxSpeed / this.speed;
       this.velocity.x *= ratio;
-      this.velocity.y *= ratio;
       this.speed = this.maxSpeed;
     }
 
-    this.velocity.x += accelerationX;
+    // Store current position for collision checking
+    const oldPos = { ...this.position };
 
     // Calculate new position
     const newPos = {
@@ -259,20 +296,29 @@ export class Player {
       y: this.position.y + this.velocity.y
     };
 
+    // Create a copy of velocity for collision checking
+    const newVel = { ...this.velocity };
+
     // Check collisions and update position
-    const collision = this.checkCollisions(newPos, this.velocity);
+    const collision = this.checkCollisions(newPos, newVel);
+    
+    // Update position and velocity
     this.position = collision.newPos;
-    this.velocity = collision.vel;
+    this.velocity = newVel;
+    
+    // Update ground state
+    const wasOnGround = this.isOnGround;
     this.isOnGround = collision.onGround;
 
-    if (collision.onGround) {
+    // Reset jumping flag when landing
+    if (!wasOnGround && this.isOnGround) {
       this.isJumping = false;
     }
 
     // Handle facing right/left
-    if (this.velocity.x > 0) {
+    if (this.velocity.x > 0.1) {
       this.facingRight = true;
-    } else if (this.velocity.x < 0) {
+    } else if (this.velocity.x < -0.1) {
       this.facingRight = false;
     }
   }
