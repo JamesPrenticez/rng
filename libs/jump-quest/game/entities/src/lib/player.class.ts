@@ -1,3 +1,4 @@
+// libs/jump-quest/game/entities/src/lib/player-enhanced.class.ts
 import { Position, Velocity } from "@jump-quest/models";
 import { Weapon } from "./weapon.class";
 import { CollisionBlock } from "./collision-block.class";
@@ -72,14 +73,38 @@ export class Player {
     this.img.src = "./player.spritesheet.png";
   }
 
+  /**
+   * Update method that only handles logic, not drawing
+   */
   update = () => {
     this.physics();
     this.movePlayer();
     this.setPlayerAction();
-    this.drawPlayerSprite();
   }
 
+  /**
+   * Separate drawing method that can be called independently
+   */
   drawPlayerSprite = () => {
+    this.updateSpriteFrame();
+
+    // Draw sprite if loaded, otherwise fallback to circle
+    if (this.img.complete && this.img.naturalWidth > 0) {
+      this.drawSprite();
+    } else {
+      this.drawFallbackCircle();
+    }
+
+    // Draw the weapon if the player has one
+    if (this.weapon && this.weapon.image.complete) {
+      this.weapon.draw(this.ctx, this.position.x, this.position.y, this.facingRight);
+    }
+  };
+
+  /**
+   * Update sprite animation frame
+   */
+  private updateSpriteFrame = () => {
     this.frameColumn++;
 
     if (this.frameColumn >= this.frameSpeed) {
@@ -90,47 +115,55 @@ export class Player {
         this.frameCurrent = 0;
       }
     }
+  }
 
-    // Draw sprite if loaded, otherwise fallback to circle
-    if (this.img.complete && this.img.naturalWidth > 0) {
-      const sourceX = (this.frameCurrent * this.frameWidth) + this.frameXOffset;
-      const sourceY = (this.frameRow * this.frameHeight) + this.frameYOffset;
-      const width = this.frameWidth * this.frameScale;
-      const height = this.frameHeight * this.frameScale;
-      const x = this.position.x - (width / 2);
-      const y = this.position.y - (height / 2);
+  /**
+   * Draw the sprite image
+   */
+  private drawSprite = () => {
+    const sourceX = (this.frameCurrent * this.frameWidth) + this.frameXOffset;
+    const sourceY = (this.frameRow * this.frameHeight) + this.frameYOffset;
+    const width = this.frameWidth * this.frameScale;
+    const height = this.frameHeight * this.frameScale;
+    const x = this.position.x - (width / 2);
+    const y = this.position.y - (height / 2);
 
-      this.ctx.save();
+    this.ctx.save();
 
-      if (this.facingRight) {
-        this.ctx.scale(1, 1);
-        this.ctx.drawImage(this.img, sourceX, sourceY, 512, 512, x, y, width, height);
-      } else {
-        this.ctx.scale(-1, 1);
-        this.ctx.drawImage(this.img, sourceX, sourceY, 512, 512, -x - width, y, width, height);
-      }
-
-      this.ctx.restore();
-
-      // Draw collision circle for debugging
-      this.ctx.strokeStyle = '#00ff00';
-      this.ctx.lineWidth = 1;
-      this.ctx.beginPath();
-      this.ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
-      this.ctx.stroke();
+    if (this.facingRight) {
+      this.ctx.scale(1, 1);
+      this.ctx.drawImage(this.img, sourceX, sourceY, 512, 512, x, y, width, height);
     } else {
-      // Fallback: simple circle
-      this.ctx.fillStyle = this.color;
-      this.ctx.beginPath();
-      this.ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
-      this.ctx.fill();
+      this.ctx.scale(-1, 1);
+      this.ctx.drawImage(this.img, sourceX, sourceY, 512, 512, -x - width, y, width, height);
     }
 
-    // Draw the weapon if the player has one
-    if (this.weapon && this.weapon.image.complete) {
-      this.weapon.draw(this.ctx, this.position.x, this.position.y, this.facingRight);
-    }
-  };
+    this.ctx.restore();
+
+    // Draw collision circle for debugging
+    this.drawDebugCircle();
+  }
+
+  /**
+   * Draw fallback circle when sprite isn't loaded
+   */
+  private drawFallbackCircle = () => {
+    this.ctx.fillStyle = this.color;
+    this.ctx.beginPath();
+    this.ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
+    this.ctx.fill();
+  }
+
+  /**
+   * Draw debug collision circle
+   */
+  private drawDebugCircle = () => {
+    this.ctx.strokeStyle = '#00ff00';
+    this.ctx.lineWidth = 1;
+    this.ctx.beginPath();
+    this.ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
+    this.ctx.stroke();
+  }
 
   pickUpWeapon = (weapon: Weapon) => {
     this.weapon = weapon;
