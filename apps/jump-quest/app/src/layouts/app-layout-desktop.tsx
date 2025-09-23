@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Game } from '../components/game';
 
 const Container = styled.div`
   display: flex;
@@ -12,7 +13,8 @@ const Container = styled.div`
 export const DesktopAppLayout = () => {
   return (
     <Container>
-      <h1>DESKTOP</h1>
+      {/* <h1>DESKTOP</h1> */}
+      <Game />
     </Container>
   );
 };

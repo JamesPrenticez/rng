@@ -1,61 +1,112 @@
 import { create } from 'zustand';
-import { Player } from "@jump-quest/models"
+import { CollisionBlock, GameState } from '@jump-quest/models'
 
-interface GameStore {
-  // Game State
-  screen: 'menu' | 'playing' | 'levelSelect';
-  currentLevel: number;
-  
-  // Player State
-  player: Player;
-  
-  // Input State
-  keys: Set<string>;
-  
-  // Actions
-  setScreen: (screen: 'menu' | 'playing' | 'levelSelect') => void;
-  setLevel: (level: number) => void;
-  updatePlayer: (player: Player) => void;
-  resetPlayer: () => void;
-  addKey: (key: string) => void;
-  removeKey: (key: string) => void;
-}
-
-export const useGameStore = create<GameStore>((set, get) => ({
-  // Initial State
-  keys: new Set<string>(),
-  screen: 'menu',
-  currentLevel: 1,
+export const useGameStore = create<GameState>((set, get) => ({
   player: {
-    position: { x: 50, y: 400 },
+    position: { x: 512, y: 288 },
     velocity: { x: 0, y: 0 },
-    size: { x: 20, y: 25 },
-    onGround: false
+    hp: 10,
+    killCount: 0,
+    radius: 10,
+    speed: 0,
+    acceleration: 0.07,
+    maxSpeed: 3,
+    isOnGround: false,
+    isCrouching: false,
+    isJumping: false,
+    facingRight: true,
+    action: 'idle',
+    frameRow: 0,
+    frameCurrent: 0,
+    frameColumn: 0,
+    frameSpeed: 10,
+    frameLength: 7,
+    frameWidth: 512,
+    frameHeight: 512,
+    frameScale: 0.25,
+    frameXOffset: 200,
+    frameYOffset: 200,
+    sprite: null,
+    weapon: null
   },
-  
-  // Actions
-  setScreen: (screen) => set({ screen }),
-  
-  setLevel: (level) => set({ currentLevel: level }),
-  
-  updatePlayer: (player) => set({ player }),
-  
-  resetPlayer: () => set({
-    player: {
-      position: { x: 50, y: 400 },
-      velocity: { x: 0, y: 0 },
-      size: { x: 20, y: 25 },
-      onGround: false
-    }
-  }),
-  
-  addKey: (key) => set((state) => ({
-    keys: new Set(state.keys).add(key)
+  collisionBlocks: [],
+  keys: {},
+  isPlaying: false,
+  frameRate: 0,
+  canvasSize: { width: 1024, height: 576 },
+
+  setPlayer: (playerUpdate) => set(state => ({
+    player: { ...state.player, ...playerUpdate }
   })),
-  
-  removeKey: (key) => set((state) => {
-    const newKeys = new Set(state.keys);
-    newKeys.delete(key);
-    return { keys: newKeys };
-  })
+
+  updatePlayerPosition: (position) => set(state => ({
+    player: { ...state.player, position }
+  })),
+
+  updatePlayerVelocity: (velocity) => set(state => ({
+    player: { ...state.player, velocity }
+  })),
+
+  setKeyState: (key, pressed) => set(state => ({
+    keys: { ...state.keys, [key]: pressed }
+  })),
+
+  toggleGame: () => set(state => ({ isPlaying: !state.isPlaying })),
+
+  setFrameRate: (fps) => set({ frameRate: fps }),
+
+  initializeGame: () => {
+    const collisionsLevelOne = [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 292, 292, 292, 292, 292, 292, 292, 292, 292, 292, 292, 292, 292, 292, 0,
+      0, 292, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 292, 0,
+      0, 292, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 292, 0,
+      0, 292, 292, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 292, 0,
+      0, 292, 292, 292, 292, 292, 292, 292, 292, 292, 292, 292, 292, 292, 292, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    ];
+
+    // Parse 2D collision map
+    const rows = [];
+    for (let i = 0; i < collisionsLevelOne.length; i += 16) {
+      rows.push(collisionsLevelOne.slice(i, i + 16));
+    }
+
+    // Create collision blocks
+    const collisionBlocks: CollisionBlock[] = [];
+    const tileSize = { w: 64, h: 64 };
+
+    rows.forEach((row, y) => {
+      row.forEach((value, x) => {
+        if (value === 292) {
+          collisionBlocks.push({
+            position: {
+              x: x * tileSize.w,
+              y: y * tileSize.h
+            },
+            width: tileSize.w,
+            height: tileSize.h
+          });
+        }
+      });
+    });
+
+    // Load player sprite
+    const playerSprite = new Image();
+    playerSprite.src = "./assets/sprites/player/player.png";
+    
+    playerSprite.onload = () => {
+      set(state => ({
+        player: { ...state.player, sprite: playerSprite }
+      }));
+    };
+    
+    playerSprite.onerror = () => {
+      console.warn("Player sprite failed to load from ./assets/sprites/player/player.png");
+    };
+
+    set({ collisionBlocks });
+  }
 }));
