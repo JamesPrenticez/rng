@@ -1,0 +1,8 @@
+{
+  "name": "jump-quest-models",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/jump-quest/models/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {}
+}
