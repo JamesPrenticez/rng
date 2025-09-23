@@ -23,9 +23,9 @@ export const useGameStore = create<GameState>((set, get) => ({
     frameLength: 7,
     frameWidth: 512,
     frameHeight: 512,
-    frameScale: 0.25,
-    frameXOffset: 200,
-    frameYOffset: 200,
+    frameScale: 0.5,
+    frameXOffset: 0,
+    frameYOffset: 105,
     sprite: null,
     weapon: null
   },
@@ -95,7 +95,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     // Load player sprite
     const playerSprite = new Image();
-    playerSprite.src = "./assets/sprites/player/player.png";
+    playerSprite.src = "/spritesheet.png"; // served from app's public folder
     
     playerSprite.onload = () => {
       set(state => ({
@@ -104,7 +104,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     };
     
     playerSprite.onerror = () => {
-      console.warn("Player sprite failed to load from ./assets/sprites/player/player.png");
+      console.warn("Player sprite failed to load from /spritesheet.png");
     };
 
     set({ collisionBlocks });

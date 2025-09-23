@@ -24,6 +24,8 @@ export const useGameEngine = (canvasRef: React.RefObject<HTMLCanvasElement>) => 
   const walkFriction = 0.95;
   const runFriction = 0.98;
   const baseAcceleration = 0.07;
+const jumpVelocity = 10;
+
   const maxAcceleration = 0.14;
   const accelerationIncrement = 0.0008;
 
@@ -116,7 +118,7 @@ export const useGameEngine = (canvasRef: React.RefObject<HTMLCanvasElement>) => 
       newPlayer.isCrouching = false;
       newPlayer.isJumping = true;
       newPlayer.isOnGround = false;
-      newPlayer.velocity.y = -15; // Jump velocity
+      newPlayer.velocity.y = -jumpVelocity; // Jump velocity
       jumpStateRef.current.isCrouchingForJump = false;
     }
 
@@ -213,12 +215,12 @@ export const useGameEngine = (canvasRef: React.RefObject<HTMLCanvasElement>) => 
     if (!ctx) return;
 
     // Clear canvas
-    ctx.fillStyle = '#222';
+    ctx.fillStyle = '#DADADA';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Draw collision blocks
     ctx.fillStyle = 'rgba(255, 0, 0, 0.7)';
-    ctx.strokeStyle = '#ff0000';
+    ctx.strokeStyle = 'rgba(170, 36, 36, 0.7)';
     ctx.lineWidth = 2;
     collisionBlocks.forEach(block => {
       ctx.fillRect(block.position.x, block.position.y, block.width, block.height);
