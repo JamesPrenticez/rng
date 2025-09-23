@@ -24,75 +24,78 @@ export const useGameEngine = (canvasRef: React.RefObject<HTMLCanvasElement>) => 
   const walkFriction = 0.95;
   const runFriction = 0.98;
   const baseAcceleration = 0.07;
-const jumpVelocity = 10;
+  const jumpVelocity = 6;
+  const crouchDelay = 100; // how to make this on key down then realease
 
   const maxAcceleration = 0.14;
   const accelerationIncrement = 0.0008;
 
   // Collision detection
-  const checkCollisions = useCallback((newPos: Position, vel: Velocity) => {
-    const playerRect = {
-      x: newPos.x - player.radius,
-      y: newPos.y - player.radius,
-      width: player.radius * 2,
-      height: player.radius * 2
+const checkCollisions = useCallback((newPos: Position, vel: Velocity) => {
+  const playerRect = {
+    x: newPos.x - player.radius,
+    y: newPos.y - player.radius,
+    width: player.radius * 2,
+    height: player.radius * 2
+  };
+
+  let onGround = false;
+  const groundTolerance = 2; // px tolerance for "standing on ground"
+
+  for (const block of collisionBlocks) {
+    const blockRect = {
+      x: block.position.x,
+      y: block.position.y,
+      width: block.width,
+      height: block.height
     };
 
-    let collisionX = false;
-    let collisionY = false;
-    let onGround = false;
+    if (
+      playerRect.x < blockRect.x + blockRect.width &&
+      playerRect.x + playerRect.width > blockRect.x &&
+      playerRect.y < blockRect.y + blockRect.height &&
+      playerRect.y + playerRect.height > blockRect.y
+    ) {
+      const overlapX = Math.min(
+        playerRect.x + playerRect.width - blockRect.x,
+        blockRect.x + blockRect.width - playerRect.x
+      );
+      const overlapY = Math.min(
+        playerRect.y + playerRect.height - blockRect.y,
+        blockRect.y + blockRect.height - playerRect.y
+      );
 
-    for (const block of collisionBlocks) {
-      const blockRect = {
-        x: block.position.x,
-        y: block.position.y,
-        width: block.width,
-        height: block.height
-      };
-
-      // Check if collision would occur
-      if (
-        playerRect.x < blockRect.x + blockRect.width &&
-        playerRect.x + playerRect.width > blockRect.x &&
-        playerRect.y < blockRect.y + blockRect.height &&
-        playerRect.y + playerRect.height > blockRect.y
-      ) {
-        // Determine collision side
-        const overlapX = Math.min(
-          playerRect.x + playerRect.width - blockRect.x,
-          blockRect.x + blockRect.width - playerRect.x
-        );
-        const overlapY = Math.min(
-          playerRect.y + playerRect.height - blockRect.y,
-          blockRect.y + blockRect.height - playerRect.y
-        );
-
-        if (overlapX < overlapY) {
-          // Horizontal collision
-          collisionX = true;
-          if (playerRect.x < blockRect.x) {
-            newPos.x = blockRect.x - player.radius;
-          } else {
-            newPos.x = blockRect.x + blockRect.width + player.radius;
-          }
-          vel.x = 0;
+      if (overlapX < overlapY) {
+        // horizontal collision
+        if (playerRect.x < blockRect.x) {
+          newPos.x = blockRect.x - player.radius;
         } else {
-          // Vertical collision
-          collisionY = true;
-          if (playerRect.y < blockRect.y) {
+          newPos.x = blockRect.x + blockRect.width + player.radius;
+        }
+        vel.x = 0;
+      } else {
+        // vertical collision
+        if (playerRect.y < blockRect.y) {
+          // ✅ snap to block top with tolerance
+          if (
+            newPos.y + player.radius >= blockRect.y - groundTolerance &&
+            vel.y >= 0
+          ) {
             newPos.y = blockRect.y - player.radius;
+            vel.y = 0;
             onGround = true;
-            vel.y = 0;
-          } else {
-            newPos.y = blockRect.y + blockRect.height + player.radius;
-            vel.y = 0;
           }
+        } else {
+          newPos.y = blockRect.y + blockRect.height + player.radius;
+          vel.y = 0;
         }
       }
     }
+  }
 
-    return { newPos, vel, onGround };
-  }, [collisionBlocks, player.radius]);
+  return { newPos, vel, onGround };
+}, [collisionBlocks, player.radius]);
+
 
   // Jump state management
   const jumpStateRef = useRef({ crouchStartTime: 0, isCrouchingForJump: false });
@@ -113,12 +116,12 @@ const jumpVelocity = 10;
 
     // Handle crouch-to-jump transition
     if (jumpStateRef.current.isCrouchingForJump && 
-        currentTime - jumpStateRef.current.crouchStartTime > 50) {
+        currentTime - jumpStateRef.current.crouchStartTime > crouchDelay) {
       // Execute jump
       newPlayer.isCrouching = false;
       newPlayer.isJumping = true;
       newPlayer.isOnGround = false;
-      newPlayer.velocity.y = -jumpVelocity; // Jump velocity
+      newPlayer.velocity.y = -jumpVelocity; 
       jumpStateRef.current.isCrouchingForJump = false;
     }
 
@@ -137,7 +140,7 @@ const jumpVelocity = 10;
     // Apply friction
     const friction = newPlayer.speed > 2 ? runFriction : walkFriction;
     newPlayer.velocity.x *= friction;
-    newPlayer.velocity.y *= friction;
+    // newPlayer.velocity.y *= friction;
 
     // Apply gravity
     if (!newPlayer.isOnGround) {
@@ -177,6 +180,8 @@ const jumpVelocity = 10;
     } else if (newPlayer.isJumping) {
       newPlayer.action = 'jump';
       newPlayer.frameRow = 3;
+      newPlayer.frameColumn = 1; 
+      newPlayer.frameCurrent = 1;
       newPlayer.frameLength = 1;
     } else if (newPlayer.speed < 0.4) {
       newPlayer.action = 'idle';
@@ -270,7 +275,7 @@ const jumpVelocity = 10;
     }
 
     // Draw player info
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = '#222';
     ctx.font = '12px Arial';
     ctx.fillText(`Action: ${player.action}`, 10, 20);
     ctx.fillText(`Speed: ${player.speed.toFixed(2)}`, 10, 35);
@@ -290,7 +295,7 @@ const jumpVelocity = 10;
     }
     lastFrameTime.current = now;
 
-    ctx.fillStyle = '#dadada';
+    ctx.fillStyle = '#222';
     ctx.font = '10px Arial';
     ctx.fillText(`FPS: ${useGameStore.getState().frameRate}`, canvas.width - 60, 15);
   }, [canvasRef, collisionBlocks, player, setFrameRate]);

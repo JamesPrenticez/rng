@@ -31,7 +31,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
   collisionBlocks: [],
   keys: {},
-  isPlaying: false,
+  isPlaying: true,
   frameRate: 0,
   canvasSize: { width: 1024, height: 576 },
 
@@ -58,8 +58,9 @@ export const useGameStore = create<GameState>((set, get) => ({
   initializeGame: () => {
     const collisionsLevelOne = [
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 292, 292, 292, 292, 292, 292, 292, 292, 292, 292, 292, 292, 292, 292, 0,
+      0, 292, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 292, 0,
+      0, 292, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 292, 0,
       0, 292, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 292, 0,
       0, 292, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 292, 0,
       0, 292, 292, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 292, 0,
