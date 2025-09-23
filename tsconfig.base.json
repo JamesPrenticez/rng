@@ -29,6 +29,7 @@
       "@dice-magic/stores": ["libs/dice-magic/ui/stores/src/index.ts"],
       "@dice-magic/ui": ["libs/dice-magic/ui/src/index.ts"],
       "@dice-magic/utils": ["libs/dice-magic/utils/src/index.ts"],
+      "@jump-quest/hooks": ["libs/jump-quest/ui/hooks/src/index.ts"],
       "@jump-quest/models": ["libs/jump-quest/models/src/index.ts"],
       "@jump-quest/stores": ["libs/jump-quest/ui/stores/src/index.ts"],
       "@shared/assets/audio/*": ["libs/shared/assets/audio/*"],
@@ -49,7 +50,9 @@
       "@shared/ui/theme": ["libs/shared/ui/theme/src/index.ts"],
       "@shared/utils": ["libs/shared/utils/src/index.ts"],
       "@shared/websocket": ["libs/shared/websocket/src/index.ts"],
-      "@jump-quest/hooks": ["libs/jump-quest/ui/hooks/src/index.ts"]
+      "@jump-quest/core": ["libs/jump-quest/game/core/src/index.ts"],
+      "@jump-quest/entities": ["libs/jump-quest/game/entities/src/index.ts"],
+      "@jump-quest/systems": ["libs/jump-quest/game/systems/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

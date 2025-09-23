@@ -1,7 +1,7 @@
 {
-  "name": "jump-quest-hooks",
+  "name": "jump-quest-entities",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/jump-quest/ui/hooks/src",
+  "sourceRoot": "libs/jump-quest/game/entities/src",
   "projectType": "library",
   "tags": [],
   "targets": {}

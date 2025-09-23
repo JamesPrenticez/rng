@@ -43,6 +43,7 @@ module.exports = [
       'react-hooks/exhaustive-deps': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
       'prefer-const': 'off',
+      "@typescript-eslint/no-inferrable-types": "off"
     },
   },
 ];

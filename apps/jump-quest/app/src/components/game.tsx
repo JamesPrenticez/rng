@@ -1,7 +1,8 @@
-import { useEffect, useRef } from "react";
-import { useGameStore } from "@jump-quest/stores"
-import { useGameEngine } from "@jump-quest/hooks"
+import { useEffect, useRef, useState } from "react";
 import styled from "@emotion/styled";
+import {
+  GameEngine
+} from "@jump-quest/entities"
 
 const GameContainer = styled.div`
   display: flex;
@@ -64,24 +65,32 @@ const Instructions = styled.div`
 // Main Game Component
 export const Game: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { isPlaying, toggleGame, initializeGame, setKeyState, canvasSize } = useGameStore();
+  const gameEngineRef = useRef<GameEngine | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  // Initialize game on mount
+  // Initialize game engine
   useEffect(() => {
-    initializeGame();
-  }, [initializeGame]);
+    if (canvasRef.current && !gameEngineRef.current) {
+      gameEngineRef.current = new GameEngine(canvasRef.current);
+      
+      // Auto-start the game
+      gameEngineRef.current.startGame();
+      setIsPlaying(true);
+    }
+  }, []);
 
-  // Use game engine
-  useGameEngine(canvasRef);
-
-  // Key event handlers
+  // Handle key events
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      setKeyState(e.code, true);
+      if (gameEngineRef.current) {
+        gameEngineRef.current.handleKeyDown(e);
+      }
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
-      setKeyState(e.code, false);
+      if (gameEngineRef.current) {
+        gameEngineRef.current.handleKeyUp(e);
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -91,16 +100,23 @@ export const Game: React.FC = () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [setKeyState]);
+  }, []);
+
+  const toggleGame = () => {
+    if (gameEngineRef.current) {
+      gameEngineRef.current.toggleGame();
+      setIsPlaying(!isPlaying);
+    }
+  };
 
   return (
     <GameContainer>
-      <h1 style={{ color: '#fff', marginBottom: '20px' }}>React 2D Game Engine</h1>
+      <h1 style={{ color: '#fff', marginBottom: '20px' }}>React 2D Game Engine (OOP)</h1>
       
       <GameCanvas
         ref={canvasRef}
-        width={canvasSize.width}
-        height={canvasSize.height}
+        width={1024}
+        height={576}
       />
       
       <Controls>
@@ -113,8 +129,9 @@ export const Game: React.FC = () => {
         <h3>Controls</h3>
         <p><strong>WASD</strong> - Move (W to jump)</p>
         <p><strong>A/D</strong> - Left/Right movement</p>
-        <p>The player (white circle) can jump, walk, and run with physics-based movement.</p>
-        <p>Red blocks are collision objects that the player can stand on and collide with.</p>
+        <p>The player loads from <code>./assets/sprites/player/player.png</code></p>
+        <p>Weapon loads from <code>./assets/sprites/weapons/bow.png</code></p>
+        <p>Green circle shows collision boundary, red blocks are collision objects.</p>
       </Instructions>
     </GameContainer>
   );

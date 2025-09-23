@@ -1,7 +1,7 @@
 {
-  "name": "jump-quest/stores",
+  "name": "jump-quest-core",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/jump-quest/ui/stores/src",
+  "sourceRoot": "libs/jump-quest/game/core/src",
   "projectType": "library",
   "tags": [],
   "targets": {}

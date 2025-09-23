@@ -1,0 +1,8 @@
+{
+  "name": "jump-quest-systems",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/jump-quest/game/systems/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {}
+}

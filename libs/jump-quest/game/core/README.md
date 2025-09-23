@@ -1,7 +1,7 @@
-# stores
+# core
 
 This library was generated with [Nx](https://nx.dev).
 
 ## Building
 
-Run `nx build stores` to build the library.
+Run `nx build core` to build the library.
