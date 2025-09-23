@@ -28,7 +28,7 @@ export class GameEngine {
     this.camera = new Camera(this.canvas.width, this.canvas.height);
 
     // Create enhanced map
-    this.map = GameMap.createTestMap(this.canvas.ctx, tileSize);
+    this.map = GameMap.createTestMap(this.canvas.ctx, tileSize); // Add Static maps
 
     // Set camera bounds to the map size
     this.camera.setMapBounds(this.map.worldWidth, this.map.worldHeight);

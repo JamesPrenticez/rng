@@ -275,7 +275,7 @@ export class GameMap {
     
     // Add some platforms
     for (let x = 10; x < 20; x++) {
-      terrainData[20 * mapWidth + x] = 2; // Grass platform
+      terrainData[25 * mapWidth + x] = 2; // Grass platform
     }
     
     for (let x = 30; x < 40; x++) {
