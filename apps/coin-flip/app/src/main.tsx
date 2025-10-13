@@ -1,13 +1,14 @@
-import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import App from './app/app';
+import { CoinFlipAppLayout } from './layouts/app-layout';
+import '@shared/assets/styles/styles.css';
+import { BaseAppLayout } from '@shared/layouts';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
 root.render(
-  <StrictMode>
-    <App />
-  </StrictMode>
+  <BaseAppLayout type="static">
+      <CoinFlipAppLayout />
+  </BaseAppLayout>
 );
