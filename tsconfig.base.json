@@ -18,7 +18,7 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "noPropertyAccessFromIndexSignature": false,
-    "ignoreDeprecations": "6.0",
+    // "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
       "@dice-magic/contexts": ["libs/dice-magic/ui/contexts/src/index.ts"],
