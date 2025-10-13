@@ -8,7 +8,7 @@ const Container = styled.div`
 export const App = () => {
     return (
       <Container>
-      <h1>FUCK YOU</h1>
+      <h1>Lobby</h1>
       </Container>
     );
 };

@@ -1,0 +1,5 @@
+procs:
+  # 'lobby:server':
+  #   shell: 'nx serve game-lobby-server'
+  'lobby:app':
+    shell: 'nx serve lobby-app'

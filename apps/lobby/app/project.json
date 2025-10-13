@@ -1,13 +1,13 @@
 {
-    "name": "game-lobby-frontend",
+    "name": "lobby-app",
     "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-    "sourceRoot": "apps/game-lobby/frontend/src",
+    "sourceRoot": "apps/game-lobby/app/src",
     "projectType": "application",
     "tags": [
-        "scope:game-lobby",
-        "app:game-lobby-frontend",
+        "scope:lobby",
+        "app:lobby-app",
         "type:app",
-        "tier:frontend",
+        "tier:app",
         "environment:production",
         "environment:demo",
         "environment:prod",
@@ -19,7 +19,7 @@
             "outputs": ["{options.outputPath}"],
             "defaultConfiguration": "production",
             "options": {
-                "outputPath": "dist/apps/game-lobby/frontend"
+                "outputPath": "dist/apps/lobby/app"
             },
             "configurations": {
                 "development": {
@@ -34,15 +34,15 @@
             "executor": "@nx/vite:dev-server",
             "defaultConfiguration": "development",
             "options": {
-                "buildTarget": "game-lobby-frontend:build"
+                "buildTarget": "lobby-app:build"
             },
             "configurations": {
                 "development": {
-                    "buildTarget": "game-lobby-frontend:build:development",
+                    "buildTarget": "lobby-app:build:development",
                     "hmr": true
                 },
                 "production": {
-                    "buildTarget": "game-lobby-frontend:build:production",
+                    "buildTarget": "lobby-app:build:production",
                     "hmr": false
                 }
             }
@@ -54,7 +54,7 @@
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
             "options": {
-                "jestConfig": "apps/game-lobby/frontend/jest.config.ts"
+                "jestConfig": "apps/lobby/app/jest.config.ts"
             }
         },
         "preview": {
@@ -62,14 +62,14 @@
             "executor": "@nx/vite:preview-server",
             "defaultConfiguration": "development",
             "options": {
-                "buildTarget": "game-lobby-frontend:build"
+                "buildTarget": "lobby-app:build"
             },
             "configurations": {
                 "development": {
-                    "buildTarget": "game-lobby-frontend:build:development"
+                    "buildTarget": "lobby-app:build:development"
                 },
                 "production": {
-                    "buildTarget": "game-lobby-frontend:build:production"
+                    "buildTarget": "lobby-app:build:production"
                 }
             }
         }

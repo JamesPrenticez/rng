@@ -4,6 +4,8 @@
   "license": "MIT",
   "scripts": {
     "all-games": "sh ./.config/run-many.sh dice-magic",
+    "lobby": "mprocs -c ./.config/lobby.mprocs.yaml",
+    "coin": "mprocs -c ./.config/coin-flip.mprocs.yaml",
     "dice": "mprocs -c ./.config/dice-magic.mprocs.yaml",
     "jump": "mprocs -c ./.config/jump-quest.mprocs.yaml",
     "components": "mprocs -c ./.config/component-library.mprocs.yaml",

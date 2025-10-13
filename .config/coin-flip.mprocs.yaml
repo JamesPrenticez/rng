@@ -1,0 +1,5 @@
+procs:
+  # 'coin-flip:server':
+  #   shell: 'nx serve coin-flip-server'
+  'coin-flip:app':
+    shell: 'nx serve coin-flip-app'
