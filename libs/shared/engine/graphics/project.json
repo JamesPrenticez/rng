@@ -1,0 +1,8 @@
+{
+  "name": "shared-engine-graphics",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/engine/graphics/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {}
+}

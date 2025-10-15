@@ -51,7 +51,12 @@
       "@shared/theme": ["libs/shared/ui/theme/src/index.ts"],
       "@shared/ui/theme": ["libs/shared/ui/theme/src/index.ts"],
       "@shared/utils": ["libs/shared/utils/src/index.ts"],
-      "@shared/websocket": ["libs/shared/websocket/src/index.ts"]
+      "@shared/websocket": ["libs/shared/websocket/src/index.ts"],
+      "@shared/engine/core": ["libs/shared/engine/core/src/index.ts"],
+      "@shared/engine/graphics": ["libs/shared/engine/graphics/src/index.ts"],
+      "@shared/engine/inputs": ["libs/shared/engine/inputs/src/index.ts"],
+      "@shared/engine/physics": ["libs/shared/engine/physics/src/index.ts"],
+      "@shared/engine/ui": ["libs/shared/engine/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

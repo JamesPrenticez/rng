@@ -1,0 +1,8 @@
+{
+  "name": "shared-engine-physics",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/engine/physics/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {}
+}
