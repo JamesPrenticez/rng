@@ -8,16 +8,16 @@ export class CoinFlipGame {
   flipping = false;
 
   constructor(canvasEl: HTMLCanvasElement) {
-    this.canvas = new Canvas(canvasEl, 400, 400);
+    this.canvas = new Canvas(canvasEl, 768, 768);
     this.loop = new GameLoop(this.canvas.ctx);
 
     const coinImg = new Image();
-    coinImg.src = './coin-flip-spritesheet.png';
+    coinImg.src = './coin-flip-spritesheet-768x768.webp';  // 4608 x 3072 = 768x768
 
-    const flipAnim = new Animation(coinImg, 128, 128, 24, 80, false);
-    const idleAnim = new Animation(coinImg, 128, 128, 1, 1000, true);
+    const flipAnim = new Animation(coinImg, 768, 768, 24, 80, false); 
+    const idleAnim = new Animation(coinImg, 768, 768, 1, 1000, true);
 
-    this.coin = new Sprite(this.canvas.ctx, 150, 150, 1);
+    this.coin = new Sprite(this.canvas.ctx, 0, 0, 1); 
     this.coin.addAnimation('idle', idleAnim);
     this.coin.addAnimation('flip', flipAnim);
     this.coin.play('idle');

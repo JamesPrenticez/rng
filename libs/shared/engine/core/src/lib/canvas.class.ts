@@ -15,6 +15,11 @@ export class Canvas {
     this.width = width;
     this.height = height;
 
+    // Prevent scaling issues
+    this.ctx.imageSmoothingEnabled = false;
+    (this.ctx as any).mozImageSmoothingEnabled = false;
+    (this.ctx as any).webkitImageSmoothingEnabled = false;
+
     this.resize(width, height);
   }
 

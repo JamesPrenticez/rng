@@ -12,7 +12,7 @@ const Container = styled.div`
 const Canvas = styled.canvas`
   border: 2px solid #444;
   background: #222;
-  image-rendering: pixelated;
+image-rendering: crisp-edges;
 `;
 
 
