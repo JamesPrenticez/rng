@@ -7,8 +7,11 @@ export class CoinFlipGame {
   coin: Sprite;
   flipping = false;
 
-  constructor(canvasEl: HTMLCanvasElement) {
-    this.canvas = new Canvas(canvasEl, 768, 768);
+  constructor(canvasEl: HTMLCanvasElement, width?: number, height?: number) {
+    const w = width || 1000;
+    const h = height || 500;
+
+    this.canvas = new Canvas(canvasEl, w, h);
     this.loop = new GameLoop(this.canvas.ctx);
 
     const coinImg = new Image();
@@ -17,7 +20,7 @@ export class CoinFlipGame {
     const flipAnim = new Animation(coinImg, 768, 768, 24, 80, false); 
     const idleAnim = new Animation(coinImg, 768, 768, 1, 1000, true);
 
-    this.coin = new Sprite(this.canvas.ctx, 0, 0, 1); 
+    this.coin = new Sprite(this.canvas.ctx, w / 2 + 20 - 384, h / 2 - 384, 1); // Center the coin
     this.coin.addAnimation('idle', idleAnim);
     this.coin.addAnimation('flip', flipAnim);
     this.coin.play('idle');
